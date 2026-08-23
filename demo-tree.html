@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bordone Tree &amp; Land — Tree Removal, Landscaping &amp; Snow in Queens</title>
+<meta name="description" content="Storm damage? Call (718) 555-0198. Tree removal, pruning, landscaping, and commercial snow contracts across Queens. Free estimates.">
+<style>
+:root{--forest:#2E3B22;--moss:#55683B;--wheat:#EDEEDC;--bark:#8B6F47;--amber:#E3A72F;--paper:#F8F8F0;--txt:#26301C}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:var(--paper);color:var(--txt);line-height:1.65}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 26px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;border:none}
+.btn-amber{background:var(--amber);color:var(--forest)}
+.btn-amber:hover{background:#CE9518}
+.btn-forest{background:var(--forest);color:var(--wheat)}
+.btn-line{background:transparent;color:var(--forest);border:2px solid var(--forest)}
+.btn-block{display:flex;width:100%}
+section{padding:58px 0}
+h2{font-size:clamp(25px,4.5vw,36px);color:var(--forest);margin-bottom:10px}
+.lead{font-size:17px;color:#4A573B;max-width:600px}
+
+/* storm banner */
+.storm{background:var(--amber);color:var(--forest);padding:12px 0;font-weight:700}
+.storm .wrap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;text-align:center;font-size:15px}
+.storm a{color:var(--forest)}
+
+/* nav */
+nav{background:var(--paper);border-bottom:2px solid var(--forest);position:sticky;top:0;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;color:var(--forest);text-decoration:none}
+.nav .btn{min-height:42px;padding:9px 18px;font-size:14px}
+
+/* hero */
+.hero{background:var(--forest);color:var(--wheat);padding:70px 0;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;bottom:-40px;width:340px;height:340px;border-radius:50%;background:var(--moss);opacity:.5}
+.hero .wrap{position:relative;z-index:1}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1;color:#fff;margin-bottom:16px;max-width:640px}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p{font-size:18px;max-width:540px;margin-bottom:26px}
+.season-pills{display:inline-flex;background:rgba(237,238,220,.14);border-radius:999px;padding:5px;margin-bottom:26px;gap:4px}
+.season-pills button{border:none;border-radius:999px;padding:10px 20px;font-size:15px;font-weight:700;cursor:pointer;background:transparent;color:var(--wheat);min-height:44px;font-family:inherit}
+.season-pills button.on{background:var(--amber);color:var(--forest)}
+
+/* services */
+.svc-wrap{display:grid;gap:16px;margin-top:26px}
+@media(min-width:660px){.svc-wrap{grid-template-columns:1fr 1fr}}
+@media(min-width:940px){.svc-wrap{grid-template-columns:repeat(3,1fr)}}
+.svc{background:#fff;border:1px solid #DDDCC4;border-radius:16px;padding:22px}
+.svc h3{color:var(--forest);font-size:18px;margin-bottom:6px}
+.svc p{font-size:14.5px;color:#4A573B}
+.hidden{display:none}
+
+/* gallery */
+.gal{background:var(--wheat)}
+.gal-grid{display:grid;gap:14px;margin-top:26px;grid-template-columns:1fr 1fr}
+@media(min-width:760px){.gal-grid{grid-template-columns:repeat(4,1fr)}}
+.shot{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3;display:flex;align-items:flex-end}
+.shot .lbl{width:100%;background:rgba(46,59,34,.85);color:var(--wheat);font-size:12.5px;font-weight:700;padding:7px 10px;text-transform:uppercase;letter-spacing:.05em}
+
+/* form */
+.est{background:var(--forest);color:var(--wheat)}
+.est h2{color:#fff}
+form{display:grid;gap:12px;margin-top:22px;max-width:520px}
+input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #DDDCC4;font-size:16px;font-family:inherit}
+label{font-size:14px;font-weight:700}
+
+/* reviews */
+.rev-grid{display:grid;gap:16px;margin-top:26px}
+@media(min-width:760px){.rev-grid{grid-template-columns:repeat(3,1fr)}}
+.rev{background:#fff;border:1px solid #DDDCC4;border-radius:16px;padding:22px}
+.stars{color:var(--amber);letter-spacing:2px;margin-bottom:8px}
+.rev p{font-size:15px;margin-bottom:10px}
+.rev strong{font-size:14px;color:var(--forest)}
+
+/* meta */
+.meta{background:var(--wheat)}
+.meta .cols{display:grid;gap:28px;margin-top:20px}
+@media(min-width:760px){.meta .cols{grid-template-columns:2fr 1fr}}
+.areas{display:flex;flex-wrap:wrap;gap:8px}
+.areas span{background:#fff;border:1px solid #DDDCC4;border-radius:999px;padding:6px 14px;font-size:14px}
+.hours td{padding:4px 14px 4px 0;font-size:15px}
+
+footer{background:var(--txt);color:#B8BFA6;padding:36px 0 108px;font-size:14.5px}
+@media(min-width:720px){footer{padding-bottom:36px}}
+footer a{color:var(--wheat)}
+
+.callbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--paper);border-top:2px solid var(--forest)}
+@media(min-width:720px){.callbar{display:none}}
+.callbar .btn{flex:1;font-size:14.5px}
+</style>
+</head>
+<body>
+
+<div class="storm">
+  <div class="wrap">
+    <span>⚠ Storm damage? Tree on your house, car, or wires? We answer 24/7:</span>
+    <a href="tel:7185550198">(718) 555-0198</a>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L5 12h4l-3 6h5v4h2v-4h5l-3-6h4L12 2z" fill="#2E3B22"/></svg>
+      Bordone Tree &amp; Land
+    </a>
+    <a class="btn btn-amber" href="tel:7185550198">Free Estimate</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Big trees. Tight yards. <em>Done safely.</em></h1>
+    <p>Tree removal, pruning, and full landscaping across Queens — and when the snow comes, we plow. Third-generation crew, our own bucket truck and crane.</p>
+    <div class="season-pills" role="tablist" aria-label="Season">
+      <button type="button" class="on" id="pill-green" onclick="setSeason('green')">Spring–Fall</button>
+      <button type="button" id="pill-snow" onclick="setSeason('snow')">Winter / Snow</button>
+    </div>
+    <div>
+      <a class="btn btn-amber" href="#estimate">Get a Free Estimate</a>
+    </div>
+  </div>
+</header>
+
+<section id="services">
+  <div class="wrap">
+    <h2 id="svc-title">Tree &amp; landscaping services</h2>
+    <p class="lead" id="svc-lead">Everything above the grass and in it. Fully insured, certificates sent before we start.</p>
+    <div class="svc-wrap" id="svc-green">
+      <div class="svc"><h3>Tree removal</h3><p>Full takedowns, including crane work over houses and garages. Stump grinding included on request.</p></div>
+      <div class="svc"><h3>Pruning &amp; trimming</h3><p>Deadwood out, weight off the long limbs, clearance from roofs and wires.</p></div>
+      <div class="svc"><h3>Storm damage</h3><p>Emergency removal of fallen and hanging trees. We work directly with your insurance paperwork.</p></div>
+      <div class="svc"><h3>Landscaping</h3><p>Design, planting, sod, mulch beds, and weekly maintenance routes.</p></div>
+      <div class="svc"><h3>Hedges &amp; shrubs</h3><p>Shaping, hard renewal cuts, and privacy-row planting.</p></div>
+      <div class="svc"><h3>Land clearing</h3><p>Overgrown lots cleared for builds, sales, or sanity.</p></div>
+    </div>
+    <div class="svc-wrap hidden" id="svc-snow">
+      <div class="svc"><h3>Commercial snow contracts</h3><p>Seasonal contracts for lots, storefronts, and HOAs. Priced per season, plowed by 6am.</p></div>
+      <div class="svc"><h3>Sidewalk clearing</h3><p>Shoveling and snow-blowing crews that keep you clear of city sidewalk fines.</p></div>
+      <div class="svc"><h3>Salting &amp; de-icing</h3><p>Pre-storm salting and post-storm ice control, logged with timestamps.</p></div>
+      <div class="svc"><h3>Residential plowing</h3><p>Driveways on our route get cleared every storm, automatically.</p></div>
+      <div class="svc"><h3>Roof snow removal</h3><p>Heavy-load relief for flat roofs, garages, and awnings.</p></div>
+      <div class="svc"><h3>Winter tree work</h3><p>Dormant-season pruning — best time of year for most hardwoods.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="gal">
+  <div class="wrap">
+    <h2>Before &amp; after</h2>
+    <p class="lead">Real jobs, real yards. Tap any photo on the estimate visit and we'll show you the full set.</p>
+    <div class="gal-grid">
+      <div class="shot" style="background:linear-gradient(160deg,#6B7A52,#3A4A2A)"><span class="lbl">Before — Whitestone oak</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#C9CFAF,#8FA06E)"><span class="lbl">After — Whitestone oak</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#75674B,#4C4230)"><span class="lbl">Before — Maspeth yard</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#A9C08B,#6E8A4E)"><span class="lbl">After — Maspeth yard</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#5C6B49,#333F26)"><span class="lbl">Before — Storm, Bayside</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#BCC9A2,#7D9459)"><span class="lbl">After — Storm, Bayside</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#8A8F7E,#5A6052)"><span class="lbl">Before — Hedge row</span></div>
+      <div class="shot" style="background:linear-gradient(160deg,#9FB77F,#67824A)"><span class="lbl">After — Hedge row</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="est" id="estimate">
+  <div class="wrap">
+    <h2>Free estimate, usually same week</h2>
+    <p>Describe the job. We come out, look, and hand you a number on paper. No pressure after that.</p>
+    <form onsubmit="alert('Thanks! We\'ll call to set up your free estimate.');return false;">
+      <div><label for="t-name">Name</label><input id="t-name" type="text" required></div>
+      <div><label for="t-phone">Phone</label><input id="t-phone" type="tel" required></div>
+      <div><label for="t-job">Job type</label>
+        <select id="t-job"><option>Tree removal</option><option>Pruning / trimming</option><option>Storm damage</option><option>Landscaping</option><option>Snow contract</option><option>Something else</option></select>
+      </div>
+      <div><label for="t-notes">Tell us about it</label><textarea id="t-notes" rows="3" placeholder="Example: big maple leaning over garage, Whitestone"></textarea></div>
+      <button class="btn btn-amber btn-block" type="submit">Request Free Estimate</button>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What neighbors say</h2>
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"A 60-foot oak came down on my garage in that October storm. They had it off and tarped the same day, and the paperwork made insurance painless."</p>
+        <strong>Frank D., Whitestone</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"They crane-lifted a dying maple out of my backyard over the house. Not one broken fence board. Cleaned up like they were never there."</p>
+        <strong>Elaine C., Middle Village</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Our strip mall has used their snow contract three winters. Lot's plowed before we open, salted before the freeze, every time."</p>
+        <strong>Tony R., Maspeth</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="meta">
+  <div class="wrap">
+    <h2>Where we work</h2>
+    <div class="cols">
+      <div>
+        <div class="areas">
+          <span>Whitestone</span><span>Bayside</span><span>Flushing</span><span>College Point</span><span>Douglaston</span><span>Little Neck</span><span>Fresh Meadows</span><span>Middle Village</span><span>Maspeth</span><span>Glendale</span><span>Ridgewood</span><span>Howard Beach</span>
+        </div>
+        <p style="margin-top:16px;font-size:15px">
+          <a href="https://maps.google.com/?q=69-15+Grand+Ave+Maspeth+NY" style="color:var(--moss);font-weight:700">69-15 Grand Ave, Maspeth, NY 11378 — Get directions</a>
+        </p>
+      </div>
+      <div>
+        <table class="hours">
+          <tr><td>Mon–Sat</td><td>7am – 6pm</td></tr>
+          <tr><td>Sunday</td><td>Closed</td></tr>
+          <tr><td>Storms</td><td>24/7 response</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:#fff">Bordone Tree &amp; Land</strong> · 69-15 Grand Ave, Maspeth, NY 11378</p>
+    <p style="margin-top:6px"><a href="tel:7185550198">(718) 555-0198</a> · Fully insured · Free estimates</p>
+    <p style="margin-top:12px;font-size:13px">© 2026 Bordone Tree &amp; Land. Demo site by UI Designs Co.</p>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-forest" href="tel:7185550198">Call</a>
+  <a class="btn btn-amber" href="#estimate">Free Estimate</a>
+</div>
+
+<script>
+function setSeason(s){
+  var green=document.getElementById('svc-green'),snow=document.getElementById('svc-snow');
+  var pg=document.getElementById('pill-green'),ps=document.getElementById('pill-snow');
+  var title=document.getElementById('svc-title'),lead=document.getElementById('svc-lead');
+  if(s==='snow'){
+    green.classList.add('hidden');snow.classList.remove('hidden');
+    ps.classList.add('on');pg.classList.remove('on');
+    title.textContent='Snow & winter services';
+    lead.textContent='Contracts lock in before the first storm. Commercial lots get plowed by 6am, logged and timestamped.';
+  }else{
+    snow.classList.add('hidden');green.classList.remove('hidden');
+    pg.classList.add('on');ps.classList.remove('on');
+    title.textContent='Tree & landscaping services';
+    lead.textContent='Everything above the grass and in it. Fully insured, certificates sent before we start.';
+  }
+}
+</script>
+</body>
+</html>

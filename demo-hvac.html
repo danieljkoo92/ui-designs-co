@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Heating &amp; Air — 24/7 HVAC Repair in Queens | No Heat? Call Now</title>
+<meta name="description" content="No heat or no AC in Queens? Atlas responds 24/7. Repairs, installs, maintenance agreements, financing available. Call (718) 555-0198.">
+<style>
+:root{--navy:#0E2A3F;--steel:#16405E;--ice:#DBEFFB;--sky:#4DA8DA;--flame:#F2542D;--off:#F7FAFC;--txt:#1B2B38}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;background:var(--off);color:var(--txt);line-height:1.6}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 24px;border-radius:4px;font-weight:800;font-size:16px;text-decoration:none;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;border:none}
+.btn-flame{background:var(--flame);color:#fff}
+.btn-flame:hover{background:#D6431F}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-ghost{background:transparent;color:#fff;border:2px solid #fff}
+.btn-block{display:flex;width:100%}
+section{padding:56px 0}
+h2{font-size:clamp(24px,4.5vw,34px);color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.01em}
+.sub{font-size:17px;color:#46617A;max-width:620px}
+
+/* top bar */
+.topbar{background:var(--navy);color:var(--ice);font-size:14px;padding:8px 0}
+.topbar .wrap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.topbar a{color:#fff;font-weight:700;text-decoration:none}
+
+/* nav */
+nav{background:#fff;border-bottom:3px solid var(--flame);position:sticky;top:0;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);font-weight:900;font-size:21px;letter-spacing:-.01em}
+.nav .btn{min-height:42px;padding:9px 16px;font-size:13px}
+
+/* hero split */
+.hero{background:linear-gradient(120deg,var(--navy) 55%,var(--steel));color:#fff;padding:0}
+.hero-grid{display:grid;gap:0}
+@media(min-width:860px){.hero-grid{grid-template-columns:1.2fr 1fr}}
+.hero-copy{padding:64px 20px}
+@media(min-width:860px){.hero-copy{padding:76px 40px 76px 20px;max-width:640px;margin-left:auto}}
+.hero h1{font-size:clamp(32px,6vw,50px);line-height:1.06;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:16px}
+.hero h1 span{color:var(--sky)}
+.hero p{font-size:18px;color:var(--ice);margin-bottom:26px;max-width:480px}
+.emer-panel{background:var(--flame);display:flex;flex-direction:column;justify-content:center;padding:36px 24px;gap:14px}
+@media(min-width:860px){.emer-panel{padding:36px 40px 36px 32px}}
+.emer-panel h2{color:#fff;font-size:24px;margin:0}
+.emer-panel p{color:#FFE0D6;font-size:16px}
+.emer-panel .big-call{display:flex;align-items:center;justify-content:center;background:#fff;color:var(--flame);font-size:24px;font-weight:900;padding:16px;border-radius:6px;text-decoration:none}
+.emer-panel small{color:#FFE0D6;text-align:center;font-size:13.5px}
+
+/* services */
+.svc-grid{display:grid;gap:16px;margin-top:28px}
+@media(min-width:640px){.svc-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:960px){.svc-grid{grid-template-columns:repeat(4,1fr)}}
+.svc{background:#fff;border-top:4px solid var(--sky);box-shadow:0 2px 8px rgba(14,42,63,.08);padding:22px}
+.svc h3{color:var(--navy);font-size:17px;margin-bottom:6px;text-transform:uppercase}
+.svc p{font-size:14.5px;color:#46617A}
+
+/* maintenance */
+.maint{background:var(--navy);color:var(--ice)}
+.maint h2{color:#fff}
+.maint-grid{display:grid;gap:26px;margin-top:26px}
+@media(min-width:860px){.maint-grid{grid-template-columns:1fr 1fr;align-items:center}}
+.maint ul{list-style:none;display:grid;gap:12px;margin:18px 0 24px}
+.maint li{display:flex;gap:10px;font-size:16px}
+.maint li svg{flex-shrink:0;margin-top:4px}
+.maint-price{background:var(--steel);border:1px solid rgba(219,239,251,.3);border-radius:8px;padding:30px;text-align:center}
+.maint-price .amt{font-size:52px;font-weight:900;color:#fff}
+.maint-price .amt small{font-size:18px;color:var(--ice)}
+.maint-price p{margin:8px 0 20px;font-size:15px}
+
+/* financing */
+.fin{background:var(--ice)}
+.fin-box{background:#fff;border-left:6px solid var(--flame);padding:28px;box-shadow:0 2px 8px rgba(14,42,63,.08);display:grid;gap:18px;margin-top:24px}
+@media(min-width:760px){.fin-box{grid-template-columns:1fr auto;align-items:center}}
+.fin-box strong{font-size:20px;color:var(--navy)}
+.fin-box p{font-size:15.5px;color:#46617A;margin-top:6px}
+
+/* form */
+.book{background:#fff}
+form{display:grid;gap:12px;margin-top:22px;max-width:540px}
+@media(min-width:640px){form{grid-template-columns:1fr 1fr}form .full{grid-column:1/-1}}
+input,select,textarea{width:100%;padding:13px;border:1px solid #B9CEDE;border-radius:4px;font-size:16px;font-family:inherit}
+label{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--navy)}
+
+/* reviews */
+.revs{background:var(--off)}
+.rev-grid{display:grid;gap:16px;margin-top:26px}
+@media(min-width:760px){.rev-grid{grid-template-columns:repeat(3,1fr)}}
+.rev{background:#fff;box-shadow:0 2px 8px rgba(14,42,63,.08);padding:22px;border-radius:6px}
+.stars{color:#F0A500;letter-spacing:2px;margin-bottom:8px}
+.rev p{font-size:15px;margin-bottom:10px}
+.rev strong{font-size:14px;color:var(--navy)}
+
+/* areas */
+.meta .cols{display:grid;gap:28px;margin-top:20px}
+@media(min-width:760px){.meta .cols{grid-template-columns:2fr 1fr}}
+.areas{display:flex;flex-wrap:wrap;gap:8px}
+.areas span{background:#fff;border:1px solid #B9CEDE;padding:6px 14px;font-size:14px;border-radius:3px}
+.hours td{padding:4px 14px 4px 0;font-size:15px}
+
+footer{background:var(--navy);color:#8FB2CC;padding:36px 0 108px;font-size:14.5px}
+@media(min-width:720px){footer{padding-bottom:36px}}
+footer a{color:var(--ice)}
+
+.callbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--navy)}
+@media(min-width:720px){.callbar{display:none}}
+.callbar .btn{flex:1;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span>24/7 emergency service, all of Queens</span>
+    <a href="tel:7185550198">(718) 555-0198</a>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#0E2A3F"/><path d="M12 5c2 3 4 4.5 4 7a4 4 0 11-8 0c0-2.5 2-4 4-7z" fill="#F2542D"/><path d="M12 10.5c.9 1.3 1.7 2 1.7 3.1a1.7 1.7 0 11-3.4 0c0-1.1.8-1.8 1.7-3.1z" fill="#DBEFFB"/></svg>
+      ATLAS
+    </a>
+    <a class="btn btn-flame" href="tel:7185550198">Call 24/7</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1>No heat.<br>No AC.<br><span>No waiting.</span></h1>
+      <p>Atlas Heating &amp; Air repairs furnaces, boilers, and AC units across Queens, day or night. Most repairs done on the first visit — our trucks carry the parts.</p>
+      <a class="btn btn-flame" href="tel:7185550198">Call (718) 555-0198</a>
+    </div>
+    <div class="emer-panel">
+      <h2>Emergency right now?</h2>
+      <p>Heat out in February. AC dead in a heat wave. We answer at 3am.</p>
+      <a class="big-call" href="tel:7185550198">(718) 555-0198</a>
+      <small>Average response time in Queens: under 90 minutes</small>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>What we fix and install</h2>
+    <p class="sub">Repairs first. If a repair makes sense, we do the repair. Replacement gets recommended when the math says so, not before.</p>
+    <div class="svc-grid">
+      <div class="svc"><h3>AC repair</h3><p>Central air, ductless mini-splits, through-wall units. Refrigerant, compressors, boards.</p></div>
+      <div class="svc"><h3>Heating repair</h3><p>Furnaces, steam and hot-water boilers, thermostats, zone valves.</p></div>
+      <div class="svc"><h3>New installs</h3><p>Full system replacement, sized right for your house — not oversold.</p></div>
+      <div class="svc"><h3>Ductless splits</h3><p>Room-by-room heating and cooling for houses without ductwork.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="maint" id="maintenance">
+  <div class="wrap">
+    <h2>The Atlas Comfort Agreement</h2>
+    <div class="maint-grid">
+      <div>
+        <p style="font-size:17px">Systems that get tuned twice a year break down less and last years longer. Members skip the emergency line — they go to the front of it.</p>
+        <ul>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4DA8DA" stroke-width="3" stroke-linecap="round"/></svg>Spring AC tune-up + fall heating tune-up</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4DA8DA" stroke-width="3" stroke-linecap="round"/></svg>15% off all repairs, parts and labor</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4DA8DA" stroke-width="3" stroke-linecap="round"/></svg>Priority scheduling — members jump the line</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4DA8DA" stroke-width="3" stroke-linecap="round"/></svg>No overtime charges, ever</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#4DA8DA" stroke-width="3" stroke-linecap="round"/></svg>Filter changes included at every visit</li>
+        </ul>
+      </div>
+      <div class="maint-price">
+        <div class="amt">$19<small>/mo</small></div>
+        <p>Per system. Cancel anytime. Pays for itself with one avoided breakdown.</p>
+        <a class="btn btn-flame btn-block" href="tel:7185550198">Join by phone</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fin">
+  <div class="wrap">
+    <h2>Replacing a system?</h2>
+    <div class="fin-box">
+      <div>
+        <strong>Financing available on installs from $5,000 to $15,000</strong>
+        <p>A new furnace or central air system is a real expense. Approved customers pay monthly instead of all at once — we'll walk you through the numbers before any work starts, in writing.</p>
+      </div>
+      <a class="btn btn-navy" href="tel:7185550198">Ask about financing</a>
+    </div>
+  </div>
+</section>
+
+<section class="book">
+  <div class="wrap">
+    <h2>Book a visit</h2>
+    <p class="sub">Not an emergency? Pick a day that works. We confirm by text.</p>
+    <form onsubmit="alert('Thanks! We\'ll text you to confirm your appointment.');return false;">
+      <div><label for="h-name">Name</label><input id="h-name" type="text" required></div>
+      <div><label for="h-phone">Phone</label><input id="h-phone" type="tel" required></div>
+      <div><label for="h-issue">What's going on?</label>
+        <select id="h-issue"><option>No heat</option><option>No AC</option><option>Strange noise / smell</option><option>Tune-up / maintenance</option><option>Replacement quote</option></select>
+      </div>
+      <div><label for="h-day">Preferred day</label><input id="h-day" type="date"></div>
+      <div class="full"><label for="h-notes">Notes</label><textarea id="h-notes" rows="3"></textarea></div>
+      <div class="full"><button class="btn btn-flame btn-block" type="submit">Request Appointment</button></div>
+    </form>
+  </div>
+</section>
+
+<section class="revs">
+  <div class="wrap">
+    <h2>Queens keeps calling us back</h2>
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Boiler died on a Friday night in January. Tech was at my door in Astoria by 9pm and had heat running before midnight."</p>
+        <strong>Rosa M., Astoria</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Two other companies said replace the whole unit. Atlas fixed a $340 board and my AC has run two summers since."</p>
+        <strong>James T., Forest Hills</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"The financing made a $9,800 furnace replacement doable. Everything in writing, no surprises on the final bill."</p>
+        <strong>Priya S., Fresh Meadows</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="meta">
+  <div class="wrap">
+    <h2>Service area &amp; hours</h2>
+    <div class="cols">
+      <div>
+        <div class="areas">
+          <span>Astoria</span><span>Long Island City</span><span>Sunnyside</span><span>Woodside</span><span>Jackson Heights</span><span>Elmhurst</span><span>Forest Hills</span><span>Rego Park</span><span>Flushing</span><span>Fresh Meadows</span><span>Bayside</span><span>Ridgewood</span>
+        </div>
+        <p style="margin-top:16px;font-size:15px">
+          <a href="https://maps.google.com/?q=35-11+36th+Ave+Astoria+NY" style="color:var(--steel);font-weight:700">35-11 36th Ave, Astoria, NY 11106 — Get directions</a>
+        </p>
+      </div>
+      <div>
+        <table class="hours">
+          <tr><td>Office</td><td>Mon–Sat, 7am–6pm</td></tr>
+          <tr><td>Emergency</td><td>24/7, every day</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:#fff">Atlas Heating &amp; Air</strong> · 35-11 36th Ave, Astoria, NY 11106</p>
+    <p style="margin-top:6px"><a href="tel:7185550198">(718) 555-0198</a> · Licensed &amp; insured · NYC Master HVAC license</p>
+    <p style="margin-top:12px;font-size:13px">© 2026 Atlas Heating &amp; Air. Demo site by UI Designs Co.</p>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-flame" href="tel:7185550198">Call 24/7</a>
+  <a class="btn btn-ghost" href="https://maps.google.com/?q=35-11+36th+Ave+Astoria+NY">Directions</a>
+</div>
+
+</body>
+</html>

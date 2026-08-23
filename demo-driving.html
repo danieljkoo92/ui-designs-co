@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunrise Driving School — English · 한국어 · 中文 | Flushing, Queens</title>
+<meta name="description" content="Learn to drive in English, Korean, or Chinese. 5-hour pre-licensing course, road test car rental, patient licensed instructors. Flushing, Queens. (718) 555-0198.">
+<style>
+:root{--cream:#FDF3E3;--red:#B0413E;--red-dark:#8E312F;--teal:#2A6F6B;--sun:#E9B44C;--ink:#3A2E2A;--card:#FFFDF8}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",-apple-system,"Malgun Gothic","Microsoft YaHei",sans-serif;background:var(--cream);color:var(--ink);line-height:1.65}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 26px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;border:none;font-family:inherit}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-dark)}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-line{background:transparent;color:var(--red);border:2px solid var(--red)}
+.btn-block{display:flex;width:100%}
+section{padding:54px 0}
+h2{font-size:clamp(24px,4.5vw,34px);color:var(--red);margin-bottom:10px}
+.sub{font-size:16.5px;color:#6B5B54;max-width:580px}
+
+/* nav */
+nav{background:var(--card);border-bottom:3px solid var(--red);position:sticky;top:0;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;color:var(--red);text-decoration:none}
+.lang{display:flex;gap:4px;background:var(--cream);border-radius:10px;padding:4px}
+.lang button{border:none;background:transparent;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer;color:var(--ink);min-height:40px;font-family:inherit}
+.lang button.on{background:var(--red);color:#fff}
+
+/* hero */
+.hero{padding:60px 0 52px;background:radial-gradient(circle at 85% 15%,rgba(233,180,76,.35),transparent 45%),var(--cream)}
+.hero-grid{display:grid;gap:30px;align-items:center}
+@media(min-width:820px){.hero-grid{grid-template-columns:1.15fr .85fr}}
+.hero h1{font-size:clamp(30px,5.5vw,44px);line-height:1.14;margin-bottom:14px;color:var(--ink)}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:17.5px;color:#6B5B54;margin-bottom:24px}
+.hero-card{background:var(--card);border:2px solid var(--sun);border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(58,46,42,.10)}
+.hero-card h3{color:var(--teal);font-size:18px;margin-bottom:12px}
+.hero-card ul{list-style:none;display:grid;gap:9px}
+.hero-card li{padding-left:26px;position:relative;font-size:15px}
+.hero-card li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:900}
+
+/* packages */
+.pack{background:var(--card)}
+.pack-grid{display:grid;gap:18px;margin-top:26px}
+@media(min-width:820px){.pack-grid{grid-template-columns:repeat(3,1fr)}}
+.pkg{border:2px solid #EAD9BF;border-radius:16px;padding:26px;display:flex;flex-direction:column;background:var(--cream)}
+.pkg.best{border-color:var(--red);background:#fff}
+.pkg .pk-badge{display:inline-block;background:var(--sun);color:var(--ink);font-size:12px;font-weight:800;border-radius:99px;padding:4px 12px;margin-bottom:10px;width:fit-content}
+.pkg h3{font-size:19px;margin-bottom:4px}
+.pkg .amt{font-size:34px;font-weight:800;color:var(--red);margin:6px 0}
+.pkg ul{list-style:none;display:grid;gap:8px;margin:10px 0 20px;flex:1}
+.pkg li{padding-left:24px;position:relative;font-size:14.5px}
+.pkg li::before{content:"•";position:absolute;left:6px;color:var(--red);font-weight:900}
+
+/* services */
+.svc-grid{display:grid;gap:14px;margin-top:26px}
+@media(min-width:640px){.svc-grid{grid-template-columns:1fr 1fr}}
+.svc{background:var(--card);border-radius:14px;padding:20px 22px;border-left:5px solid var(--teal)}
+.svc h3{font-size:17px;color:var(--teal);margin-bottom:4px}
+.svc p{font-size:14.5px;color:#6B5B54}
+
+/* form */
+.book{background:var(--teal);color:#EAF4F3}
+.book h2{color:#fff}
+form{display:grid;gap:12px;margin-top:22px;max-width:520px}
+input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #EAD9BF;font-size:16px;font-family:inherit}
+label{font-size:14px;font-weight:700}
+
+/* reviews */
+.rev-grid{display:grid;gap:16px;margin-top:26px}
+@media(min-width:760px){.rev-grid{grid-template-columns:repeat(3,1fr)}}
+.rev{background:var(--card);border:2px solid #EAD9BF;border-radius:14px;padding:22px}
+.stars{color:var(--sun);letter-spacing:2px;margin-bottom:8px}
+.rev p{font-size:15px;margin-bottom:10px}
+.rev strong{font-size:14px;color:var(--teal)}
+
+/* meta */
+.meta{background:var(--card)}
+.meta .cols{display:grid;gap:28px;margin-top:20px}
+@media(min-width:760px){.meta .cols{grid-template-columns:2fr 1fr}}
+.areas{display:flex;flex-wrap:wrap;gap:8px}
+.areas span{background:var(--cream);border:1px solid #EAD9BF;border-radius:99px;padding:6px 14px;font-size:14px}
+.hours td{padding:4px 14px 4px 0;font-size:15px}
+
+footer{background:var(--ink);color:#C9BBB2;padding:36px 0 108px;font-size:14.5px}
+@media(min-width:720px){footer{padding-bottom:36px}}
+footer a{color:var(--sun)}
+
+.callbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:3px solid var(--red)}
+@media(min-width:720px){.callbar{display:none}}
+.callbar .btn{flex:1;font-size:14.5px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#E9B44C"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3" stroke="#B0413E" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="#B0413E"/></svg>
+      <span data-i18n="brand">Sunrise Driving School</span>
+    </a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="on" id="lang-en" onclick="setLang('en')">EN</button>
+      <button type="button" id="lang-ko" onclick="setLang('ko')">한국어</button>
+      <button type="button" id="lang-zh" onclick="setLang('zh')">中文</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <h1><span data-i18n="heroTitle1">Learn to drive in</span> <span data-i18n="heroTitle2">your language.</span></h1>
+      <p data-i18n="heroSub">Patient, licensed instructors who teach in English, Korean, and Chinese. From your permit to your license, we handle every step — including the car for your road test.</p>
+      <a class="btn btn-red" href="tel:7185550198" data-i18n="heroCta">Call (718) 555-0198</a>
+    </div>
+    <div class="hero-card">
+      <h3 data-i18n="cardTitle">Everything you need to pass</h3>
+      <ul>
+        <li data-i18n="card1">5-hour pre-licensing course (required for your road test)</li>
+        <li data-i18n="card2">Driving lessons in the language you think in</li>
+        <li data-i18n="card3">Road test car rental — instructor drives you there</li>
+        <li data-i18n="card4">We schedule your road test for you</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section class="pack" id="packages">
+  <div class="wrap">
+    <h2 data-i18n="packTitle">Lesson packages</h2>
+    <p class="sub" data-i18n="packSub">Every lesson is 45 minutes, one-on-one, in a dual-brake car. Pick up from home, school, or the subway.</p>
+    <div class="pack-grid">
+      <div class="pkg">
+        <h3 data-i18n="p1Name">Starter</h3>
+        <div class="amt">$199</div>
+        <ul>
+          <li data-i18n="p1a">3 driving lessons</li>
+          <li data-i18n="p1b">Good for a first-time feel of the road</li>
+          <li data-i18n="p1c">Instructor progress notes after each lesson</li>
+        </ul>
+        <a class="btn btn-line btn-block" href="tel:7185550198" data-i18n="pkgCta">Book by phone</a>
+      </div>
+      <div class="pkg best">
+        <span class="pk-badge" data-i18n="bestBadge">Most popular</span>
+        <h3 data-i18n="p2Name">Road Test Ready</h3>
+        <div class="amt">$549</div>
+        <ul>
+          <li data-i18n="p2a">8 driving lessons</li>
+          <li data-i18n="p2b">5-hour pre-licensing course included</li>
+          <li data-i18n="p2c">Road test scheduling done for you</li>
+          <li data-i18n="p2d">Road test car rental included</li>
+        </ul>
+        <a class="btn btn-red btn-block" href="tel:7185550198" data-i18n="pkgCta2">Book by phone</a>
+      </div>
+      <div class="pkg">
+        <h3 data-i18n="p3Name">Zero to License</h3>
+        <div class="amt">$899</div>
+        <ul>
+          <li data-i18n="p3a">15 driving lessons</li>
+          <li data-i18n="p3b">Everything in Road Test Ready</li>
+          <li data-i18n="p3c">Highway and night driving practice</li>
+          <li data-i18n="p3d">Free re-test rental if you don't pass</li>
+        </ul>
+        <a class="btn btn-line btn-block" href="tel:7185550198" data-i18n="pkgCta3">Book by phone</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="svcTitle">Services</h2>
+    <div class="svc-grid">
+      <div class="svc"><h3 data-i18n="s1t">5-hour pre-licensing course</h3><p data-i18n="s1d">NY requires it before any road test. We run it weekly, in all three languages. Certificate issued same day.</p></div>
+      <div class="svc"><h3 data-i18n="s2t">Road test car rental</h3><p data-i18n="s2d">Use our insured, dual-brake car for the test. Your instructor drives you to the site and stays until you're done.</p></div>
+      <div class="svc"><h3 data-i18n="s3t">Nervous beginner lessons</h3><p data-i18n="s3d">Never touched a wheel? We start in empty lots, no honking, no pressure. Many of our students began exactly there.</p></div>
+      <div class="svc"><h3 data-i18n="s4t">License holders from abroad</h3><p data-i18n="s4d">Already drove in Korea or China? Short refresher course focused on NY road rules and test habits.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="book">
+  <div class="wrap">
+    <h2 data-i18n="formTitle">Book your first lesson</h2>
+    <p data-i18n="formSub">Leave your number and we'll call you back in your language.</p>
+    <form onsubmit="alert(I18N[LANG].formOk);return false;">
+      <div><label for="d-name" data-i18n="fName">Name</label><input id="d-name" type="text" required></div>
+      <div><label for="d-phone" data-i18n="fPhone">Phone</label><input id="d-phone" type="tel" required></div>
+      <div><label for="d-lang" data-i18n="fLang">Preferred language</label>
+        <select id="d-lang"><option>English</option><option>한국어</option><option>中文</option></select>
+      </div>
+      <button class="btn btn-red btn-block" type="submit" data-i18n="fBtn">Request a Call Back</button>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="revTitle">Students who passed</h2>
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p data-i18n="r1">"My mother is 52 and only speaks Korean. Mr. Park taught her from zero and she passed on her first try. She cried in the parking lot."</p>
+        <strong>Jenny K., Murray Hill</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p data-i18n="r2">"The instructor explained everything in Mandarin, then made me practice the exact road test route in College Point. Passed with two points off."</p>
+        <strong>Wei L., Flushing</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p data-i18n="r3">"Failed twice with another school. One lesson here and they found the problem — my parallel parking setup. Passed the next week using their car."</p>
+        <strong>Andre P., Corona</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="meta">
+  <div class="wrap">
+    <h2 data-i18n="areaTitle">Pick-up areas &amp; hours</h2>
+    <div class="cols">
+      <div>
+        <div class="areas">
+          <span>Flushing</span><span>Murray Hill</span><span>College Point</span><span>Whitestone</span><span>Bayside</span><span>Fresh Meadows</span><span>Corona</span><span>Elmhurst</span><span>Jackson Heights</span><span>Forest Hills</span>
+        </div>
+        <p style="margin-top:16px;font-size:15px">
+          <a href="https://maps.google.com/?q=136-20+38th+Ave+Flushing+NY" style="color:var(--teal);font-weight:700" data-i18n="dirLink">136-20 38th Ave, Flushing, NY 11354 — Get directions</a>
+        </p>
+      </div>
+      <div>
+        <table class="hours">
+          <tr><td data-i18n="hWk">Mon–Fri</td><td>9am – 8pm</td></tr>
+          <tr><td data-i18n="hSat">Sat–Sun</td><td>8am – 6pm</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:#fff" data-i18n="brand2">Sunrise Driving School</strong> · 136-20 38th Ave, Flushing, NY 11354</p>
+    <p style="margin-top:6px"><a href="tel:7185550198">(718) 555-0198</a> · <span data-i18n="ftLic">NYS DMV-licensed instructors</span></p>
+    <p style="margin-top:12px;font-size:13px">© 2026 Sunrise Driving School. Demo site by UI Designs Co.</p>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-red" href="tel:7185550198" data-i18n="barCall">Call</a>
+  <a class="btn btn-teal" href="#packages" data-i18n="barPkg">Packages</a>
+</div>
+
+<script>
+var I18N={
+en:{
+brand:"Sunrise Driving School",brand2:"Sunrise Driving School",
+heroTitle1:"Learn to drive in",heroTitle2:"your language.",
+heroSub:"Patient, licensed instructors who teach in English, Korean, and Chinese. From your permit to your license, we handle every step — including the car for your road test.",
+heroCta:"Call (718) 555-0198",
+cardTitle:"Everything you need to pass",
+card1:"5-hour pre-licensing course (required for your road test)",
+card2:"Driving lessons in the language you think in",
+card3:"Road test car rental — instructor drives you there",
+card4:"We schedule your road test for you",
+packTitle:"Lesson packages",
+packSub:"Every lesson is 45 minutes, one-on-one, in a dual-brake car. Pick up from home, school, or the subway.",
+p1Name:"Starter",p1a:"3 driving lessons",p1b:"Good for a first-time feel of the road",p1c:"Instructor progress notes after each lesson",
+bestBadge:"Most popular",
+p2Name:"Road Test Ready",p2a:"8 driving lessons",p2b:"5-hour pre-licensing course included",p2c:"Road test scheduling done for you",p2d:"Road test car rental included",
+p3Name:"Zero to License",p3a:"15 driving lessons",p3b:"Everything in Road Test Ready",p3c:"Highway and night driving practice",p3d:"Free re-test rental if you don't pass",
+pkgCta:"Book by phone",pkgCta2:"Book by phone",pkgCta3:"Book by phone",
+svcTitle:"Services",
+s1t:"5-hour pre-licensing course",s1d:"NY requires it before any road test. We run it weekly, in all three languages. Certificate issued same day.",
+s2t:"Road test car rental",s2d:"Use our insured, dual-brake car for the test. Your instructor drives you to the site and stays until you're done.",
+s3t:"Nervous beginner lessons",s3d:"Never touched a wheel? We start in empty lots, no honking, no pressure. Many of our students began exactly there.",
+s4t:"License holders from abroad",s4d:"Already drove in Korea or China? Short refresher course focused on NY road rules and test habits.",
+formTitle:"Book your first lesson",formSub:"Leave your number and we'll call you back in your language.",
+fName:"Name",fPhone:"Phone",fLang:"Preferred language",fBtn:"Request a Call Back",
+formOk:"Thanks! We'll call you back in your language.",
+revTitle:"Students who passed",
+r1:"\"My mother is 52 and only speaks Korean. Mr. Park taught her from zero and she passed on her first try. She cried in the parking lot.\"",
+r2:"\"The instructor explained everything in Mandarin, then made me practice the exact road test route in College Point. Passed with two points off.\"",
+r3:"\"Failed twice with another school. One lesson here and they found the problem — my parallel parking setup. Passed the next week using their car.\"",
+areaTitle:"Pick-up areas & hours",
+dirLink:"136-20 38th Ave, Flushing, NY 11354 — Get directions",
+hWk:"Mon–Fri",hSat:"Sat–Sun",
+ftLic:"NYS DMV-licensed instructors",
+barCall:"Call",barPkg:"Packages"
+},
+ko:{
+brand:"선라이즈 운전학원",brand2:"선라이즈 운전학원",
+heroTitle1:"운전, 편한 언어로",heroTitle2:"배우세요.",
+heroSub:"영어, 한국어, 중국어로 가르치는 인내심 있는 공인 강사진. 연습면허부터 정식면허까지 모든 단계를 도와드립니다 — 도로주행 시험용 차량 대여까지.",
+heroCta:"전화 (718) 555-0198",
+cardTitle:"합격에 필요한 모든 것",
+card1:"5시간 사전면허 교육 (도로주행 시험 필수)",
+card2:"생각하는 언어 그대로 배우는 운전 수업",
+card3:"도로주행 시험 차량 대여 — 강사가 시험장까지 동행",
+card4:"도로주행 시험 예약도 저희가 대신 해드립니다",
+packTitle:"수업 패키지",
+packSub:"모든 수업은 45분 1:1이며 보조 브레이크 차량으로 진행합니다. 집, 학교, 지하철역 픽업 가능.",
+p1Name:"스타터",p1a:"운전 수업 3회",p1b:"처음 도로 감각을 익히기에 적합",p1c:"수업마다 강사의 진도 메모 제공",
+bestBadge:"최다 선택",
+p2Name:"시험 준비반",p2a:"운전 수업 8회",p2b:"5시간 사전면허 교육 포함",p2c:"도로주행 시험 예약 대행",p2d:"시험 차량 대여 포함",
+p3Name:"제로에서 면허까지",p3a:"운전 수업 15회",p3b:"시험 준비반 혜택 전부 포함",p3c:"고속도로 및 야간 주행 연습",p3d:"불합격 시 재시험 차량 무료",
+pkgCta:"전화 예약",pkgCta2:"전화 예약",pkgCta3:"전화 예약",
+svcTitle:"서비스",
+s1t:"5시간 사전면허 교육",s1d:"뉴욕주 도로주행 시험 전 필수 과정입니다. 매주 3개 언어로 진행하며 수료증은 당일 발급됩니다.",
+s2t:"시험 차량 대여",s2d:"보험 가입된 보조 브레이크 차량으로 시험을 보세요. 강사가 시험장까지 운전해 데려다주고 끝날 때까지 함께합니다.",
+s3t:"왕초보 수업",s3d:"핸들을 잡아본 적이 없어도 괜찮습니다. 빈 주차장에서 시작합니다. 경적도, 압박도 없습니다.",
+s4t:"해외 면허 소지자",s4d:"한국이나 중국에서 운전하셨나요? 뉴욕 도로 규칙과 시험 요령 중심의 단기 과정이 있습니다.",
+formTitle:"첫 수업 예약",formSub:"전화번호를 남겨주시면 한국어로 다시 연락드립니다.",
+fName:"이름",fPhone:"전화번호",fLang:"선호 언어",fBtn:"전화 요청하기",
+formOk:"감사합니다! 한국어로 다시 연락드리겠습니다.",
+revTitle:"합격한 수강생들",
+r1:"\"52세 어머니는 한국어만 하십니다. 박 선생님이 처음부터 가르쳐 주셨고 한 번에 합격하셨어요. 주차장에서 우셨습니다.\"",
+r2:"\"강사님이 중국어로 전부 설명해 주시고 College Point 실제 시험 코스로 연습시켜 주셨어요. 감점 2점으로 합격했습니다.\"",
+r3:"\"다른 학원에서 두 번 떨어졌는데 여기서 한 번 수업받고 문제를 찾았어요 — 평행주차 준비 자세였습니다. 다음 주에 이 학원 차로 합격했습니다.\"",
+areaTitle:"픽업 지역 및 운영시간",
+dirLink:"136-20 38th Ave, Flushing, NY 11354 — 길찾기",
+hWk:"월–금",hSat:"토–일",
+ftLic:"뉴욕주 DMV 공인 강사",
+barCall:"전화",barPkg:"패키지"
+},
+zh:{
+brand:"日升驾驶学校",brand2:"日升驾驶学校",
+heroTitle1:"用您的语言",heroTitle2:"学开车。",
+heroSub:"耐心的持牌教练，用英语、韩语和中文授课。从学习许可证到正式驾照，每一步我们都帮您安排 — 包括路考用车。",
+heroCta:"致电 (718) 555-0198",
+cardTitle:"通过考试所需的一切",
+card1:"5小时预备课程（路考必修）",
+card2:"用您最熟悉的语言上驾驶课",
+card3:"路考租车 — 教练开车送您到考场",
+card4:"路考预约由我们代办",
+packTitle:"课程套餐",
+packSub:"每节课45分钟，一对一，双刹车教练车。可从家、学校或地铁站接您。",
+p1Name:"入门",p1a:"3节驾驶课",p1b:"适合第一次上路熟悉感觉",p1c:"每节课后教练提供进度记录",
+bestBadge:"最受欢迎",
+p2Name:"路考冲刺",p2a:"8节驾驶课",p2b:"含5小时预备课程",p2c:"代办路考预约",p2d:"含路考租车",
+p3Name:"从零到驾照",p3a:"15节驾驶课",p3b:"含路考冲刺全部内容",p3c:"高速公路和夜间驾驶练习",p3d:"未通过可免费再次租车补考",
+pkgCta:"电话预约",pkgCta2:"电话预约",pkgCta3:"电话预约",
+svcTitle:"服务项目",
+s1t:"5小时预备课程",s1d:"纽约州规定路考前必须完成。每周开课，三种语言授课，证书当天发放。",
+s2t:"路考租车",s2d:"用我们投保的双刹车教练车参加考试。教练开车送您到考场，全程陪同直到结束。",
+s3t:"零基础课程",s3d:"从没摸过方向盘？我们从空停车场开始。没有喇叭声，没有压力。",
+s4t:"海外驾照持有者",s4d:"在中国或韩国开过车？我们有针对纽约交规和考试习惯的短期强化课程。",
+formTitle:"预约第一节课",formSub:"留下电话，我们会用中文给您回电。",
+fName:"姓名",fPhone:"电话",fLang:"首选语言",fBtn:"请求回电",
+formOk:"谢谢！我们会用中文给您回电。",
+revTitle:"通过考试的学员",
+r1:"\"我妈妈52岁，只会说韩语。朴教练从零教起，她一次就通过了。她在停车场哭了。\"",
+r2:"\"教练用普通话讲解一切，还带我在College Point的真实考试路线上练习。只扣了两分就通过了。\"",
+r3:"\"在别的驾校挂了两次。这里上了一节课就找到了问题 — 我侧方停车的起始位置。第二周用他们的车通过了。\"",
+areaTitle:"接送区域及营业时间",
+dirLink:"136-20 38th Ave, Flushing, NY 11354 — 查看路线",
+hWk:"周一至周五",hSat:"周六周日",
+ftLic:"纽约州DMV持牌教练",
+barCall:"致电",barPkg:"套餐"
+}
+};
+var LANG='en';
+function setLang(l){
+  LANG=l;
+  var dict=I18N[l];
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n');
+    if(dict[k])el.textContent=dict[k];
+  });
+  ['en','ko','zh'].forEach(function(x){
+    document.getElementById('lang-'+x).classList.toggle('on',x===l);
+  });
+  document.documentElement.lang=(l==='en'?'en':(l==='ko'?'ko':'zh'));
+}
+</script>
+</body>
+</html>

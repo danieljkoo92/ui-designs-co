@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenShield Pest Control — Queens, NY | Quarterly Protection Plans</title>
+<meta name="description" content="Bed bugs, roaches, rodents handled fast. Quarterly protection plans from $49/mo. Serving Flushing, Bayside, Jamaica and all of Queens. Call (718) 555-0198.">
+<style>
+:root{--green:#12351F;--green-mid:#1E5631;--leaf:#7BB661;--pale:#E8F5E0;--white:#FAFDF7;--dark:#16211A;--alert:#D64518}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Georgia,"Times New Roman",serif;background:var(--white);color:var(--dark);line-height:1.65}
+h1,h2,h3,.btn,.nav,.plan-price,.tag{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1020px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 24px;border-radius:6px;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;border:none}
+.btn-green{background:var(--green-mid);color:#fff}
+.btn-green:hover{background:var(--green)}
+.btn-alert{background:var(--alert);color:#fff}
+.btn-white{background:#fff;color:var(--green);border:2px solid var(--green)}
+.btn-block{display:flex;width:100%}
+section{padding:56px 0}
+h2{font-size:clamp(24px,4.5vw,34px);color:var(--green);margin-bottom:10px}
+
+/* emergency banner */
+.emer{background:var(--alert);color:#fff;padding:12px 0;font-family:Arial,sans-serif}
+.emer .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;text-align:center;font-size:15px;font-weight:700}
+.emer a{color:#fff}
+
+/* nav */
+nav{background:var(--green);position:sticky;top:0;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav .brand{color:var(--pale);font-weight:800;font-size:19px;text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav .btn{min-height:42px;padding:9px 16px;font-size:14px}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--green) 0%,var(--green-mid) 100%);color:var(--pale);padding:60px 0}
+.hero h1{font-size:clamp(30px,6vw,46px);line-height:1.12;color:#fff;margin-bottom:14px}
+.hero p{font-size:18px;max-width:540px;margin-bottom:24px}
+.hero .cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.emer-cards{display:grid;gap:12px;margin-top:34px}
+@media(min-width:680px){.emer-cards{grid-template-columns:repeat(3,1fr)}}
+.emer-card{background:rgba(255,255,255,.1);border:1px solid rgba(232,245,224,.35);border-radius:10px;padding:16px 18px}
+.emer-card strong{display:block;color:#fff;font-family:Arial,sans-serif;font-size:17px;margin-bottom:4px}
+.emer-card span{font-size:14.5px}
+
+/* plans */
+.plans{background:var(--pale)}
+.tag{text-transform:uppercase;letter-spacing:.1em;font-size:12.5px;font-weight:700;color:var(--green-mid);margin-bottom:8px}
+.plan-row{display:grid;gap:18px;margin-top:28px}
+@media(min-width:820px){.plan-row{grid-template-columns:repeat(3,1fr)}}
+.plan{background:#fff;border-radius:12px;padding:26px;border:1px solid #CFE3C4;display:flex;flex-direction:column}
+.plan.hot{border:3px solid var(--green-mid)}
+.plan h3{color:var(--green);font-size:20px}
+.plan-price{font-size:34px;font-weight:800;color:var(--dark);margin:6px 0 2px}
+.plan-price small{font-size:15px;font-weight:600;color:#5A6B58}
+.plan p.sub{font-size:14px;color:#5A6B58;margin-bottom:14px}
+.plan ul{list-style:none;display:grid;gap:8px;margin-bottom:20px;flex:1}
+.plan li{padding-left:22px;position:relative;font-size:15px}
+.plan li::before{content:"";position:absolute;left:0;top:8px;width:10px;height:10px;border-radius:50%;background:var(--leaf)}
+
+/* services */
+.svc-grid{display:grid;gap:14px;margin-top:26px}
+@media(min-width:640px){.svc-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:920px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+.svc{border-left:4px solid var(--leaf);background:#fff;border-radius:0 10px 10px 0;padding:16px 18px;box-shadow:0 1px 4px rgba(22,33,26,.07)}
+.svc strong{font-family:Arial,sans-serif;color:var(--green);display:block;margin-bottom:3px}
+.svc span{font-size:14.5px;color:#4A5A48}
+
+/* form */
+.quote{background:var(--green);color:var(--pale)}
+.quote h2{color:#fff}
+form{display:grid;gap:12px;margin-top:24px;max-width:520px}
+input,select,textarea{width:100%;padding:13px 14px;border-radius:6px;border:1px solid #CFE3C4;font-size:16px;font-family:Arial,sans-serif;background:#fff;color:var(--dark)}
+label{font-size:14px;font-weight:700;font-family:Arial,sans-serif}
+
+/* reviews */
+.rev-grid{display:grid;gap:16px;margin-top:26px}
+@media(min-width:760px){.rev-grid{grid-template-columns:repeat(3,1fr)}}
+.rev{background:#fff;border:1px solid #DDE8D5;border-radius:10px;padding:20px}
+.stars{color:#E0A526;letter-spacing:2px;font-size:15px;margin-bottom:8px}
+.rev p{font-size:15px;font-style:italic;margin-bottom:10px}
+.rev strong{font-family:Arial,sans-serif;font-size:14px;color:var(--green)}
+
+/* areas + hours */
+.meta{background:var(--pale)}
+.meta .cols{display:grid;gap:28px;margin-top:20px}
+@media(min-width:760px){.meta .cols{grid-template-columns:2fr 1fr}}
+.areas{display:flex;flex-wrap:wrap;gap:8px}
+.areas span{background:#fff;border:1px solid #CFE3C4;border-radius:99px;padding:6px 14px;font-size:14px;font-family:Arial,sans-serif}
+.hours td{padding:4px 14px 4px 0;font-size:15px}
+
+footer{background:var(--dark);color:#A9BCA6;padding:36px 0 108px;font-family:Arial,sans-serif;font-size:14.5px}
+@media(min-width:720px){footer{padding-bottom:36px}}
+footer a{color:var(--pale)}
+
+.callbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:2px solid var(--green-mid)}
+@media(min-width:720px){.callbar{display:none}}
+.callbar .btn{flex:1;font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="emer">
+  <div class="wrap">
+    <span>Bed bugs? Roaches? Rodents? Same-day emergency service:</span>
+    <a href="tel:7185550198">(718) 555-0198</a>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" fill="#7BB661"/><path d="M12 6v12M8 10c0 3 1.5 5 4 6 2.5-1 4-3 4-6" stroke="#12351F" stroke-width="1.6" fill="none"/></svg>
+      GreenShield Pest Control
+    </a>
+    <a class="btn btn-alert" href="tel:7185550198">Call Now</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Pests come back.<br>We make sure they don't.</h1>
+    <p>Family-run pest control serving Queens since 2011. One treatment kills what you see. Our quarterly plan keeps them from coming back — guaranteed between visits.</p>
+    <div class="cta-row">
+      <a class="btn btn-alert" href="tel:7185550198">Emergency: Call (718) 555-0198</a>
+      <a class="btn btn-white" href="#plans">See Protection Plans</a>
+    </div>
+    <div class="emer-cards">
+      <div class="emer-card"><strong>Bed bugs</strong><span>Heat + chemical treatment, follow-up inspection included.</span></div>
+      <div class="emer-card"><strong>Roaches</strong><span>German roach cleanouts for kitchens and apartments.</span></div>
+      <div class="emer-card"><strong>Rodents</strong><span>Trapping, removal, and entry-point sealing.</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="plans" id="plans">
+  <div class="wrap">
+    <p class="tag">Protection plans</p>
+    <h2>Quarterly protection beats emergency calls</h2>
+    <p style="max-width:600px">A one-time treatment fixes today. A plan means we're back every season, before the ants, mice, and waterbugs are. Between-visit callbacks are free on every plan.</p>
+    <div class="plan-row">
+      <div class="plan">
+        <h3>Home Basic</h3>
+        <div class="plan-price">$49<small>/mo</small></div>
+        <p class="sub">Houses and single apartments</p>
+        <ul>
+          <li>4 seasonal visits a year</li>
+          <li>Ants, roaches, mice, waterbugs, spiders</li>
+          <li>Free callbacks between visits</li>
+          <li>No contract — cancel anytime</li>
+        </ul>
+        <a class="btn btn-green btn-block" href="tel:7185550198">Start with a call</a>
+      </div>
+      <div class="plan hot">
+        <h3>Home Plus</h3>
+        <div class="plan-price">$79<small>/mo</small></div>
+        <p class="sub">Our most popular plan</p>
+        <ul>
+          <li>Everything in Basic</li>
+          <li>Rodent stations, exterior barrier</li>
+          <li>Wasp &amp; hornet nest removal</li>
+          <li>Priority same-day scheduling</li>
+        </ul>
+        <a class="btn btn-green btn-block" href="tel:7185550198">Start with a call</a>
+      </div>
+      <div class="plan">
+        <h3>Business</h3>
+        <div class="plan-price">$129<small>/mo</small></div>
+        <p class="sub">Restaurants, delis, salons, offices</p>
+        <ul>
+          <li>Monthly service visits</li>
+          <li>Health-inspection-ready logbook</li>
+          <li>Discreet unmarked vehicles</li>
+          <li>After-hours service available</li>
+        </ul>
+        <a class="btn btn-green btn-block" href="tel:7185550198">Start with a call</a>
+      </div>
+    </div>
+    <p style="margin-top:18px;font-size:15px">Just need one visit? One-time treatments start at $175. We'll tell you honestly which makes sense for your situation.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="tag">What we handle</p>
+    <h2>Every pest Queens throws at you</h2>
+    <div class="svc-grid">
+      <div class="svc"><strong>Bed bugs</strong><span>Inspection, treatment, and a follow-up visit to confirm they're gone.</span></div>
+      <div class="svc"><strong>Roaches</strong><span>German and American roach cleanouts, gel baiting, crack-and-crevice work.</span></div>
+      <div class="svc"><strong>Mice &amp; rats</strong><span>Trapping, bait stations, and sealing the holes they came in through.</span></div>
+      <div class="svc"><strong>Ants</strong><span>Colony treatment, not just spraying the trail you can see.</span></div>
+      <div class="svc"><strong>Wasps &amp; hornets</strong><span>Nest removal from eaves, decks, and play areas.</span></div>
+      <div class="svc"><strong>Termites</strong><span>Inspections and treatment plans, with reports for home sales.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="wrap">
+    <h2>Get a free quote</h2>
+    <p>Tell us what you're seeing. We'll call back within the hour during business hours.</p>
+    <form action="tel:7185550198" method="get" onsubmit="alert('Thanks! We\'ll call you back within the hour during business hours.');return false;">
+      <div><label for="p-name">Name</label><input id="p-name" type="text" name="name" required></div>
+      <div><label for="p-phone">Phone</label><input id="p-phone" type="tel" name="phone" required></div>
+      <div><label for="p-pest">What are you seeing?</label>
+        <select id="p-pest" name="pest">
+          <option>Bed bugs</option><option>Roaches</option><option>Mice or rats</option><option>Ants</option><option>Wasps / hornets</option><option>Termites</option><option>Not sure</option>
+        </select>
+      </div>
+      <div><label for="p-notes">Anything else</label><textarea id="p-notes" rows="3" name="notes"></textarea></div>
+      <button class="btn btn-alert btn-block" type="submit">Request My Free Quote</button>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="tag">Reviews</p>
+    <h2>Neighbors who called us</h2>
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Found roaches in my Flushing apartment on a Tuesday, they were here Wednesday morning. Three weeks on the plan and I haven't seen one since."</p>
+        <strong>Maria G., Flushing</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"They sealed two holes behind my stove the mice were using. Other companies just put down traps and left. Worth every dollar."</p>
+        <strong>Devon W., Jamaica</strong>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"I run a deli on Northern Blvd. Their logbook got me through my health inspection without a single pest violation."</p>
+        <strong>Sam K., Bayside</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="meta">
+  <div class="wrap">
+    <h2>Where and when</h2>
+    <div class="cols">
+      <div>
+        <p class="tag">Service areas</p>
+        <div class="areas">
+          <span>Flushing</span><span>Bayside</span><span>Jamaica</span><span>Astoria</span><span>Elmhurst</span><span>Forest Hills</span><span>Fresh Meadows</span><span>Whitestone</span><span>College Point</span><span>Corona</span><span>Rego Park</span><span>Woodside</span>
+        </div>
+        <p style="margin-top:16px;font-size:15px">
+          <a href="https://maps.google.com/?q=147-32+Northern+Blvd+Flushing+NY" style="color:var(--green-mid);font-weight:700">147-32 Northern Blvd, Flushing, NY 11354 — Get directions</a>
+        </p>
+      </div>
+      <div>
+        <p class="tag">Hours</p>
+        <table class="hours">
+          <tr><td>Mon–Fri</td><td>7am – 7pm</td></tr>
+          <tr><td>Saturday</td><td>8am – 5pm</td></tr>
+          <tr><td>Sunday</td><td>Emergencies only</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:#fff">GreenShield Pest Control</strong> · 147-32 Northern Blvd, Flushing, NY 11354</p>
+    <p style="margin-top:6px"><a href="tel:7185550198">(718) 555-0198</a> · Licensed &amp; insured, NYS DEC certified applicators</p>
+    <p style="margin-top:12px;font-size:13px">© 2026 GreenShield Pest Control. Demo site by UI Designs Co.</p>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-alert" href="tel:7185550198">Call Now</a>
+  <a class="btn btn-green" href="#plans">Plans</a>
+</div>
+
+</body>
+</html>
