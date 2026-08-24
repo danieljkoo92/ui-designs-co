@@ -92,6 +92,8 @@ module.exports = async function handler(req, res) {
     });
 
     if (!apiRes.ok) {
+      const detail = await apiRes.text();
+      console.error('anthropic error', apiRes.status, detail.slice(0, 500));
       res.status(502).json({ error: 'upstream' });
       return;
     }
