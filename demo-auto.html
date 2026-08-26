@@ -15,65 +15,72 @@
   --edge:#232A35;
   --steel:#8C97A6;
   --white:#F2F5F9;
-  --ember:#F97316;
-  --ember-dark:#DC5A0B;
+  --ember:#D9A441;
+  --ember-dark:#B8862C;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--void);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-.skip{position:absolute;left:-9999px;top:0;background:var(--ember);color:#fff;padding:10px 16px;z-index:200}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ember);color:#0A0C10;padding:10px 16px;z-index:200}
 .skip:focus{left:0}
 h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
 .wrap{max-width:1100px;width:100%;margin:0 auto;padding:0 22px}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 28px;background:var(--ember);color:#fff;text-decoration:none;font-weight:700;font-size:16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 28px;background:var(--ember);color:#0A0C10;text-decoration:none;font-weight:700;font-size:16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
 .btn:hover{background:var(--ember-dark);transform:translateY(-4px) scale(1.02)}
 .btn-ghost{background:transparent;border:1px solid var(--steel);color:var(--white)}
 .btn-ghost:hover{background:var(--panel)}
 .kicker{text-transform:uppercase;letter-spacing:.2em;font-size:12px;font-weight:700;color:var(--ember);margin-bottom:14px}
-
-/* fixed 3D stage behind acts 1-3 */
-#stage{position:fixed;inset:0;z-index:0;pointer-events:none}
-#stage canvas{width:100%;height:100%;display:block}
-.act{position:relative;z-index:1}
 
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;background:linear-gradient(to bottom,rgba(10,12,16,.85),transparent);backdrop-filter:blur(2px)}
 header .wrap{display:flex;justify-content:space-between;align-items:center}
 .logo{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:21px;color:var(--white);text-decoration:none;letter-spacing:.02em}
 .logo em{font-style:italic;color:var(--ember)}
-header a.call{color:var(--white);text-decoration:none;font-weight:700;font-size:15px;border:1px solid var(--edge);border-radius:6px;padding:10px 16px;min-height:44px;display:inline-flex;align-items:center}
+header a.call{color:var(--white);text-decoration:none;font-weight:700;font-size:15px;border:1px solid var(--edge);border-radius:6px;padding:10px 16px;min-height:44px;display:inline-flex;align-items:center;background:rgba(10,12,16,.5)}
 header a.call:hover{border-color:var(--ember)}
 
-/* act 1 hero */
-.hero{min-height:100vh;display:flex;align-items:flex-end;padding-bottom:12vh}
-.hero h1{font-size:clamp(52px,11vw,128px);line-height:.98;font-weight:800;letter-spacing:-.02em}
+/* act 1 hero — the wreck */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;padding-bottom:10vh;overflow:hidden}
+.hero .bg{position:absolute;inset:-6% 0;background:url(img/car-wrecked.jpg) center 40%/cover no-repeat;z-index:0;will-change:transform}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.95) 8%,rgba(10,12,16,.45) 45%,rgba(10,12,16,.35));z-index:1}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-size:clamp(52px,11vw,128px);line-height:.98;font-weight:800;letter-spacing:-.02em;text-shadow:0 4px 30px rgba(0,0,0,.6)}
 .hero h1 .ch{display:inline-block}
 .hero h1 em{font-style:italic;color:var(--ember)}
-.hero p{margin:22px 0 30px;font-size:19px;color:var(--steel);max-width:460px}
+.hero p{margin:22px 0 30px;font-size:19px;color:#C3CAD4;max-width:460px;text-shadow:0 2px 12px rgba(0,0,0,.8)}
 .hero .row{display:flex;gap:14px;flex-wrap:wrap}
 
-/* act 2 damage */
-.damage{min-height:100vh;display:flex;align-items:center}
-.damage .copy{max-width:420px;background:rgba(10,12,16,.55);backdrop-filter:blur(6px);border:1px solid var(--edge);border-radius:10px;padding:30px}
-.damage h2{font-size:clamp(30px,5vw,44px);line-height:1.1;margin-bottom:12px}
-.damage p{color:var(--steel);font-size:16px}
-.damage .meter{margin-top:22px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden}
+/* act 2 damage wipe — pinned */
+.damage{position:relative;min-height:100vh;overflow:hidden}
+.damage .layer{position:absolute;inset:0;background-position:center 42%;background-size:cover;background-repeat:no-repeat}
+.damage .wrecked{background-image:url(img/car-wrecked.jpg)}
+.damage .fixed{background-image:url(img/car-pristine.jpg);clip-path:inset(0 100% 0 0);will-change:clip-path}
+.damage .seam{position:absolute;top:0;bottom:0;width:2px;background:var(--ember);box-shadow:0 0 22px rgba(217,164,65,.9);left:0%;opacity:0;will-change:left}
+.damage .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.9) 4%,transparent 40%)}
+.damage .copy{position:absolute;left:0;right:0;bottom:7vh}
+.damage .card{max-width:420px;background:rgba(10,12,16,.72);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:10px;padding:26px 30px}
+.damage h2{font-size:clamp(28px,4.5vw,40px);line-height:1.1;margin-bottom:10px}
+.damage p{color:var(--steel);font-size:15.5px}
+.damage .meter{margin-top:18px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden}
 .damage .meter i{display:block;height:100%;width:0;background:var(--ember)}
 .damage .label{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-top:8px}
 
-/* act 3 paint */
-.paint{min-height:90vh;display:flex;align-items:center}
-.paint .copy{max-width:420px;margin-left:auto;background:rgba(10,12,16,.55);backdrop-filter:blur(6px);border:1px solid var(--edge);border-radius:10px;padding:30px}
-.paint h2{font-size:clamp(30px,5vw,44px);line-height:1.1;margin-bottom:12px}
-.paint p{color:var(--steel);font-size:16px;margin-bottom:20px}
-.swatches{display:flex;gap:14px}
-.swatch{width:52px;height:52px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;pointer-events:auto;display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px;font-size:0;transition:transform .25s,border-color .25s}
+/* act 3 paint bay */
+.paint{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--void)}
+.paint .bg{position:absolute;inset:0;background:url(img/car-pristine.jpg) center 42%/cover no-repeat;transition:filter .6s ease;will-change:filter}
+.paint .shade{position:absolute;inset:0;background:linear-gradient(to right,transparent 40%,rgba(10,12,16,.88) 75%)}
+.paint .wrap{position:relative;z-index:2}
+.paint .copy{max-width:400px;margin-left:auto;background:rgba(10,12,16,.72);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:10px;padding:28px}
+.paint h2{font-size:clamp(28px,4.5vw,40px);line-height:1.1;margin-bottom:12px}
+.paint p{color:var(--steel);font-size:15.5px;margin-bottom:20px}
+.swatches{display:flex;gap:14px;flex-wrap:wrap}
+.swatch-col{display:flex;flex-direction:column;align-items:center}
+.swatch{width:52px;height:52px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;font-size:0;transition:transform .25s,border-color .25s}
 .swatch:hover,.swatch:focus-visible{transform:translateY(-4px) scale(1.02);border-color:var(--white)}
 .swatch[aria-pressed="true"]{border-color:var(--ember)}
 .swatch-name{font-size:12px;color:var(--steel);margin-top:8px;text-align:center}
-.swatch-col{display:flex;flex-direction:column;align-items:center}
 
-/* solid sections after the 3D acts */
+/* solid sections */
 .solid{background:var(--void);position:relative;z-index:2;border-top:1px solid var(--edge)}
 section.pad{padding:96px 0}
 .process h2,.proof h2,.book h2{font-size:clamp(30px,5vw,46px);margin-bottom:10px}
@@ -110,7 +117,7 @@ section.pad{padding:96px 0}
 .hours li{display:flex;justify-content:space-between;max-width:280px;padding:4px 0;border-bottom:1px dashed var(--edge)}
 .areas{font-size:14px;color:var(--steel);line-height:1.8}
 
-footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);font-size:14px;position:relative;z-index:2;background:var(--void)}
+footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);font-size:14px;background:var(--void)}
 @media(min-width:720px){footer{padding-bottom:40px}}
 
 .sticky-call{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,12,16,.92);backdrop-filter:blur(6px);border-top:1px solid var(--edge);display:flex;gap:10px}
@@ -118,12 +125,20 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 @media(min-width:720px){.sticky-call{display:none}}
 
 .reveal{opacity:0;transform:translateY(24px)}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none}
+  .damage .fixed{clip-path:none}
+}
+@media(max-width:767px){
+  .hero .bg{background-position:35% 40%}
+  .damage .layer{background-position:38% 42%}
+  .paint .bg{background-position:38% 42%}
+  .paint .shade{background:linear-gradient(to top,rgba(10,12,16,.92) 30%,transparent 70%)}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#process">Skip to content</a>
-<div id="stage" aria-hidden="true"></div>
 
 <header>
   <div class="wrap">
@@ -132,7 +147,9 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
   </div>
 </header>
 
-<section class="act hero" id="top">
+<section class="hero" id="top">
+  <div class="bg" id="heroBg" role="img" aria-label="A wrecked black and gold supercar on a wet track"></div>
+  <div class="shade"></div>
   <div class="wrap">
     <p class="kicker reveal">Collision repair · Astoria, Queens</p>
     <h1 id="headline">Bring it <em>back.</em></h1>
@@ -144,29 +161,37 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
   </div>
 </section>
 
-<section class="act damage" id="repair">
-  <div class="wrap">
-    <div class="copy">
-      <p class="kicker">The work</p>
-      <h2>Every panel. Every line.</h2>
-      <p>Keep scrolling — that's the repair. Dents pulled, panels trued, paint cut and polished until the light runs straight down the body again.</p>
-      <div class="meter"><i id="meter"></i></div>
-      <div class="label"><span>Arrived</span><span>Delivered</span></div>
+<section class="damage" id="repair" aria-label="Scroll to see the car repaired from wrecked to restored">
+  <div class="layer wrecked"></div>
+  <div class="layer fixed" id="fixedLayer"></div>
+  <div class="seam" id="seam"></div>
+  <div class="shade"></div>
+  <div class="copy">
+    <div class="wrap">
+      <div class="card">
+        <p class="kicker">The work</p>
+        <h2>Every panel. Every line.</h2>
+        <p>Keep scrolling — that's the repair. Dents pulled, panels trued, paint cut and polished until the light runs straight down the body again.</p>
+        <div class="meter"><i id="meter"></i></div>
+        <div class="label"><span>Arrived</span><span>Delivered</span></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="act paint" id="paint">
+<section class="paint" id="paint">
+  <div class="bg" id="paintBg"></div>
+  <div class="shade"></div>
   <div class="wrap">
     <div class="copy">
       <p class="kicker">The paint bay</p>
       <h2>Factory match, or better.</h2>
-      <p>Computerized color match, full-body respray, ceramic clearcoat. Tap a finish — that's the actual paint model we mix from.</p>
-      <div class="swatches" role="group" aria-label="Paint finishes">
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)" data-color="#2563EB" aria-pressed="true" aria-label="Estoril Blue">Estoril Blue</button><span class="swatch-name">Estoril Blue</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#3A4149,#14181D)" data-color="#232A33" aria-pressed="false" aria-label="Graphite">Graphite</button><span class="swatch-name">Graphite</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#EF4444,#991B1B)" data-color="#B91C1C" aria-pressed="false" aria-label="Rosso Red">Rosso Red</button><span class="swatch-name">Rosso Red</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E5E7EB,#9CA3AF)" data-color="#C8CDD4" aria-pressed="false" aria-label="Alpine Silver">Alpine Silver</button><span class="swatch-name">Alpine Silver</span></div>
+      <p>Computerized color match, full-body respray, ceramic clearcoat. Tap a finish and watch the accents change.</p>
+      <div class="swatches" role="group" aria-label="Accent finishes">
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E8C25A,#9A7420)" data-filter="none" aria-pressed="true" aria-label="Factory Gold">Factory Gold</button><span class="swatch-name">Factory Gold</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#4E9EF0,#1D4ED8)" data-filter="hue-rotate(185deg) saturate(1.25)" aria-pressed="false" aria-label="Sapphire">Sapphire</button><span class="swatch-name">Sapphire</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E45858,#8E1B1B)" data-filter="hue-rotate(-28deg) saturate(1.5)" aria-pressed="false" aria-label="Rosso">Rosso</button><span class="swatch-name">Rosso</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E5E7EB,#8B9199)" data-filter="saturate(.15) brightness(1.08)" aria-pressed="false" aria-label="Ghost Silver">Ghost Silver</button><span class="swatch-name">Ghost Silver</span></div>
       </div>
     </div>
   </div>
@@ -191,17 +216,16 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
   <div class="wrap">
     <p class="kicker reveal">Proof</p>
     <h2 class="reveal">Astoria has opinions. Here are three.</h2>
-    <p class="sub reveal"></p>
-    <div class="reviews">
+    <div class="reviews" style="margin-top:44px">
       <div class="review reveal"><div class="stars">★★★★★</div><p>"Rear-ended on the Grand Central. Ironside handled the GEICO claim, found frame damage the adjuster missed, and had my Camry back in eight days. Panel gaps are perfect."</p><div class="who">Maria G. — Astoria</div></div>
       <div class="review reveal"><div class="stars">★★★★★</div><p>"Door and quarter panel respray on a black 3-series. Black is the hardest color to match and I cannot find the blend line. Wish I'd found this shop years ago."</p><div class="who">Devon W. — Long Island City</div></div>
       <div class="review reveal"><div class="stars">★★★★★</div><p>"Hit a pole backing out, felt like an idiot, expected to get gouged. Got a straight price, daily photo updates, and the bumper looks new. Honest shop."</p><div class="who">Sam K. — Jackson Heights</div></div>
     </div>
     <div class="badges">
-      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>I-CAR Gold Class</span>
-      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Insurance approved — all carriers</span>
-      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Lifetime warranty</span>
-      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Free estimates</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg>I-CAR Gold Class</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg>Insurance approved — all carriers</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg>Lifetime warranty</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg>Free estimates</span>
     </div>
   </div>
 </section>
@@ -235,7 +259,7 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 </section>
 
 <footer>
-  <div class="wrap">© 2026 Ironside Collision · Astoria, NY · <a href="tel:+17185550142" style="color:var(--steel)">(718) 555-0142</a></div>
+  <div class="wrap">© 2026 Ironside Collision · Astoria, NY · <a href="tel:+17185550142" style="color:var(--steel)">(718) 555-0142</a> · Demo vehicle is a concept render, not a production car.</div>
 </footer>
 </div>
 
@@ -246,242 +270,49 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-
+<script>
+gsap.registerPlugin(ScrollTrigger);
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
-const isMobile = matchMedia('(max-width: 767px)').matches || 'ontouchstart' in window;
-let reduced = mq.matches;
-mq.addEventListener('change', e => { reduced = e.matches; applyMotionState(); });
+let triggers = [];
 
-/* ---------- scene ---------- */
-const stage = document.getElementById('stage');
-const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.5 : 2));
-renderer.setSize(innerWidth, innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-stage.appendChild(renderer.domElement);
-
-const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x0a0c10, 14, 30);
-const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, .1, 60);
-camera.position.set(5.6, 1.25, 7.0);
-camera.lookAt(0, .5, 0);
-
-scene.add(new THREE.HemisphereLight(0x4a5c74, 0x080a0e, 1.4));
-const key = new THREE.SpotLight(0xffffff, 520, 40, .6, .45);
-key.position.set(6, 9, 4); key.castShadow = true;
-key.shadow.mapSize.set(1024, 1024);
-scene.add(key);
-const rim = new THREE.SpotLight(0xf97316, 45, 40, .7, .6);
-rim.position.set(-7, 6, -6);
-rim.target.position.set(0, 1, 0); scene.add(rim.target);
-scene.add(rim);
-const fill = new THREE.DirectionalLight(0x93c5fd, .9);
-fill.position.set(-4, 2, 6);
-scene.add(fill);
-
-// ground: dark disc + canvas radial contact shadow
-const shadowCanvas = document.createElement('canvas');
-shadowCanvas.width = shadowCanvas.height = 256;
-const sctx = shadowCanvas.getContext('2d');
-const grad = sctx.createRadialGradient(128,128,20,128,128,128);
-grad.addColorStop(0,'rgba(0,0,0,.85)'); grad.addColorStop(1,'rgba(0,0,0,0)');
-sctx.fillStyle = grad; sctx.fillRect(0,0,256,256);
-const shadowTex = new THREE.CanvasTexture(shadowCanvas);
-const ground = new THREE.Mesh(
-  new THREE.CircleGeometry(16, 48),
-  new THREE.MeshStandardMaterial({ color: 0x0d1016, roughness: .35, metalness: .6 })
-);
-ground.rotation.x = -Math.PI/2; ground.receiveShadow = true;
-scene.add(ground);
-const contact = new THREE.Mesh(
-  new THREE.PlaneGeometry(7.5, 4),
-  new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
-);
-contact.rotation.x = -Math.PI/2; contact.position.y = .01;
-scene.add(contact);
-
-/* ---------- car (procedural: extruded side profile) ---------- */
-const car = new THREE.Group();
-const paintMat = new THREE.MeshPhysicalMaterial({
-  color: 0x2563EB, metalness: .85, roughness: .28,
-  clearcoat: 1, clearcoatRoughness: .12
-});
-const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x0c1420, metalness: .2, roughness: .05, clearcoat: 1 });
-const trimMat = new THREE.MeshStandardMaterial({ color: 0x14181d, roughness: .6, metalness: .4 });
-
-// side silhouette, hypercar: low splitter nose -> long hood -> cab-forward canopy -> teardrop tail
-const s = new THREE.Shape();
-s.moveTo(-2.75, .1);                           // splitter tip
-s.lineTo(-2.72, .3);                           // nose face
-s.quadraticCurveTo(-2.3, .42, -1.5, .52);      // long low hood
-s.quadraticCurveTo(-.75, .6, -.45, .98);       // steep windshield, cab forward
-s.quadraticCurveTo(-.05, 1.16, .45, 1.12);     // canopy peak
-s.quadraticCurveTo(1.3, .95, 2.1, .72);        // long falling tail deck
-s.lineTo(2.65, .62);                           // tail lip
-s.quadraticCurveTo(2.75, .5, 2.68, .3);        // kamm tail face
-s.lineTo(2.5, .14);
-s.lineTo(-2.6, .08);
-s.closePath();
-const bodyGeo = new THREE.ExtrudeGeometry(s, { depth: 1.95, bevelEnabled: true, bevelThickness: .13, bevelSize: .13, bevelSegments: 5, curveSegments: 20 });
-bodyGeo.translate(0, 0, -1.95/2);
-const body = new THREE.Mesh(bodyGeo, paintMat);
-body.castShadow = true;
-car.add(body);
-
-// canopy glass (fighter-jet bubble over the cab)
-const g = new THREE.Shape();
-g.moveTo(-.55, .8);
-g.quadraticCurveTo(-.15, 1.1, .4, 1.06);
-g.quadraticCurveTo(.95, .96, 1.25, .78);
-g.closePath();
-const glassGeo = new THREE.ExtrudeGeometry(g, { depth: 1.35, bevelEnabled: true, bevelThickness: .07, bevelSize: .07, bevelSegments: 4 });
-glassGeo.translate(0, .05, -1.35/2);
-const glass = new THREE.Mesh(glassGeo, glassMat);
-car.add(glass);
-
-// rear wing on struts + shark fin
-const wingMat = trimMat;
-const wing = new THREE.Mesh(new THREE.BoxGeometry(.5, .05, 2.25), wingMat);
-wing.position.set(2.45, 1.28, 0); wing.rotation.z = .1; wing.castShadow = true;
-car.add(wing);
-const endL = new THREE.Mesh(new THREE.BoxGeometry(.34, .2, .04), wingMat);
-endL.position.set(2.45, 1.22, 1.11); endL.rotation.z = .1;
-const endR = endL.clone(); endR.position.z = -1.11;
-car.add(endL, endR);
-[[.8], [-.8]].forEach(([z]) => {
-  const strut = new THREE.Mesh(new THREE.BoxGeometry(.3, .55, .05), wingMat);
-  strut.position.set(2.42, .95, z); strut.rotation.z = .18;
-  car.add(strut);
-});
-const finShape = new THREE.Shape();
-finShape.moveTo(.5, 1.05); finShape.quadraticCurveTo(1.5, 1.05, 2.55, 1.26);
-finShape.lineTo(2.55, .6); finShape.lineTo(.6, .9); finShape.closePath();
-const fin = new THREE.Mesh(new THREE.ExtrudeGeometry(finShape, { depth: .05, bevelEnabled: false }), wingMat);
-fin.position.z = -.025;
-car.add(fin);
-
-// wheels — bigger at the rear, pushed to the corners
-const hubMat = new THREE.MeshStandardMaterial({ color: 0x9aa4b0, metalness: .95, roughness: .25 });
-[[-1.85, 1, .38], [1.75, 1, .44], [-1.85, -1, .38], [1.75, -1, .44]].forEach(([x, side, r]) => {
-  const wheelGeo = new THREE.CylinderGeometry(r, r, .34, 28);
-  wheelGeo.rotateX(Math.PI/2);
-  const hubGeo = new THREE.CylinderGeometry(r * .5, r * .5, .36, 20);
-  hubGeo.rotateX(Math.PI/2);
-  const w = new THREE.Mesh(wheelGeo, trimMat);
-  w.position.set(x, r, side * 1.0); w.castShadow = true;
-  const h = new THREE.Mesh(hubGeo, hubMat);
-  h.position.copy(w.position);
-  car.add(w, h);
-});
-car.position.y = .0;
-scene.add(car);
-
-/* ---------- damage morph (displace nose verts, lerp back on scroll) ---------- */
-const pos = bodyGeo.attributes.position;
-const orig = pos.array.slice();
-const dented = pos.array.slice();
-for (let i = 0; i < pos.count; i++) {
-  const x = orig[i*3], y = orig[i*3+1], z = orig[i*3+2];
-  if (x < -1.55 && y > .15) { // front end
-    const f = Math.min(1, (-x - 1.55) / .9);
-    const n = Math.sin(y * 21 + z * 13) * .5 + Math.sin(x * 17) * .5;
-    dented[i*3]   += f * (.18 + .07 * n);
-    dented[i*3+1] -= f * (.05 + .03 * n);
-    dented[i*3+2] += f * .07 * n;
-  }
-}
-const damagedColor = new THREE.Color(0x39434f);
-const paintedColor = new THREE.Color(0x2563EB);
-let damage = reduced ? 0 : 1;
-function applyDamage(t) { // t: 1 = wrecked, 0 = restored
-  damage = t;
-  for (let i = 0; i < pos.array.length; i++)
-    pos.array[i] = orig[i] + (dented[i] - orig[i]) * t;
-  pos.needsUpdate = true;
-  bodyGeo.computeVertexNormals();
-  paintMat.color.copy(paintedColor).lerp(damagedColor, t);
-  paintMat.roughness = .28 + t * .55;
-  paintMat.clearcoat = 1 - t * .85;
-  requestRender();
-}
-
-/* ---------- render loop: continuous on desktop, on-demand on mobile ---------- */
-let needsRender = true, rafActive = false;
-function requestRender() { needsRender = true; if (!rafActive) tick(); }
-let t0 = performance.now();
-function tick() {
-  rafActive = true;
-  requestAnimationFrame(tick);
-  const t = performance.now();
-  if (!reduced && !isMobile) {
-    car.rotation.y = 3.6 + Math.sin(t * .00012) * .3;
-    needsRender = true;
-  } else if (car.rotation.y !== 3.6) { car.rotation.y = 3.6; needsRender = true; }
-  if (needsRender) { renderer.render(scene, camera); needsRender = false; }
-}
-tick();
-
-// cursor parallax (desktop, motion allowed)
-if (!isMobile) {
-  addEventListener('pointermove', e => {
-    if (reduced) return;
-    const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
-    gsap.to(camera.position, { x: 5.6 + nx * .8, y: 1.25 - ny * .4, duration: .8, ease: 'power2.out', onUpdate: () => { camera.lookAt(0,.5,0); requestRender(); } });
-  });
-}
-
-addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-  requestRender();
-  ScrollTrigger.refresh();
-});
-addEventListener('pagehide', () => { shadowTex.dispose(); renderer.dispose(); });
-
-/* ---------- paint swap ---------- */
+/* paint bay accent swap */
 document.querySelectorAll('.swatch').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', 'false'));
     btn.setAttribute('aria-pressed', 'true');
-    paintedColor.set(btn.dataset.color);
-    const target = new THREE.Color(btn.dataset.color).lerp(damagedColor, damage);
-    gsap.to(paintMat.color, { r: target.r, g: target.g, b: target.b, duration: .6, ease: 'power2.out', onUpdate: requestRender });
-    gsap.fromTo(paintMat, { clearcoatRoughness: .5 }, { clearcoatRoughness: .12, duration: .9, onUpdate: requestRender });
+    document.getElementById('paintBg').style.filter = btn.dataset.filter;
   });
 });
 
-/* ---------- GSAP ---------- */
-gsap.registerPlugin(ScrollTrigger);
-let triggers = [];
+/* headline char split (once) */
+const h = document.getElementById('headline');
+h.innerHTML = 'Bring it <em>back.</em>';
+(function wrapChars(node) {
+  [...node.childNodes].forEach(c => {
+    if (c.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      c.textContent.split('').forEach(ch => {
+        const sp = document.createElement('span');
+        sp.className = 'ch'; sp.textContent = ch === ' ' ? ' ' : ch;
+        frag.appendChild(sp);
+      });
+      node.replaceChild(frag, c);
+    } else wrapChars(c);
+  });
+})(h);
+
 function buildMotion() {
   triggers.forEach(t => t.kill()); triggers = [];
-  // hero headline char split (build once)
-  const h = document.getElementById('headline');
-  if (!h.dataset.split) {
-    h.dataset.split = '1';
-    h.innerHTML = h.textContent.replace(/back\./, '') === h.textContent ? h.innerHTML : h.innerHTML;
-    h.innerHTML = 'Bring it <em>back.</em>';
-    const wrapChars = node => {
-      [...node.childNodes].forEach(c => {
-        if (c.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          c.textContent.split('').forEach(ch => {
-            const sp = document.createElement('span');
-            sp.className = 'ch'; sp.textContent = ch === ' ' ? ' ' : ch;
-            frag.appendChild(sp);
-          });
-          node.replaceChild(frag, c);
-        } else wrapChars(c);
-      });
-    };
-    wrapChars(h);
+  const meter = document.getElementById('meter');
+  const fixedLayer = document.getElementById('fixedLayer');
+  const seam = document.getElementById('seam');
+  if (mq.matches) {
+    fixedLayer.style.clipPath = 'none';
+    seam.style.opacity = 0;
+    meter.style.width = '100%';
+    gsap.set('#headline .ch', { opacity: 1, y: 0 });
+    return;
   }
-  if (reduced) { applyDamage(0); document.getElementById('meter').style.width = '100%'; return; }
-
   gsap.fromTo('#headline .ch', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out', stagger: .04, delay: .15 });
   gsap.utils.toArray('.reveal').forEach(el => {
     triggers.push(ScrollTrigger.create({
@@ -489,37 +320,32 @@ function buildMotion() {
       animation: gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
     }));
   });
-  // damage scrub — pinned; car drifts right so it clears the copy card
-  const dmg = { t: 1 };
-  applyDamage(1);
-  const dmgTl = gsap.timeline();
-  dmgTl.to(dmg, {
-    t: 0, ease: 'none',
-    onUpdate: () => { applyDamage(dmg.t); document.getElementById('meter').style.width = ((1 - dmg.t) * 100) + '%'; }
-  }, 0);
-  dmgTl.to(car.position, { x: 2.1, ease: 'none', onUpdate: requestRender, duration: .3 }, 0);
+  // hero parallax (decorative bg only)
+  triggers.push(ScrollTrigger.create({
+    trigger: '#top', start: 'top top', end: 'bottom top', scrub: true,
+    animation: gsap.to('#heroBg', { yPercent: 12, ease: 'none' })
+  }));
+  // damage wipe — pinned scrub, wrecked -> restored left to right
+  const wipe = { p: 0 };
   triggers.push(ScrollTrigger.create({
     trigger: '#repair', start: 'top top', end: '+=150%', pin: true, scrub: 1,
-    animation: dmgTl
-  }));
-  // camera drift into paint bay; car slides left to clear the right-hand card
-  const paintTl = gsap.timeline();
-  paintTl.to(camera.position, { x: -3.8, y: 1.2, z: 7.4, ease: 'none', onUpdate: () => { camera.lookAt(car.position.x * .6, .55, 0); requestRender(); } }, 0);
-  paintTl.to(car.position, { x: -1.6, ease: 'none', onUpdate: requestRender }, 0);
-  triggers.push(ScrollTrigger.create({
-    trigger: '#paint', start: 'top bottom', end: 'top top', scrub: 1,
-    animation: paintTl
-  }));
-  // fade stage out after paint
-  triggers.push(ScrollTrigger.create({
-    trigger: '.solid', start: 'top 80%', end: 'top 20%', scrub: true,
-    animation: gsap.to('#stage', { opacity: 0, ease: 'none' })
+    animation: gsap.to(wipe, {
+      p: 1, ease: 'none',
+      onUpdate: () => {
+        const pct = wipe.p * 100;
+        fixedLayer.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        seam.style.left = pct + '%';
+        seam.style.opacity = wipe.p > .01 && wipe.p < .99 ? 1 : 0;
+        meter.style.width = pct + '%';
+      }
+    })
   }));
 }
-function applyMotionState() { buildMotion(); ScrollTrigger.refresh(); }
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
 buildMotion();
-requestRender();
+const imgs = ['img/car-wrecked.jpg', 'img/car-pristine.jpg'].map(src => { const i = new Image(); i.src = src; return i; });
+Promise.all(imgs.map(i => i.decode().catch(() => {}))).then(() => ScrollTrigger.refresh());
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
 </body>
 </html>
