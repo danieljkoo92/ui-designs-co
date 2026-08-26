@@ -62,6 +62,13 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
 .cloud .fly{position:absolute;width:clamp(150px,22vw,300px);aspect-ratio:3/2;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.7)}
 .cloud .fly img{width:100%;height:100%;object-fit:cover;object-position:top}
 .act .tagline{position:relative;z-index:2;font-family:"Playfair Display",Georgia,serif;font-size:clamp(24px,3.4vw,44px);font-weight:700;text-shadow:0 4px 30px rgba(0,0,0,.95)}
+/* industry cuts */
+.cutslide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;visibility:hidden}
+.cutslide.show{opacity:1;visibility:visible}
+.cutslide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.88) 6%,transparent 45%)}
+.cutwrap{position:absolute;left:0;right:0;bottom:12vh;text-align:center;z-index:2}
+.cutwrap .k{display:block;letter-spacing:.24em;font-size:12px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+.cutwrap .t{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:clamp(38px,7vw,92px);line-height:1;text-shadow:0 4px 40px rgba(0,0,0,.9)}
 /* film progress */
 .film .hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:var(--steel);font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
 
@@ -210,6 +217,13 @@ footer .fine{margin-top:18px;font-size:13px}
 
   <div class="act on" id="a1">
     <h1 class="line" id="line1">Websites shouldn't look <em>cheap.</em></h1>
+  </div>
+  <div class="act" id="ac">
+    <div class="cutslide" data-label="HVAC" style="background-image:url(img/cuts/hvac.jpg)"></div>
+    <div class="cutslide" data-label="Auto body" style="background-image:url(img/car-wrecked.jpg)"></div>
+    <div class="cutslide" data-label="Roofing" style="background-image:url(img/cuts/roofing.jpg)"></div>
+    <div class="cutslide" data-label="Contractors" style="background-image:url(img/cuts/contractor.jpg)"></div>
+    <div class="cutwrap"><span class="k">Built for</span><span class="t" id="cutLabel">HVAC</span></div>
   </div>
   <div class="act" id="a2">
     <p class="line">Your business.<br><em>Rebuilt online.</em></p>
@@ -475,12 +489,22 @@ footer .fine{margin-top:18px;font-size:13px}
 gsap.registerPlugin(ScrollTrigger);
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
 
-/* ---- the film: acts keyed to video time ---- */
+/* ---- the film: fast self-paced act loop over the ambient video ---- */
 const vid = document.getElementById('filmVid');
-const acts = ['a1','a2','a3','a4','a5'].map(id => document.getElementById(id));
-const CUES = [[0,1.7],[1.7,3.5],[3.5,5.4],[5.4,7.1],[7.1,99]];
+const actIds = ['a1','ac','a2','a3','a4','a5'];
+const acts = actIds.map(id => document.getElementById(id));
 let current = 0;
-
+function setAct(n){
+  if (n === current) return;
+  acts[current].classList.remove('on');
+  acts[n].classList.add('on');
+  current = n;
+  if (actIds[n] === 'a4') { scatterCloud(); flyCloud(); }
+  if (actIds[n] === 'a3') {
+    gsap.fromTo('.shot-desktop', {scale:1.1, opacity:0}, {scale:1, opacity:1, duration:.45, ease:'power3.out'});
+    gsap.fromTo('.shot-phone', {y:50, opacity:0}, {y:14, opacity:1, duration:.45, delay:.1, ease:'power3.out'});
+  }
+}
 /* char-split the opening line */
 const l1 = document.getElementById('line1');
 (function wrapChars(node){
@@ -496,12 +520,11 @@ const l1 = document.getElementById('line1');
     } else wrapChars(c);
   });
 })(l1);
-if (!mq.matches) gsap.fromTo('#line1 .ch', {opacity:0, y:24}, {opacity:1, y:0, duration:.5, ease:'power2.out', stagger:.03, delay:.2});
 
 /* portfolio cloud */
 const cloud = document.getElementById('cloud');
 const SHOTS = ['pest','hvac','tree','moving','driving','auto'];
-const flyers = SHOTS.map((s,i) => {
+const flyers = SHOTS.map(s => {
   const d = document.createElement('div');
   d.className = 'fly';
   d.innerHTML = `<img src="img/shots/${s}.jpg" alt="">`;
@@ -509,10 +532,7 @@ const flyers = SHOTS.map((s,i) => {
   return d;
 });
 function scatterCloud(){
-  flyers.forEach((d,i) => {
-    const a = (i / flyers.length) * Math.PI * 2;
-    gsap.set(d, {left: '50%', top: '50%', xPercent: -50, yPercent: -50, x: 0, y: 0, z: -600, opacity: 0, rotateY: 0});
-  });
+  flyers.forEach(d => gsap.set(d, {left:'50%', top:'50%', xPercent:-50, yPercent:-50, x:0, y:0, z:-600, opacity:0, rotateY:0}));
 }
 function flyCloud(){
   flyers.forEach((d,i) => {
@@ -522,34 +542,48 @@ function flyCloud(){
       y: Math.sin(a) * (innerHeight * .27),
       z: (i % 2 ? 120 : -160),
       rotateY: (i % 2 ? -18 : 14),
-      opacity: 1, duration: 1.4, ease: 'power3.out', delay: i * .06
+      opacity: 1, duration: .8, ease: 'power3.out', delay: i * .04
     });
   });
 }
 scatterCloud();
 
-function setAct(n){
-  if (n === current) return;
-  acts[current].classList.remove('on');
-  acts[n].classList.add('on');
-  current = n;
-  if (n === 3) { scatterCloud(); flyCloud(); }
+/* industry hard cuts */
+const slides = [...document.querySelectorAll('.cutslide')];
+const cutLabel = document.getElementById('cutLabel');
+function showSlide(i){
+  slides.forEach((sl,j) => sl.classList.toggle('show', i === j));
+  cutLabel.textContent = slides[i].dataset.label;
+  gsap.fromTo(slides[i], {scale:1.07}, {scale:1, duration:.75, ease:'power2.out'});
+  gsap.fromTo(cutLabel, {y:16, opacity:0}, {y:0, opacity:1, duration:.3, ease:'power3.out'});
 }
-function filmTick(){
-  if (!mq.matches && !vid.paused && vid.duration) {
-    const t = vid.currentTime;
-    for (let i = 0; i < CUES.length; i++) {
-      if (t >= CUES[i][0] && t < CUES[i][1]) { setAct(i); break; }
-    }
-  }
-  requestAnimationFrame(filmTick);
+
+/* master loop — snappy */
+let film;
+function buildFilm(){
+  if (film) film.kill();
+  film = gsap.timeline({ repeat: -1 });
+  film.call(() => { setAct(0); gsap.fromTo('#line1 .ch', {opacity:0, y:22}, {opacity:1, y:0, duration:.4, ease:'power2.out', stagger:.022}); }, null, 0);
+  film.call(() => { setAct(1); showSlide(0); }, null, 1.6);
+  film.call(() => showSlide(1), null, 2.35);
+  film.call(() => showSlide(2), null, 3.1);
+  film.call(() => showSlide(3), null, 3.85);
+  film.call(() => setAct(2), null, 4.7);   // YOUR BUSINESS. REBUILT ONLINE.
+  film.call(() => setAct(3), null, 6.1);   // site shots
+  film.call(() => setAct(4), null, 7.8);   // portfolio explosion
+  film.call(() => setAct(5), null, 9.7);   // closing CTA
+  film.call(() => {}, null, 11.6);         // loop point
 }
-filmTick();
 function applyMotion(){
-  if (mq.matches) { vid.pause(); vid.style.display = 'none'; setAct(0);
-    document.querySelector('.cta-row') || acts[0].insertAdjacentHTML('beforeend',
-      '<div class="cta-row"><a class="btn" href="sms:9172458685">Request Personal Website Preview (FREE)</a></div>');
-  } else { vid.style.display = ''; vid.play().catch(()=>{}); }
+  if (mq.matches) {
+    if (film) film.kill();
+    vid.pause(); vid.style.display = 'none';
+    acts[current].classList.remove('on'); current = 5;
+    acts[5].classList.add('on');
+  } else {
+    vid.style.display = ''; vid.play().catch(()=>{});
+    buildFilm();
+  }
 }
 mq.addEventListener('change', applyMotion);
 applyMotion();
