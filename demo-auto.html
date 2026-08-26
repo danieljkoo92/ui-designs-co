@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironside Collision — Auto Body &amp; Collision Repair, Astoria NY</title>
+<meta name="description" content="Collision repair, paint, and restoration in Astoria, Queens. Insurance approved. Call (718) 555-0142.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0A0C10;
+  --panel:#12161D;
+  --edge:#232A35;
+  --steel:#8C97A6;
+  --white:#F2F5F9;
+  --ember:#F97316;
+  --ember-dark:#DC5A0B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--void);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ember);color:#fff;padding:10px 16px;z-index:200}
+.skip:focus{left:0}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
+.wrap{max-width:1100px;width:100%;margin:0 auto;padding:0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 28px;background:var(--ember);color:#fff;text-decoration:none;font-weight:700;font-size:16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
+.btn:hover{background:var(--ember-dark);transform:translateY(-4px) scale(1.02)}
+.btn-ghost{background:transparent;border:1px solid var(--steel);color:var(--white)}
+.btn-ghost:hover{background:var(--panel)}
+.kicker{text-transform:uppercase;letter-spacing:.2em;font-size:12px;font-weight:700;color:var(--ember);margin-bottom:14px}
+
+/* fixed 3D stage behind acts 1-3 */
+#stage{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stage canvas{width:100%;height:100%;display:block}
+.act{position:relative;z-index:1}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;background:linear-gradient(to bottom,rgba(10,12,16,.85),transparent);backdrop-filter:blur(2px)}
+header .wrap{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:21px;color:var(--white);text-decoration:none;letter-spacing:.02em}
+.logo em{font-style:italic;color:var(--ember)}
+header a.call{color:var(--white);text-decoration:none;font-weight:700;font-size:15px;border:1px solid var(--edge);border-radius:6px;padding:10px 16px;min-height:44px;display:inline-flex;align-items:center}
+header a.call:hover{border-color:var(--ember)}
+
+/* act 1 hero */
+.hero{min-height:100vh;display:flex;align-items:flex-end;padding-bottom:12vh}
+.hero h1{font-size:clamp(52px,11vw,128px);line-height:.98;font-weight:800;letter-spacing:-.02em}
+.hero h1 .ch{display:inline-block}
+.hero h1 em{font-style:italic;color:var(--ember)}
+.hero p{margin:22px 0 30px;font-size:19px;color:var(--steel);max-width:460px}
+.hero .row{display:flex;gap:14px;flex-wrap:wrap}
+
+/* act 2 damage */
+.damage{min-height:100vh;display:flex;align-items:center}
+.damage .copy{max-width:420px;background:rgba(10,12,16,.55);backdrop-filter:blur(6px);border:1px solid var(--edge);border-radius:10px;padding:30px}
+.damage h2{font-size:clamp(30px,5vw,44px);line-height:1.1;margin-bottom:12px}
+.damage p{color:var(--steel);font-size:16px}
+.damage .meter{margin-top:22px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden}
+.damage .meter i{display:block;height:100%;width:0;background:var(--ember)}
+.damage .label{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-top:8px}
+
+/* act 3 paint */
+.paint{min-height:90vh;display:flex;align-items:center}
+.paint .copy{max-width:420px;margin-left:auto;background:rgba(10,12,16,.55);backdrop-filter:blur(6px);border:1px solid var(--edge);border-radius:10px;padding:30px}
+.paint h2{font-size:clamp(30px,5vw,44px);line-height:1.1;margin-bottom:12px}
+.paint p{color:var(--steel);font-size:16px;margin-bottom:20px}
+.swatches{display:flex;gap:14px}
+.swatch{width:52px;height:52px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;pointer-events:auto;display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px;font-size:0;transition:transform .25s,border-color .25s}
+.swatch:hover,.swatch:focus-visible{transform:translateY(-4px) scale(1.02);border-color:var(--white)}
+.swatch[aria-pressed="true"]{border-color:var(--ember)}
+.swatch-name{font-size:12px;color:var(--steel);margin-top:8px;text-align:center}
+.swatch-col{display:flex;flex-direction:column;align-items:center}
+
+/* solid sections after the 3D acts */
+.solid{background:var(--void);position:relative;z-index:2;border-top:1px solid var(--edge)}
+section.pad{padding:96px 0}
+.process h2,.proof h2,.book h2{font-size:clamp(30px,5vw,46px);margin-bottom:10px}
+.sub{color:var(--steel);max-width:520px;margin-bottom:44px}
+.steps{display:grid;gap:18px}
+@media(min-width:800px){.steps{grid-template-columns:repeat(4,1fr)}}
+.step{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:26px;transition:transform .25s,border-color .25s}
+.step:hover{transform:translateY(-4px) scale(1.02);border-color:var(--steel)}
+.step .n{font-family:"Playfair Display",Georgia,serif;font-size:15px;color:var(--ember);letter-spacing:.14em;margin-bottom:12px}
+.step h3{font-size:19px;margin-bottom:8px}
+.step p{font-size:14.5px;color:var(--steel)}
+
+.reviews{display:grid;gap:18px;margin-bottom:44px}
+@media(min-width:800px){.reviews{grid-template-columns:repeat(3,1fr)}}
+.review{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:26px}
+.review .stars{color:var(--ember);letter-spacing:3px;margin-bottom:12px;font-size:14px}
+.review p{font-size:15px;margin-bottom:14px}
+.review .who{font-size:13.5px;color:var(--steel)}
+.badges{display:flex;flex-wrap:wrap;gap:12px}
+.badge{border:1px solid var(--edge);border-radius:99px;padding:9px 18px;font-size:13.5px;color:var(--steel);display:inline-flex;align-items:center;gap:8px}
+.badge svg{flex-shrink:0}
+
+/* book */
+.book-grid{display:grid;gap:36px}
+@media(min-width:860px){.book-grid{grid-template-columns:1fr 1fr}}
+.book form{display:grid;gap:14px}
+.book label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.book input,.book select,.book textarea{width:100%;padding:13px 14px;background:var(--panel);border:1px solid var(--edge);border-radius:6px;color:var(--white);font-size:16px;font-family:inherit}
+.book input:focus,.book select:focus,.book textarea:focus{outline:2px solid var(--ember);outline-offset:1px}
+.info p{color:var(--steel);margin-bottom:18px;font-size:15.5px}
+.info .big{font-family:"Playfair Display",Georgia,serif;font-size:30px;color:var(--white)}
+.info a{color:var(--ember)}
+.hours{list-style:none;margin:18px 0;font-size:15px;color:var(--steel)}
+.hours li{display:flex;justify-content:space-between;max-width:280px;padding:4px 0;border-bottom:1px dashed var(--edge)}
+.areas{font-size:14px;color:var(--steel);line-height:1.8}
+
+footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);font-size:14px;position:relative;z-index:2;background:var(--void)}
+@media(min-width:720px){footer{padding-bottom:40px}}
+
+.sticky-call{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,12,16,.92);backdrop-filter:blur(6px);border-top:1px solid var(--edge);display:flex;gap:10px}
+.sticky-call .btn{flex:1}
+@media(min-width:720px){.sticky-call{display:none}}
+
+.reveal{opacity:0;transform:translateY(24px)}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#process">Skip to content</a>
+<div id="stage" aria-hidden="true"></div>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top">IRON<em>SIDE</em></a>
+    <a class="call" href="tel:+17185550142">(718) 555-0142</a>
+  </div>
+</header>
+
+<section class="act hero" id="top">
+  <div class="wrap">
+    <p class="kicker reveal">Collision repair · Astoria, Queens</p>
+    <h1 id="headline">Bring it <em>back.</em></h1>
+    <p class="reveal">Frame to finish, your car leaves here the way it left the factory. Insurance approved, I-CAR certified, lifetime warranty on the work.</p>
+    <div class="row reveal">
+      <a class="btn" href="tel:+17185550142">Call now</a>
+      <a class="btn btn-ghost" href="#book">Get an estimate</a>
+    </div>
+  </div>
+</section>
+
+<section class="act damage" id="repair">
+  <div class="wrap">
+    <div class="copy">
+      <p class="kicker">The work</p>
+      <h2>Every panel. Every line.</h2>
+      <p>Keep scrolling — that's the repair. Dents pulled, panels trued, paint cut and polished until the light runs straight down the body again.</p>
+      <div class="meter"><i id="meter"></i></div>
+      <div class="label"><span>Arrived</span><span>Delivered</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="act paint" id="paint">
+  <div class="wrap">
+    <div class="copy">
+      <p class="kicker">The paint bay</p>
+      <h2>Factory match, or better.</h2>
+      <p>Computerized color match, full-body respray, ceramic clearcoat. Tap a finish — that's the actual paint model we mix from.</p>
+      <div class="swatches" role="group" aria-label="Paint finishes">
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)" data-color="#2563EB" aria-pressed="true" aria-label="Estoril Blue">Estoril Blue</button><span class="swatch-name">Estoril Blue</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#3A4149,#14181D)" data-color="#232A33" aria-pressed="false" aria-label="Graphite">Graphite</button><span class="swatch-name">Graphite</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#EF4444,#991B1B)" data-color="#B91C1C" aria-pressed="false" aria-label="Rosso Red">Rosso Red</button><span class="swatch-name">Rosso Red</span></div>
+        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E5E7EB,#9CA3AF)" data-color="#C8CDD4" aria-pressed="false" aria-label="Alpine Silver">Alpine Silver</button><span class="swatch-name">Alpine Silver</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="solid">
+<section class="pad process" id="process">
+  <div class="wrap">
+    <p class="kicker reveal">How it works</p>
+    <h2 class="reveal">Four steps. No runaround.</h2>
+    <p class="sub reveal">You deal with one shop and one person from claim to keys.</p>
+    <div class="steps">
+      <div class="step reveal"><div class="n">01</div><h3>Claim</h3><p>We work directly with your insurance. Photos, estimate, supplement — handled.</p></div>
+      <div class="step reveal"><div class="n">02</div><h3>Teardown</h3><p>Hidden damage found up front, not billed later. You approve everything first.</p></div>
+      <div class="step reveal"><div class="n">03</div><h3>Body &amp; paint</h3><p>Frame pulled to spec, panels trued, computerized color match sprayed in a downdraft booth.</p></div>
+      <div class="step reveal"><div class="n">04</div><h3>Delivery</h3><p>Detailed, inspected, warrantied for life. Most jobs back in 5–10 days.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad proof">
+  <div class="wrap">
+    <p class="kicker reveal">Proof</p>
+    <h2 class="reveal">Astoria has opinions. Here are three.</h2>
+    <p class="sub reveal"></p>
+    <div class="reviews">
+      <div class="review reveal"><div class="stars">★★★★★</div><p>"Rear-ended on the Grand Central. Ironside handled the GEICO claim, found frame damage the adjuster missed, and had my Camry back in eight days. Panel gaps are perfect."</p><div class="who">Maria G. — Astoria</div></div>
+      <div class="review reveal"><div class="stars">★★★★★</div><p>"Door and quarter panel respray on a black 3-series. Black is the hardest color to match and I cannot find the blend line. Wish I'd found this shop years ago."</p><div class="who">Devon W. — Long Island City</div></div>
+      <div class="review reveal"><div class="stars">★★★★★</div><p>"Hit a pole backing out, felt like an idiot, expected to get gouged. Got a straight price, daily photo updates, and the bumper looks new. Honest shop."</p><div class="who">Sam K. — Jackson Heights</div></div>
+    </div>
+    <div class="badges">
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>I-CAR Gold Class</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Insurance approved — all carriers</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Lifetime warranty</span>
+      <span class="badge reveal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg>Free estimates</span>
+    </div>
+  </div>
+</section>
+
+<section class="pad book" id="book">
+  <div class="wrap">
+    <p class="kicker reveal">Estimates</p>
+    <h2 class="reveal">Send photos, get a number.</h2>
+    <p class="sub reveal">Text or use the form. Estimates back same day, usually within the hour.</p>
+    <div class="book-grid">
+      <form onsubmit="event.preventDefault();this.innerHTML='<p style=&quot;font-size:18px&quot;>Got it — we will text your estimate shortly.</p>'">
+        <div><label for="f-name">Name</label><input id="f-name" required autocomplete="name"></div>
+        <div><label for="f-phone">Phone</label><input id="f-phone" type="tel" required autocomplete="tel"></div>
+        <div><label for="f-car">Year / make / model</label><input id="f-car" placeholder="2021 Honda CR-V"></div>
+        <div><label for="f-desc">What happened?</label><textarea id="f-desc" rows="3"></textarea></div>
+        <button class="btn" type="submit">Request estimate</button>
+      </form>
+      <div class="info">
+        <p class="big">Ironside Collision</p>
+        <p>31-08 38th Ave, Astoria, NY 11101<br>
+        <a href="https://maps.google.com/?q=31-08+38th+Ave+Astoria+NY">Get directions</a> · <a href="tel:+17185550142">(718) 555-0142</a></p>
+        <ul class="hours">
+          <li><span>Mon–Fri</span><span>8am – 6pm</span></li>
+          <li><span>Saturday</span><span>9am – 2pm</span></li>
+          <li><span>Sunday</span><span>Closed</span></li>
+        </ul>
+        <p class="areas"><strong style="color:var(--white)">Service area:</strong> Astoria, Long Island City, Sunnyside, Woodside, Jackson Heights, Elmhurst, Corona, Flushing, Ridgewood, Maspeth.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Ironside Collision · Astoria, NY · <a href="tel:+17185550142" style="color:var(--steel)">(718) 555-0142</a></div>
+</footer>
+</div>
+
+<div class="sticky-call">
+  <a class="btn" href="tel:+17185550142">Call (718) 555-0142</a>
+  <a class="btn btn-ghost" href="#book" style="flex:0 0 auto">Estimate</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+const isMobile = matchMedia('(max-width: 767px)').matches || 'ontouchstart' in window;
+let reduced = mq.matches;
+mq.addEventListener('change', e => { reduced = e.matches; applyMotionState(); });
+
+/* ---------- scene ---------- */
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.5 : 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0a0c10, 14, 30);
+const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, .1, 60);
+camera.position.set(5.2, 1.9, 7.5);
+camera.lookAt(0, .55, 0);
+
+scene.add(new THREE.HemisphereLight(0x4a5c74, 0x080a0e, 1.4));
+const key = new THREE.SpotLight(0xffffff, 520, 40, .6, .45);
+key.position.set(6, 9, 4); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+scene.add(key);
+const rim = new THREE.SpotLight(0xf97316, 45, 40, .7, .6);
+rim.position.set(-7, 6, -6);
+rim.target.position.set(0, 1, 0); scene.add(rim.target);
+scene.add(rim);
+const fill = new THREE.DirectionalLight(0x93c5fd, .9);
+fill.position.set(-4, 2, 6);
+scene.add(fill);
+
+// ground: dark disc + canvas radial contact shadow
+const shadowCanvas = document.createElement('canvas');
+shadowCanvas.width = shadowCanvas.height = 256;
+const sctx = shadowCanvas.getContext('2d');
+const grad = sctx.createRadialGradient(128,128,20,128,128,128);
+grad.addColorStop(0,'rgba(0,0,0,.85)'); grad.addColorStop(1,'rgba(0,0,0,0)');
+sctx.fillStyle = grad; sctx.fillRect(0,0,256,256);
+const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(16, 48),
+  new THREE.MeshStandardMaterial({ color: 0x0d1016, roughness: .35, metalness: .6 })
+);
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true;
+scene.add(ground);
+const contact = new THREE.Mesh(
+  new THREE.PlaneGeometry(7.5, 4),
+  new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
+);
+contact.rotation.x = -Math.PI/2; contact.position.y = .01;
+scene.add(contact);
+
+/* ---------- car (procedural: extruded side profile) ---------- */
+const car = new THREE.Group();
+const paintMat = new THREE.MeshPhysicalMaterial({
+  color: 0x2563EB, metalness: .85, roughness: .28,
+  clearcoat: 1, clearcoatRoughness: .12
+});
+const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x0c1420, metalness: .2, roughness: .05, clearcoat: 1 });
+const trimMat = new THREE.MeshStandardMaterial({ color: 0x14181d, roughness: .6, metalness: .4 });
+
+// side silhouette: nose -> hood -> windshield -> roof -> rear glass -> trunk -> tail
+const s = new THREE.Shape();
+s.moveTo(-2.35, .25);
+s.lineTo(-2.42, .55);
+s.quadraticCurveTo(-2.35, .72, -1.9, .78);   // nose top
+s.lineTo(-.85, .86);                          // hood
+s.quadraticCurveTo(-.45, .9, -.15, 1.22);     // windshield
+s.lineTo(.85, 1.26);                          // roof
+s.quadraticCurveTo(1.45, 1.2, 1.85, .88);     // rear glass
+s.lineTo(2.3, .8);                            // trunk
+s.quadraticCurveTo(2.45, .6, 2.4, .3);        // tail
+s.lineTo(2.3, .18);
+s.lineTo(-2.25, .18);
+s.closePath();
+const bodyGeo = new THREE.ExtrudeGeometry(s, { depth: 1.85, bevelEnabled: true, bevelThickness: .12, bevelSize: .12, bevelSegments: 5, curveSegments: 16 });
+bodyGeo.translate(0, 0, -1.85/2);
+const body = new THREE.Mesh(bodyGeo, paintMat);
+body.castShadow = true;
+car.add(body);
+
+// greenhouse (slightly smaller re-extrude of the top, glass)
+const g = new THREE.Shape();
+g.moveTo(-.35, .95); g.quadraticCurveTo(-.2, .98, -.05, 1.2);
+g.lineTo(.8, 1.24); g.quadraticCurveTo(1.32, 1.18, 1.68, .92);
+g.closePath();
+const glassGeo = new THREE.ExtrudeGeometry(g, { depth: 1.6, bevelEnabled: true, bevelThickness: .05, bevelSize: .05, bevelSegments: 3 });
+glassGeo.translate(0, .04, -1.6/2);
+const glass = new THREE.Mesh(glassGeo, glassMat);
+car.add(glass);
+
+// wheels
+const wheelGeo = new THREE.CylinderGeometry(.42, .42, .3, 28);
+wheelGeo.rotateX(Math.PI/2);
+const hubGeo = new THREE.CylinderGeometry(.2, .2, .32, 20);
+hubGeo.rotateX(Math.PI/2);
+const hubMat = new THREE.MeshStandardMaterial({ color: 0x9aa4b0, metalness: .95, roughness: .25 });
+[[-1.45, 1], [1.55, 1], [-1.45, -1], [1.55, -1]].forEach(([x, side]) => {
+  const w = new THREE.Mesh(wheelGeo, trimMat);
+  w.position.set(x, .42, side * .95); w.castShadow = true;
+  const h = new THREE.Mesh(hubGeo, hubMat);
+  h.position.copy(w.position);
+  car.add(w, h);
+});
+car.position.y = .0;
+scene.add(car);
+
+/* ---------- damage morph (displace nose verts, lerp back on scroll) ---------- */
+const pos = bodyGeo.attributes.position;
+const orig = pos.array.slice();
+const dented = pos.array.slice();
+for (let i = 0; i < pos.count; i++) {
+  const x = orig[i*3], y = orig[i*3+1], z = orig[i*3+2];
+  if (x < -1.55 && y > .15) { // front end
+    const f = Math.min(1, (-x - 1.55) / .9);
+    const n = Math.sin(y * 21 + z * 13) * .5 + Math.sin(x * 17) * .5;
+    dented[i*3]   += f * (.28 + .1 * n);
+    dented[i*3+1] -= f * (.12 + .06 * n);
+    dented[i*3+2] += f * .09 * n;
+  }
+}
+const damagedColor = new THREE.Color(0x39434f);
+const paintedColor = new THREE.Color(0x2563EB);
+let damage = reduced ? 0 : 1;
+function applyDamage(t) { // t: 1 = wrecked, 0 = restored
+  damage = t;
+  for (let i = 0; i < pos.array.length; i++)
+    pos.array[i] = orig[i] + (dented[i] - orig[i]) * t;
+  pos.needsUpdate = true;
+  bodyGeo.computeVertexNormals();
+  paintMat.color.copy(paintedColor).lerp(damagedColor, t);
+  paintMat.roughness = .28 + t * .55;
+  paintMat.clearcoat = 1 - t * .85;
+  requestRender();
+}
+
+/* ---------- render loop: continuous on desktop, on-demand on mobile ---------- */
+let needsRender = true, rafActive = false;
+function requestRender() { needsRender = true; if (!rafActive) tick(); }
+let t0 = performance.now();
+function tick() {
+  rafActive = true;
+  requestAnimationFrame(tick);
+  const t = performance.now();
+  if (!reduced && !isMobile) {
+    car.rotation.y = 2.55 + Math.sin(t * .00012) * .35;
+    needsRender = true;
+  } else if (car.rotation.y !== 2.55) { car.rotation.y = 2.55; needsRender = true; }
+  if (needsRender) { renderer.render(scene, camera); needsRender = false; }
+}
+tick();
+
+// cursor parallax (desktop, motion allowed)
+if (!isMobile) {
+  addEventListener('pointermove', e => {
+    if (reduced) return;
+    const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
+    gsap.to(camera.position, { x: 5.2 + nx * .8, y: 1.9 - ny * .5, duration: .8, ease: 'power2.out', onUpdate: () => { camera.lookAt(0,.55,0); requestRender(); } });
+  });
+}
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  requestRender();
+  ScrollTrigger.refresh();
+});
+addEventListener('pagehide', () => { shadowTex.dispose(); renderer.dispose(); });
+
+/* ---------- paint swap ---------- */
+document.querySelectorAll('.swatch').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+    paintedColor.set(btn.dataset.color);
+    const target = new THREE.Color(btn.dataset.color).lerp(damagedColor, damage);
+    gsap.to(paintMat.color, { r: target.r, g: target.g, b: target.b, duration: .6, ease: 'power2.out', onUpdate: requestRender });
+    gsap.fromTo(paintMat, { clearcoatRoughness: .5 }, { clearcoatRoughness: .12, duration: .9, onUpdate: requestRender });
+  });
+});
+
+/* ---------- GSAP ---------- */
+gsap.registerPlugin(ScrollTrigger);
+let triggers = [];
+function buildMotion() {
+  triggers.forEach(t => t.kill()); triggers = [];
+  // hero headline char split (build once)
+  const h = document.getElementById('headline');
+  if (!h.dataset.split) {
+    h.dataset.split = '1';
+    h.innerHTML = h.textContent.replace(/back\./, '') === h.textContent ? h.innerHTML : h.innerHTML;
+    h.innerHTML = 'Bring it <em>back.</em>';
+    const wrapChars = node => {
+      [...node.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          c.textContent.split('').forEach(ch => {
+            const sp = document.createElement('span');
+            sp.className = 'ch'; sp.textContent = ch === ' ' ? ' ' : ch;
+            frag.appendChild(sp);
+          });
+          node.replaceChild(frag, c);
+        } else wrapChars(c);
+      });
+    };
+    wrapChars(h);
+  }
+  if (reduced) { applyDamage(0); document.getElementById('meter').style.width = '100%'; return; }
+
+  gsap.fromTo('#headline .ch', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out', stagger: .04, delay: .15 });
+  gsap.utils.toArray('.reveal').forEach(el => {
+    triggers.push(ScrollTrigger.create({
+      trigger: el, start: 'top 85%',
+      animation: gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
+    }));
+  });
+  // damage scrub — pinned; car drifts right so it clears the copy card
+  const dmg = { t: 1 };
+  applyDamage(1);
+  const dmgTl = gsap.timeline();
+  dmgTl.to(dmg, {
+    t: 0, ease: 'none',
+    onUpdate: () => { applyDamage(dmg.t); document.getElementById('meter').style.width = ((1 - dmg.t) * 100) + '%'; }
+  }, 0);
+  dmgTl.to(car.position, { x: 2.1, ease: 'none', onUpdate: requestRender, duration: .3 }, 0);
+  triggers.push(ScrollTrigger.create({
+    trigger: '#repair', start: 'top top', end: '+=150%', pin: true, scrub: 1,
+    animation: dmgTl
+  }));
+  // camera drift into paint bay; car slides left to clear the right-hand card
+  const paintTl = gsap.timeline();
+  paintTl.to(camera.position, { x: -3.8, y: 1.5, z: 7.4, ease: 'none', onUpdate: () => { camera.lookAt(car.position.x * .6, .55, 0); requestRender(); } }, 0);
+  paintTl.to(car.position, { x: -1.6, ease: 'none', onUpdate: requestRender }, 0);
+  triggers.push(ScrollTrigger.create({
+    trigger: '#paint', start: 'top bottom', end: 'top top', scrub: 1,
+    animation: paintTl
+  }));
+  // fade stage out after paint
+  triggers.push(ScrollTrigger.create({
+    trigger: '.solid', start: 'top 80%', end: 'top 20%', scrub: true,
+    animation: gsap.to('#stage', { opacity: 0, ease: 'none' })
+  }));
+}
+function applyMotionState() { buildMotion(); ScrollTrigger.refresh(); }
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+buildMotion();
+requestRender();
+</script>
+</body>
+</html>

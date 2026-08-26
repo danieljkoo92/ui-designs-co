@@ -95,6 +95,9 @@ header{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1p
 @media(min-width:1000px){.work-grid{grid-template-columns:repeat(3,1fr)}}
 .card{display:block;text-decoration:none;color:var(--ink);border:1px solid var(--gold-soft);border-radius:14px;overflow:hidden;background:var(--paper);transition:transform .15s,box-shadow .15s,border-color .15s}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(59,130,246,.18);border-color:var(--gold)}
+.card-premium{border:2px solid #0B0F14}
+.card-premium:hover{border-color:#F97316;box-shadow:0 10px 26px rgba(249,115,22,.22)}
+.prem-badge{position:absolute;top:10px;right:10px;background:#F97316;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:99px}
 .shot{height:150px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;letter-spacing:-.01em}
 .card-body{padding:18px 20px 20px}
 .card-body h3{font-size:18px;margin-bottom:6px}
@@ -182,6 +185,12 @@ footer strong{font-family:"Playfair Display",Georgia,serif}
         <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Reviews, service areas, and hours done right</li>
       </ul>
       <a class="btn" href="sms:9172458685">Request Personal Website Preview (FREE)</a>
+    </div>
+    <div class="build-card" style="background:var(--ink);color:var(--paper);border-color:#F97316;outline-color:rgba(249,115,22,.35);box-shadow:0 6px 30px rgba(249,115,22,.12)">
+      <p class="kicker" style="color:#F97316;border-color:#F97316">Signature — the premium build</p>
+      <div class="price" style="color:var(--paper)">$3,500 <small style="color:var(--sand)">one-time</small></div>
+      <p style="margin:14px 0 18px;color:var(--sand);max-width:560px">For businesses that want a site people remember. 3D product or vehicle showcase, scroll-driven storytelling, custom motion design. Live in 10–14 days. See the <a href="demo-auto.html" target="_blank" rel="noopener" style="color:#F97316">auto body demo</a> — that's this tier.</p>
+      <a class="btn" style="background:#F97316" href="sms:9172458685">Text about a Signature build</a>
     </div>
   </div>
 </section>
@@ -289,6 +298,14 @@ footer strong{font-family:"Playfair Display",Georgia,serif}
         <div class="card-body">
           <h3>Driving school</h3>
           <p>Sells lessons in English, Korean, and Chinese — the language toggle actually switches the page.</p>
+          <span class="open">Open demo →</span>
+        </div>
+      </a>
+      <a class="card card-premium" href="demo-auto.html" target="_blank" rel="noopener">
+        <div class="shot" style="background:linear-gradient(135deg,#0B0F14,#1E293B);color:#F97316;position:relative">Auto Body — 3D<span class="prem-badge">Premium</span></div>
+        <div class="card-body">
+          <h3>Auto body <span style="color:var(--clay);font-size:13px;font-weight:700">— Signature tier</span></h3>
+          <p>A 3D car you repair by scrolling — wrecked to restored, live paint bay included. This is the $3,500 class of build.</p>
           <span class="open">Open demo →</span>
         </div>
       </a>

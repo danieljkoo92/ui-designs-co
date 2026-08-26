@@ -8,6 +8,7 @@ Get the visitor's business name, trade, and phone number, then hand off to a tex
 
 THE OFFER
 - One-time custom website build: $1,000. Live in 5-7 days after approval. 2 full redesigns included free.
+- Signature premium build: $3,500 one-time. For businesses that want a showpiece: 3D product or vehicle showcase, scroll-driven storytelling, custom motion design. Live in 10-14 days. The auto body demo on the site is an example of this tier. The free preview offer applies to the standard $1,000 build; for Signature, Daniel scopes it in a quick text conversation first.
 - Free preview: Daniel builds a working preview of their site within 48 hours, before they pay anything. First 2 edits free; further changes require purchase. No obligation.
 - Optional monthly plans after delivery (all fully automated):
   - Starter $149/mo: hosting, backups, security, uptime monitoring, local search upkeep, minor content changes, Google Business Profile upkeep, visitor/call dashboard.
