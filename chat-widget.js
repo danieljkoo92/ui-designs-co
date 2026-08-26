@@ -17,7 +17,7 @@
     '#uidc-bubble{position:fixed;bottom:84px;right:16px;z-index:9999;width:56px;height:56px;border-radius:50%;background:#0A0C10;border:2px solid #D9A441;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(217,164,65,.35);transition:transform .15s;font-size:24px;line-height:1}',
     '@media(min-width:720px){#uidc-bubble{bottom:20px;right:20px}}',
     '#uidc-bubble:hover{transform:scale(1.06)}',
-    '#uidc-panel{position:fixed;bottom:0;right:0;z-index:10000;width:100%;height:100%;background:#FFFFFF;display:none;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;box-shadow:0 12px 40px rgba(11,15,20,.3)}',
+    '#uidc-panel{position:fixed;bottom:0;right:0;z-index:10000;width:100%;height:72vh;border-radius:16px 16px 0 0;overflow:hidden;background:#FFFFFF;display:none;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;box-shadow:0 12px 40px rgba(11,15,20,.3)}',
     '@media(min-width:720px){#uidc-panel{width:360px;height:520px;bottom:20px;right:20px;border-radius:14px;overflow:hidden}}',
     '#uidc-head{background:#0A0C10;color:#F2F5F9;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:2px solid #D9A441}',
     '#uidc-head strong{font-size:17px;display:block;font-family:"Playfair Display",Georgia,serif}',
@@ -99,7 +99,7 @@
     document.getElementById('uidc-panel').style.display = 'flex';
     document.getElementById('uidc-bubble').style.display = 'none';
     if (history.length === 0) {
-      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds websites for Queens service businesses, and the first look is free. What kind of business do you run?");
+      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds custom websites for local businesses. Want a preview of yours? What kind of business do you run?");
     }
   }
 
@@ -207,6 +207,8 @@
 
   /* ---------- auto-open triggers ---------- */
   function armTriggers() {
+    // phones: never auto-open — the bubble is enough
+    if (window.matchMedia('(max-width: 719px)').matches) return;
     // 30 seconds on page
     setTimeout(function () { openPanel(false); }, 30000);
 
