@@ -55,7 +55,7 @@ header a.call:hover{border-color:var(--ember)}
 .damage .layer{position:absolute;inset:0;background-position:center 42%;background-size:cover;background-repeat:no-repeat}
 .damage .wrecked{background-image:url(img/car-wrecked.jpg)}
 .damage .fixed{background-image:url(img/car-pristine.jpg);opacity:0;will-change:opacity}
-.damage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
+.damage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;display:none}
 .damage .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.9) 4%,transparent 40%)}
 .damage .copy{position:absolute;left:0;right:0;bottom:7vh}
 .damage .card{max-width:420px;background:rgba(10,12,16,.72);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:10px;padding:26px 30px}
@@ -147,7 +147,7 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 <section class="damage" id="repair" aria-label="Scroll to see the car repaired from wrecked to restored">
   <div class="layer wrecked"></div>
   <div class="layer fixed" id="fixedLayer"></div>
-  <canvas id="morph"></canvas>
+  <video id="repairVid" muted playsinline preload="auto" src="img/repair.mp4" aria-hidden="true"></video>
   <div class="shade"></div>
   <div class="copy">
     <div class="wrap">
@@ -257,97 +257,13 @@ h.innerHTML = 'Bring it <em>back.</em>';
   });
 })(h);
 
-/* ---- balloon morph: WebGL displacement between wrecked and repaired ---- */
-const morph = (() => {
-  const canvas = document.getElementById('morph');
-  const gl = canvas.getContext('webgl', { antialias: false, depth: false });
-  if (!gl) return null;
-  const vs = `attribute vec2 aP; varying vec2 vUv; void main(){ vUv = aP * .5 + .5; vUv.y = 1. - vUv.y; gl_Position = vec4(aP, 0., 1.); }`;
-  const fs = `
-precision mediump float;
-varying vec2 vUv;
-uniform sampler2D uA, uB;
-uniform float uP;
-uniform vec2 uRes;
-vec2 cover(vec2 uv){
-  float ca = uRes.x / uRes.y, ia = 3.0;
-  vec2 t = uv - .5;
-  if (ca < ia) t.x *= ca / ia; else t.y *= ia / ca;
-  return t + vec2(.5, .47);
-}
-void main(){
-  vec2 uv = cover(vUv);
-  float n = sin(uv.y*22.0 + uv.x*9.0) * .5 + sin(uv.x*31.0 - uv.y*17.0) * .35 + sin((uv.x+uv.y)*47.0) * .15;
-  float w = sin(uP * 3.14159);            // bulge peaks mid-repair
-  vec2 d = vec2(n, sin(n*3.7)) * .05 * w; // panels swell as they pop back out
-  float m = smoothstep(.15, .85, uP);
-  vec2 uvA = uv + d * uP;                 // wreck warps away
-  vec2 s = (uv - .5) / (1.0 + .045 * w) + .5; // repaired panel inflates in
-  vec2 uvB = s - d * (1.0 - uP);
-  vec4 a = texture2D(uA, clamp(uvA, 0.0, 1.0));
-  vec4 b = texture2D(uB, clamp(uvB, 0.0, 1.0));
-  gl_FragColor = mix(a, b, m);
-}`;
-  function shader(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
-  const prog = gl.createProgram();
-  gl.attachShader(prog, shader(gl.VERTEX_SHADER, vs));
-  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, fs));
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
-  gl.useProgram(prog);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
-  const aP = gl.getAttribLocation(prog, 'aP');
-  gl.enableVertexAttribArray(aP);
-  gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
-  const uP = gl.getUniformLocation(prog, 'uP');
-  const uRes = gl.getUniformLocation(prog, 'uRes');
-  gl.uniform1i(gl.getUniformLocation(prog, 'uA'), 0);
-  gl.uniform1i(gl.getUniformLocation(prog, 'uB'), 1);
-  let ready = false;
-  function tex(unit, img) {
-    const t = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0 + unit);
-    gl.bindTexture(gl.TEXTURE_2D, t);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
-  }
-  const wreck = new Image(), fixed = new Image();
-  wreck.src = 'img/car-wrecked.jpg'; fixed.src = 'img/car-pristine.jpg';
-  Promise.all([wreck.decode(), fixed.decode()]).then(() => {
-    tex(0, wreck); tex(1, fixed);
-    ready = true;
-    canvas.style.display = 'block';
-    size(); draw(lastP);
-  }).catch(() => {});
-  let lastP = 0;
-  function size() {
-    const dpr = Math.min(devicePixelRatio, 1.75);
-    canvas.width = canvas.clientWidth * dpr;
-    canvas.height = canvas.clientHeight * dpr;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-  }
-  function draw(p) {
-    lastP = p;
-    if (!ready) return;
-    gl.uniform1f(uP, p);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-  }
-  addEventListener('resize', () => { if (ready) { size(); draw(lastP); } });
-  return { draw };
-})();
-
 function buildMotion() {
   triggers.forEach(t => t.kill()); triggers = [];
   const meter = document.getElementById('meter');
   const fixedLayer = document.getElementById('fixedLayer');
   if (mq.matches) {
     fixedLayer.style.opacity = 1;
-    document.getElementById('morph').style.display = 'none';
+    document.getElementById('repairVid').style.display = 'none';
     meter.style.width = '100%';
     gsap.set('#headline .ch', { opacity: 1, y: 0 });
     return;
@@ -364,20 +280,33 @@ function buildMotion() {
     trigger: '#top', start: 'top top', end: 'bottom top', scrub: true,
     animation: gsap.to('#heroBg', { yPercent: 12, ease: 'none' })
   }));
-  // repair morph — pinned scrub; shader if available, crossfade otherwise
+  // repair — pinned scrub drives the video timeline; crossfade until it can play
+  const vid = document.getElementById('repairVid');
   const wipe = { p: 0 };
   triggers.push(ScrollTrigger.create({
     trigger: '#repair', start: 'top top', end: '+=150%', pin: true, scrub: 1,
     animation: gsap.to(wipe, {
       p: 1, ease: 'none',
       onUpdate: () => {
-        if (morph) morph.draw(wipe.p);
-        else fixedLayer.style.opacity = wipe.p;
+        if (vidReady && vid.duration) {
+          vid.currentTime = Math.min(vid.duration - .05, wipe.p * vid.duration);
+        } else {
+          fixedLayer.style.opacity = wipe.p;
+        }
         meter.style.width = (wipe.p * 100) + '%';
       }
     })
   }));
 }
+let vidReady = false;
+const vidEl = document.getElementById('repairVid');
+vidEl.addEventListener('canplaythrough', () => {
+  if (mq.matches) return;
+  vidReady = true;
+  vidEl.pause();
+  vidEl.style.display = 'block';
+}, { once: true });
+vidEl.load();
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
 buildMotion();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
