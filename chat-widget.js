@@ -99,7 +99,7 @@
     document.getElementById('uidc-panel').style.display = 'flex';
     document.getElementById('uidc-bubble').style.display = 'none';
     if (history.length === 0) {
-      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds custom websites for local businesses. Want a preview of yours? What kind of business do you run?");
+      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds custom websites for local businesses, and the first preview is free. What kind of business do you run?");
     }
   }
 
