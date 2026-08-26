@@ -54,8 +54,8 @@ header a.call:hover{border-color:var(--ember)}
 .damage{position:relative;min-height:100vh;overflow:hidden}
 .damage .layer{position:absolute;inset:0;background-position:center 42%;background-size:cover;background-repeat:no-repeat}
 .damage .wrecked{background-image:url(img/car-wrecked.jpg)}
-.damage .fixed{background-image:url(img/car-pristine.jpg);clip-path:inset(0 100% 0 0);will-change:clip-path}
-.damage .seam{position:absolute;top:0;bottom:0;width:2px;background:var(--ember);box-shadow:0 0 22px rgba(217,164,65,.9);left:0%;opacity:0;will-change:left}
+.damage .fixed{background-image:url(img/car-pristine.jpg);opacity:0;will-change:opacity}
+.damage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
 .damage .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.9) 4%,transparent 40%)}
 .damage .copy{position:absolute;left:0;right:0;bottom:7vh}
 .damage .card{max-width:420px;background:rgba(10,12,16,.72);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:10px;padding:26px 30px}
@@ -64,21 +64,6 @@ header a.call:hover{border-color:var(--ember)}
 .damage .meter{margin-top:18px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden}
 .damage .meter i{display:block;height:100%;width:0;background:var(--ember)}
 .damage .label{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-top:8px}
-
-/* act 3 paint bay */
-.paint{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--void)}
-.paint .bg{position:absolute;inset:0;background:url(img/car-pristine.jpg) center 42%/cover no-repeat;transition:filter .6s ease;will-change:filter}
-.paint .shade{position:absolute;inset:0;background:linear-gradient(to right,transparent 40%,rgba(10,12,16,.88) 75%)}
-.paint .wrap{position:relative;z-index:2}
-.paint .copy{max-width:400px;margin-left:auto;background:rgba(10,12,16,.72);backdrop-filter:blur(8px);border:1px solid var(--edge);border-radius:10px;padding:28px}
-.paint h2{font-size:clamp(28px,4.5vw,40px);line-height:1.1;margin-bottom:12px}
-.paint p{color:var(--steel);font-size:15.5px;margin-bottom:20px}
-.swatches{display:flex;gap:14px;flex-wrap:wrap}
-.swatch-col{display:flex;flex-direction:column;align-items:center}
-.swatch{width:52px;height:52px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;font-size:0;transition:transform .25s,border-color .25s}
-.swatch:hover,.swatch:focus-visible{transform:translateY(-4px) scale(1.02);border-color:var(--white)}
-.swatch[aria-pressed="true"]{border-color:var(--ember)}
-.swatch-name{font-size:12px;color:var(--steel);margin-top:8px;text-align:center}
 
 /* solid sections */
 .solid{background:var(--void);position:relative;z-index:2;border-top:1px solid var(--edge)}
@@ -127,13 +112,11 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 .reveal{opacity:0;transform:translateY(24px)}
 @media(prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none}
-  .damage .fixed{clip-path:none}
+  .damage .fixed{opacity:1}
 }
 @media(max-width:767px){
   .hero .bg{background-position:35% 40%}
   .damage .layer{background-position:38% 42%}
-  .paint .bg{background-position:38% 42%}
-  .paint .shade{background:linear-gradient(to top,rgba(10,12,16,.92) 30%,transparent 70%)}
 }
 </style>
 </head>
@@ -164,7 +147,7 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 <section class="damage" id="repair" aria-label="Scroll to see the car repaired from wrecked to restored">
   <div class="layer wrecked"></div>
   <div class="layer fixed" id="fixedLayer"></div>
-  <div class="seam" id="seam"></div>
+  <canvas id="morph"></canvas>
   <div class="shade"></div>
   <div class="copy">
     <div class="wrap">
@@ -174,24 +157,6 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
         <p>Keep scrolling — that's the repair. Dents pulled, panels trued, paint cut and polished until the light runs straight down the body again.</p>
         <div class="meter"><i id="meter"></i></div>
         <div class="label"><span>Arrived</span><span>Delivered</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="paint" id="paint">
-  <div class="bg" id="paintBg"></div>
-  <div class="shade"></div>
-  <div class="wrap">
-    <div class="copy">
-      <p class="kicker">The paint bay</p>
-      <h2>Factory match, or better.</h2>
-      <p>Computerized color match, full-body respray, ceramic clearcoat. Tap a finish and watch the accents change.</p>
-      <div class="swatches" role="group" aria-label="Accent finishes">
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E8C25A,#9A7420)" data-filter="none" aria-pressed="true" aria-label="Factory Gold">Factory Gold</button><span class="swatch-name">Factory Gold</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#4E9EF0,#1D4ED8)" data-filter="hue-rotate(185deg) saturate(1.25)" aria-pressed="false" aria-label="Sapphire">Sapphire</button><span class="swatch-name">Sapphire</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E45858,#8E1B1B)" data-filter="hue-rotate(-28deg) saturate(1.5)" aria-pressed="false" aria-label="Rosso">Rosso</button><span class="swatch-name">Rosso</span></div>
-        <div class="swatch-col"><button class="swatch" style="background:linear-gradient(135deg,#E5E7EB,#8B9199)" data-filter="saturate(.15) brightness(1.08)" aria-pressed="false" aria-label="Ghost Silver">Ghost Silver</button><span class="swatch-name">Ghost Silver</span></div>
       </div>
     </div>
   </div>
@@ -275,15 +240,6 @@ gsap.registerPlugin(ScrollTrigger);
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
 let triggers = [];
 
-/* paint bay accent swap */
-document.querySelectorAll('.swatch').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.swatch').forEach(b => b.setAttribute('aria-pressed', 'false'));
-    btn.setAttribute('aria-pressed', 'true');
-    document.getElementById('paintBg').style.filter = btn.dataset.filter;
-  });
-});
-
 /* headline char split (once) */
 const h = document.getElementById('headline');
 h.innerHTML = 'Bring it <em>back.</em>';
@@ -301,14 +257,97 @@ h.innerHTML = 'Bring it <em>back.</em>';
   });
 })(h);
 
+/* ---- balloon morph: WebGL displacement between wrecked and repaired ---- */
+const morph = (() => {
+  const canvas = document.getElementById('morph');
+  const gl = canvas.getContext('webgl', { antialias: false, depth: false });
+  if (!gl) return null;
+  const vs = `attribute vec2 aP; varying vec2 vUv; void main(){ vUv = aP * .5 + .5; vUv.y = 1. - vUv.y; gl_Position = vec4(aP, 0., 1.); }`;
+  const fs = `
+precision mediump float;
+varying vec2 vUv;
+uniform sampler2D uA, uB;
+uniform float uP;
+uniform vec2 uRes;
+vec2 cover(vec2 uv){
+  float ca = uRes.x / uRes.y, ia = 3.0;
+  vec2 t = uv - .5;
+  if (ca < ia) t.x *= ca / ia; else t.y *= ia / ca;
+  return t + vec2(.5, .47);
+}
+void main(){
+  vec2 uv = cover(vUv);
+  float n = sin(uv.y*22.0 + uv.x*9.0) * .5 + sin(uv.x*31.0 - uv.y*17.0) * .35 + sin((uv.x+uv.y)*47.0) * .15;
+  float w = sin(uP * 3.14159);            // bulge peaks mid-repair
+  vec2 d = vec2(n, sin(n*3.7)) * .05 * w; // panels swell as they pop back out
+  float m = smoothstep(.15, .85, uP);
+  vec2 uvA = uv + d * uP;                 // wreck warps away
+  vec2 s = (uv - .5) / (1.0 + .045 * w) + .5; // repaired panel inflates in
+  vec2 uvB = s - d * (1.0 - uP);
+  vec4 a = texture2D(uA, clamp(uvA, 0.0, 1.0));
+  vec4 b = texture2D(uB, clamp(uvB, 0.0, 1.0));
+  gl_FragColor = mix(a, b, m);
+}`;
+  function shader(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, shader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  const aP = gl.getAttribLocation(prog, 'aP');
+  gl.enableVertexAttribArray(aP);
+  gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
+  const uP = gl.getUniformLocation(prog, 'uP');
+  const uRes = gl.getUniformLocation(prog, 'uRes');
+  gl.uniform1i(gl.getUniformLocation(prog, 'uA'), 0);
+  gl.uniform1i(gl.getUniformLocation(prog, 'uB'), 1);
+  let ready = false;
+  function tex(unit, img) {
+    const t = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+  }
+  const wreck = new Image(), fixed = new Image();
+  wreck.src = 'img/car-wrecked.jpg'; fixed.src = 'img/car-pristine.jpg';
+  Promise.all([wreck.decode(), fixed.decode()]).then(() => {
+    tex(0, wreck); tex(1, fixed);
+    ready = true;
+    canvas.style.display = 'block';
+    size(); draw(lastP);
+  }).catch(() => {});
+  let lastP = 0;
+  function size() {
+    const dpr = Math.min(devicePixelRatio, 1.75);
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+  }
+  function draw(p) {
+    lastP = p;
+    if (!ready) return;
+    gl.uniform1f(uP, p);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  addEventListener('resize', () => { if (ready) { size(); draw(lastP); } });
+  return { draw };
+})();
+
 function buildMotion() {
   triggers.forEach(t => t.kill()); triggers = [];
   const meter = document.getElementById('meter');
   const fixedLayer = document.getElementById('fixedLayer');
-  const seam = document.getElementById('seam');
   if (mq.matches) {
-    fixedLayer.style.clipPath = 'none';
-    seam.style.opacity = 0;
+    fixedLayer.style.opacity = 1;
+    document.getElementById('morph').style.display = 'none';
     meter.style.width = '100%';
     gsap.set('#headline .ch', { opacity: 1, y: 0 });
     return;
@@ -325,26 +364,22 @@ function buildMotion() {
     trigger: '#top', start: 'top top', end: 'bottom top', scrub: true,
     animation: gsap.to('#heroBg', { yPercent: 12, ease: 'none' })
   }));
-  // damage wipe — pinned scrub, wrecked -> restored left to right
+  // repair morph — pinned scrub; shader if available, crossfade otherwise
   const wipe = { p: 0 };
   triggers.push(ScrollTrigger.create({
     trigger: '#repair', start: 'top top', end: '+=150%', pin: true, scrub: 1,
     animation: gsap.to(wipe, {
       p: 1, ease: 'none',
       onUpdate: () => {
-        const pct = wipe.p * 100;
-        fixedLayer.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-        seam.style.left = pct + '%';
-        seam.style.opacity = wipe.p > .01 && wipe.p < .99 ? 1 : 0;
-        meter.style.width = pct + '%';
+        if (morph) morph.draw(wipe.p);
+        else fixedLayer.style.opacity = wipe.p;
+        meter.style.width = (wipe.p * 100) + '%';
       }
     })
   }));
 }
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
 buildMotion();
-const imgs = ['img/car-wrecked.jpg', 'img/car-pristine.jpg'].map(src => { const i = new Image(); i.src = src; return i; });
-Promise.all(imgs.map(i => i.decode().catch(() => {}))).then(() => ScrollTrigger.refresh());
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
 </body>
