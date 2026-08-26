@@ -115,8 +115,19 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
   .damage .fixed{opacity:1}
 }
 @media(max-width:767px){
-  .hero .bg{background-position:35% 40%}
-  .damage .layer{background-position:38% 42%}
+  /* hero: image band up top, copy below — no extreme crop */
+  .hero{display:block;min-height:0;padding-bottom:44px}
+  .hero .bg{position:relative;inset:auto;margin-top:64px;height:38vh;background-position:center 30%}
+  .hero .shade{background:linear-gradient(to top,var(--void) 0%,transparent 30%)}
+  .hero .wrap{margin-top:-40px}
+  .hero h1{font-size:clamp(44px,13vw,64px)}
+  .hero p{font-size:16.5px}
+  /* repair: video band up top, card below it */
+  .damage video,.damage .layer{top:64px;bottom:auto;height:42vh}
+  .damage .shade{display:none}
+  .damage .copy{bottom:auto;top:calc(64px + 42vh + 14px)}
+  .damage .card{padding:20px 22px;background:var(--void);backdrop-filter:none;border:none}
+  .damage h2{font-size:26px}
 }
 </style>
 </head>
