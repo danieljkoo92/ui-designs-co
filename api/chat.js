@@ -98,6 +98,13 @@ module.exports = async function handler(req, res) {
       return;
     }
 
+    // Fast-fail on a missing key so it reads as a config problem, not a model outage.
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('anthropic error: ANTHROPIC_API_KEY is not set');
+      res.status(500).json({ error: 'config' });
+      return;
+    }
+
     const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -119,7 +126,13 @@ module.exports = async function handler(req, res) {
     if (!apiRes.ok) {
       const detail = await apiRes.text();
       console.error('anthropic error', apiRes.status, detail.slice(0, 500));
-      res.status(502).json({ error: 'upstream' });
+      // Differentiate the cause so it's diagnosable from the browser, without
+      // Vercel logs. Safe: a category only, never the key or raw error body.
+      let code = 'upstream';
+      if (apiRes.status === 401 || apiRes.status === 403) code = 'auth';
+      else if (apiRes.status === 429) code = 'rate';
+      else if (apiRes.status === 402 || /credit|billing|balance|quota/i.test(detail)) code = 'billing';
+      res.status(502).json({ error: code });
       return;
     }
 
