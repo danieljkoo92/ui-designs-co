@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monthly Plans — UI Designs Co</title>
+<meta name="description" content="What the $149, $349 and $697 monthly plans actually do each month to get your business found and booked.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.plan-grid{display:grid;gap:22px;margin-top:34px}
+@media(min-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
+.plan{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column;position:relative}
+.plan.pick{border-color:var(--gold);box-shadow:0 22px 60px rgba(217,164,65,.10)}
+.plan .flag{position:absolute;top:-12px;left:24px;background:var(--gold);color:var(--void);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:99px}
+.plan h2{font-size:25px;font-weight:800}
+.plan .cost{font-size:38px;font-weight:800;margin:6px 0 2px;font-family:"Playfair Display",Georgia,serif}
+.plan .cost small{font-size:15px;color:var(--steel);font-weight:600;font-family:-apple-system,sans-serif}
+.plan .who{color:#C3CAD4;font-size:15px;margin-bottom:16px;min-height:48px}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:22px;flex:1}
+.plan li{display:flex;gap:10px;font-size:14.6px;color:#D6DCE4;line-height:1.5}
+.plan li svg{flex:0 0 16px;margin-top:4px}
+.plan li b{color:var(--white);font-weight:700}
+.plan .prev{font-size:13px;color:var(--steel);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+
+.explain{border-top:1px solid var(--edge);background:#0d1117}
+.ex-card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:28px 24px}
+.ex-card h3{font-size:21px;font-weight:800;margin-bottom:4px}
+.ex-card .tagline{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.ex-card p{color:#C3CAD4;font-size:15px;margin-bottom:12px}
+.ex-card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ex-card li{font-size:14.5px;color:#D6DCE4;padding-left:16px;position:relative}
+.ex-card li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+.month{counter-reset:m;display:grid;gap:16px;margin-top:30px}
+@media(min-width:760px){.month{grid-template-columns:1fr 1fr}}
+.m-item{background:var(--panel);border:1px solid var(--edge);border-left:3px solid var(--gold);border-radius:10px;padding:18px 20px}
+.m-item h4{font-size:16px;font-weight:700;margin-bottom:5px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.m-item p{color:var(--steel);font-size:14px}
+
+.cmp{width:100%;border-collapse:collapse;margin-top:30px;font-size:14.5px}
+.cmp th,.cmp td{border:1px solid var(--edge);padding:12px 14px;text-align:left}
+.cmp th{background:var(--panel);font-weight:700}
+.cmp td.c{text-align:center}
+.cmp tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+.yes{color:var(--gold);font-weight:800}
+.no{color:#4A5563}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+.faq-item{border-bottom:1px solid var(--edge);padding:20px 0}
+.faq-item h3{font-size:18px;font-weight:700;margin-bottom:7px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.faq-item p{color:#C3CAD4;font-size:15px}
+.closer{text-align:center;padding:78px 0;border-top:1px solid var(--edge)}
+.closer h2{font-size:clamp(26px,4vw,42px);font-weight:800;margin-bottom:14px}
+.closer p{color:#C3CAD4;max-width:580px;margin:0 auto 26px}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html">Work</a>
+      <a href="plans.html" aria-current="page">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">After your site is live</p>
+    <h1>A website sitting still <em>loses</em> to one being worked on.</h1>
+    <p>These plans are optional. Your site is yours and keeps working whether or not you take one. What a plan buys is someone doing the ongoing work that decides whether people find you — and that work is listed here in full, so you can see exactly what you'd be paying for.</p>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap">
+    <div class="plan-grid">
+
+      <div class="plan reveal">
+        <h2>Starter</h2>
+        <div class="cost">$149 <small>/ month</small></div>
+        <p class="who">For the business that wants the site handled and left alone.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Hosting, backups, security.</b> Your site stays up and stays yours. Backed up so a bad update can be undone.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Uptime monitoring.</b> If your site goes down, I find out before your customers do.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Local search upkeep.</b> Your name, address, hours and phone kept correct and identical everywhere they appear.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Minor content changes.</b> New prices, new hours, a new photo — text me and it's done.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Google Business Profile upkeep.</b> The panel that shows on the right of Google, kept current.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Visitor &amp; call dashboard.</b> How many people came, and how many tapped to call.</span></li>
+        </ul>
+        <a class="btn btn-ghost" href="sms:9172458685">Text about Starter</a>
+      </div>
+
+      <div class="plan pick reveal">
+        <span class="flag">Most picked</span>
+        <h2>Grow</h2>
+        <div class="cost">$349 <small>/ month</small></div>
+        <p class="who">For the business that wants the phone ringing and the reviews stacking up.</p>
+        <p class="prev">Everything in Starter, plus</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Online booking.</b> Customers pick a slot themselves instead of playing phone tag.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Advanced local search work.</b> The monthly work that decides whether you show up in the map results — detailed below.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Review replies, drafted for you.</b> Every review gets a written response; you approve it with one tap.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Review requests, automatic.</b> Finished jobs get a polite ask, so good customers actually leave reviews.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Appointment reminders.</b> Fewer no-shows, fewer wasted trips.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Monthly report.</b> One page, plain English: what came in, what changed, what I did.</span></li>
+        </ul>
+        <a class="btn" href="sms:9172458685">Text about Grow</a>
+      </div>
+
+      <div class="plan reveal">
+        <h2>Dominate</h2>
+        <div class="cost">$697 <small>/ month</small></div>
+        <p class="who">For the business that wants to be the obvious answer in its neighbourhood.</p>
+        <p class="prev">Everything in Grow, plus</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>AI chat on your site.</b> Answers questions and takes details at 11pm, when you're asleep.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Chat straight to your calendar.</b> The conversation ends in a booked slot, not a message you have to chase.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Built to be named by AI assistants.</b> Set up so that when someone asks an AI for a business like yours nearby, yours is one it can actually name — detailed below.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>A page per neighbourhood you serve.</b> Someone searching your trade plus their neighbourhood finds a page about exactly that.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Competitor tracking.</b> I watch what the other guys in your area are doing and tell you when it changes.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#D9A441" stroke-width="3" stroke-linecap="round"/></svg><span><b>Priority queue.</b> Your requests go to the front of the line.</span></li>
+        </ul>
+        <a class="btn btn-ghost" href="sms:9172458685">Text about Dominate</a>
+      </div>
+
+    </div>
+
+    <p class="muted" style="margin-top:22px;font-size:14.5px">An AI phone agent that answers calls you can't get to is available as an add-on. Pricing depends on your call volume — text and ask.</p>
+  </div>
+</section>
+
+<section class="pad explain">
+  <div class="wrap">
+    <p class="kicker">The part nobody explains</p>
+    <h2 class="sec-title">Three ways people find you now</h2>
+    <p class="sub-copy">Ten years ago there was one: you ranked on Google or you didn't. Now there are three, and they need different work. This is what the search line on the plans above actually means.</p>
+
+    <div class="grid g-3" style="margin-top:34px">
+      <div class="ex-card reveal">
+        <p class="tagline">Search engines &middot; SEO</p>
+        <h3>Someone types it into Google</h3>
+        <p>They search "plumber near me" and pick from what comes up — usually the map results, which take about 44% of the clicks.</p>
+        <ul>
+          <li>Your business details identical everywhere online — Google reads mismatches as two different businesses</li>
+          <li>A real page for each service, not one page listing everything</li>
+          <li>Pages that load fast on a phone on a weak signal</li>
+          <li>Reviews arriving steadily rather than in one suspicious burst</li>
+          <li>Photos with proper descriptions attached</li>
+        </ul>
+      </div>
+
+      <div class="ex-card reveal">
+        <p class="tagline">Direct answers &middot; AEO</p>
+        <h3>Someone gets one answer, not ten links</h3>
+        <p>Google now answers a lot of questions at the top of the page, and phone assistants read one result aloud. Being tenth is the same as being invisible.</p>
+        <ul>
+          <li>Your pages answer the actual questions people ask, in their words</li>
+          <li>Question-and-answer sections written to be quotable</li>
+          <li>Hidden labels on your page telling the machine what your hours, area and services are</li>
+          <li>Straight answers on pricing and timing, not "contact us for details"</li>
+        </ul>
+      </div>
+
+      <div class="ex-card reveal">
+        <p class="tagline">AI assistants &middot; GEO</p>
+        <h3>Someone asks ChatGPT for a recommendation</h3>
+        <p>People increasingly ask an assistant "who should I call for this in Astoria?" It names a handful of businesses. Being nameable is now its own job.</p>
+        <ul>
+          <li>Clear, consistent facts an assistant can repeat without guessing</li>
+          <li>Being described the same way across your site, your profile and directories</li>
+          <li>Content that reads like an answer rather than an advert</li>
+          <li>Your service area and specialities stated in plain sentences, not left implied</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top:26px;font-size:14.5px">Nobody — me included — can promise you a ranking or a number of calls. Google and the AI companies change how this works constantly. What I can promise is that the work above gets done every month and that you see exactly what was done.</p>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap">
+    <p class="kicker">Where the money goes</p>
+    <h2 class="sec-title">What actually happens each month</h2>
+    <p class="sub-copy">A monthly fee should buy visible work. Here's the routine on a Grow or Dominate plan.</p>
+    <div class="month">
+      <div class="m-item reveal"><h4>Week 1 — Check and fix</h4><p>Full sweep of the site: broken links, slow pages, forms that stopped sending, anything a browser update broke. Backups verified by actually restoring one.</p></div>
+      <div class="m-item reveal"><h4>Week 1 — Listings audit</h4><p>Your name, address, phone and hours checked across Google, Apple Maps, Bing and the directories that matter. Any mismatch corrected.</p></div>
+      <div class="m-item reveal"><h4>Week 2 — Content work</h4><p>A page improved or added: a service you want more of, a question customers keep asking, a job worth showing off.</p></div>
+      <div class="m-item reveal"><h4>Week 2 — Reviews</h4><p>Requests go out on finished jobs. New reviews get a drafted reply for you to approve. Anything negative comes to you first, before it's answered.</p></div>
+      <div class="m-item reveal"><h4>Week 3 — Search &amp; AI signals</h4><p>The structured labels on your pages checked and extended, question-and-answer content updated, and the phrasing that makes you nameable by assistants reviewed.</p></div>
+      <div class="m-item reveal"><h4>Week 3 — Competitors <span class="muted">(Dominate)</span></h4><p>What the other businesses in your area changed — new pages, new offers, new review volume — and whether it's worth reacting to.</p></div>
+      <div class="m-item reveal"><h4>Week 4 — Report</h4><p>One page: visitors, calls, form fills, what I changed, what I'm doing next month. Plain English, no dashboard homework.</p></div>
+      <div class="m-item reveal"><h4>Any time — Your requests</h4><p>Price change, new hours, holiday closure, a photo from a job this morning. Text me; small changes are same-day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad" style="border-top:1px solid var(--edge)">
+  <div class="wrap">
+    <h2 class="sec-title">Side by side</h2>
+    <div class="tbl-scroll">
+      <table class="cmp">
+        <thead>
+          <tr><th>&nbsp;</th><th>Starter<br><span class="muted">$149</span></th><th>Grow<br><span class="muted">$349</span></th><th>Dominate<br><span class="muted">$697</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hosting, backups, security</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Uptime monitoring</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Minor content changes</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Google Business Profile upkeep</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Visitor &amp; call dashboard</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Online booking</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Advanced local search work</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Review requests &amp; drafted replies</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Appointment reminders</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Monthly report</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>AI chat on your site</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Chat straight to your calendar</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Built to be named by AI assistants</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>A page per neighbourhood</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Competitor tracking</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+          <tr><td>Priority queue</td><td class="c no">&mdash;</td><td class="c no">&mdash;</td><td class="c yes">&#10003;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="pad" style="border-top:1px solid var(--edge);background:#0d1117">
+  <div class="wrap">
+    <h2 class="sec-title">Straight answers</h2>
+    <div class="faq-item"><h3>Do I have to take a plan?</h3><p>No. The build is a one-time payment and the site is yours either way. Plans exist because a site that's maintained gets found and a site that's abandoned slowly stops working.</p></div>
+    <div class="faq-item"><h3>Can I cancel?</h3><p>Any time, before your next billing date. Cancelling stops future billing; it doesn't refund the month you're in. No notice period, no cancellation fee, no phone call you have to sit through.</p></div>
+    <div class="faq-item"><h3>If I cancel, do I lose my website?</h3><p>No. The design and code are yours once the build is paid for. What stops is the hosting, the monitoring and the monthly work — you'd need to arrange hosting elsewhere, and I'll hand over what's needed to do that.</p></div>
+    <div class="faq-item"><h3>Can I start on a plan without a build?</h3><p>Not currently. The plans are built around sites I've made, so I know exactly what's under the hood. If you've got a site from someone else, text me and I'll tell you honestly whether it's worth working on.</p></div>
+    <div class="faq-item"><h3>Can I move up or down a tier?</h3><p>Yes, from the next billing month. Most people start on Starter and move to Grow once they see traffic worth chasing.</p></div>
+    <div class="faq-item"><h3>What happens if the work doesn't bring in more customers?</h3><p>I can't guarantee results and I won't pretend otherwise — anyone promising you rankings or a number of leads is guessing. What you get is a monthly report showing exactly what was done, so you can judge whether it's worth continuing. If it isn't, cancel.</p></div>
+    <div class="faq-item"><h3>Who do I talk to?</h3><p>Me. There's no support desk and no ticket number. You text the same number you always have.</p></div>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>Not sure which one?</h2>
+    <p>Text me what you do and roughly how busy you are. I'll tell you which plan makes sense — including if the answer is none of them yet.</p>
+    <a class="btn" href="sms:9172458685">Text Daniel</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>The Work — UI Designs Co</title>
+<meta name="description" content="Seven website builds across seven trades. Standard and Signature examples you can open and scroll.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:34px 0 30px}
+.tab{background:var(--panel);border:1px solid var(--edge);color:#C3CAD4;padding:11px 20px;border-radius:99px;font-weight:700;font-size:14.5px;cursor:pointer;min-height:44px;transition:border-color .15s,color .15s,background .15s}
+.tab:hover{color:var(--white)}
+.tab[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--void)}
+
+.works{display:grid;gap:26px}
+@media(min-width:820px){.works{grid-template-columns:1fr 1fr}}
+.w-card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
+.w-card:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 26px 60px rgba(0,0,0,.55)}
+.w-card.hide{display:none}
+.w-shot{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#0d1016;border-bottom:1px solid var(--edge)}
+.w-shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.w-tier{position:absolute;top:12px;left:12px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:99px;background:rgba(10,12,16,.86);border:1px solid var(--edge);color:#C3CAD4}
+.w-tier.premium{background:var(--gold);border-color:var(--gold);color:var(--void)}
+.w-body{padding:22px 22px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.w-body h2{font-size:22px;font-weight:800}
+.w-trade{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+.w-meta{color:var(--steel);font-size:14px;margin-top:2px}
+.w-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.w-actions .btn{min-height:44px;padding:11px 18px;font-size:14.5px}
+
+.note{margin-top:34px;padding:18px 20px;border:1px solid var(--edge);border-radius:12px;background:var(--panel);color:var(--steel);font-size:14.5px}
+.closer{text-align:center;padding:78px 0;border-top:1px solid var(--edge)}
+.closer h2{font-size:clamp(26px,4vw,42px);font-weight:800;margin-bottom:14px}
+.closer p{color:#C3CAD4;max-width:560px;margin:0 auto 26px}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html" aria-current="page">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">The work</p>
+    <h1>Seven trades. Seven <em>different</em> sites.</h1>
+    <p>Every one of these is a real, working website you can open and scroll — not a picture of one. No templates were reused between them.</p>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Filter by build type">
+      <button class="tab" role="tab" aria-selected="true" data-filter="all">All builds</button>
+      <button class="tab" role="tab" aria-selected="false" data-filter="premium">Signature — $3,500</button>
+      <button class="tab" role="tab" aria-selected="false" data-filter="standard">Standard — $1,000</button>
+    </div>
+
+    <div class="works" id="works">
+
+      <article class="w-card reveal" data-tier="premium">
+        <a class="w-shot" href="demo-auto.html" target="_blank" rel="noopener">
+          <img src="img/shots/auto.jpg" alt="Ironside Collision auto body website" loading="lazy">
+          <span class="w-tier premium">Signature</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Auto body</p>
+          <h2>Ironside Collision</h2>
+          <p class="w-meta">A wrecked car repairs itself as you scroll. Scroll-driven film, built in 10–14 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-auto.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Text about a Signature build</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="premium">
+        <a class="w-shot" href="demo-pest-pro.html" target="_blank" rel="noopener">
+          <img src="img/pest-clean.jpg" alt="PestFree Exterminating pest control website" loading="lazy">
+          <span class="w-tier premium">Signature</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Pest control</p>
+          <h2>PestFree Exterminating</h2>
+          <p class="w-meta">Opens infested and crawling, then clears as you scroll. Scroll-driven film, built in 10–14 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-pest-pro.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Text about a Signature build</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="standard">
+        <a class="w-shot" href="demo-hvac.html" target="_blank" rel="noopener">
+          <img src="img/shots/hvac.jpg" alt="HVAC company website" loading="lazy">
+          <span class="w-tier">Standard</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">HVAC</p>
+          <h2>Heating &amp; cooling</h2>
+          <p class="w-meta">Emergency call-out front and centre. Standard build, live in 5–7 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-hvac.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Get my free preview</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="standard">
+        <a class="w-shot" href="demo-tree.html" target="_blank" rel="noopener">
+          <img src="img/shots/tree.jpg" alt="Tree service website" loading="lazy">
+          <span class="w-tier">Standard</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Tree service</p>
+          <h2>Tree removal &amp; care</h2>
+          <p class="w-meta">Storm-damage work sold on photos. Standard build, live in 5–7 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-tree.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Get my free preview</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="standard">
+        <a class="w-shot" href="demo-moving.html" target="_blank" rel="noopener">
+          <img src="img/shots/moving.jpg" alt="Moving company website" loading="lazy">
+          <span class="w-tier">Standard</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Moving</p>
+          <h2>Moving company</h2>
+          <p class="w-meta">Instant quote form, priced by job size. Standard build, live in 5–7 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-moving.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Get my free preview</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="standard">
+        <a class="w-shot" href="demo-driving.html" target="_blank" rel="noopener">
+          <img src="img/shots/driving.jpg" alt="Driving school website" loading="lazy">
+          <span class="w-tier">Standard</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Driving school</p>
+          <h2>Driving school</h2>
+          <p class="w-meta">Packages and booking, built for parents on phones. Standard build, live in 5–7 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-driving.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Get my free preview</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="w-card reveal" data-tier="standard">
+        <a class="w-shot" href="demo-pest.html" target="_blank" rel="noopener">
+          <img src="img/shots/pest.jpg" alt="Pest control website" loading="lazy">
+          <span class="w-tier">Standard</span>
+        </a>
+        <div class="w-body">
+          <p class="w-trade">Pest control</p>
+          <h2>Pest control</h2>
+          <p class="w-meta">The same trade at the standard tier — compare it with the Signature build above. Live in 5–7 days.</p>
+          <div class="w-actions">
+            <a class="btn" href="demo-pest.html" target="_blank" rel="noopener">Open the site</a>
+            <a class="btn btn-ghost" href="sms:9172458685">Get my free preview</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="note">These are portfolio pieces. The business names, addresses, phone numbers, licence numbers and reviews on them are invented for demonstration — your site is built with your real details, and nothing goes live until you've confirmed them.</p>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>Yours would be next.</h2>
+    <p>Text your business name and trade. You get a working preview of your own site within 48 hours, before you've paid anything.</p>
+    <a class="btn" href="sms:9172458685">Request my free preview</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.tab');
+  var cards = document.querySelectorAll('.w-card');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var want = tab.dataset.filter;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+      cards.forEach(function (card) {
+        card.classList.toggle('hide', want !== 'all' && card.dataset.tier !== want);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

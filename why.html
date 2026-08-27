@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why a Website — the numbers | UI Designs Co</title>
+<meta name="description" content="What it costs a local business to have no website or a weak one, and what a good one does. Sourced numbers, and a calculator for your own.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="scan-widget.css">
+<style>
+.split{display:grid;gap:22px;margin-top:34px}
+@media(min-width:860px){.split{grid-template-columns:1fr 1fr}}
+.col{border:1px solid var(--edge);border-radius:16px;padding:28px 24px;background:var(--panel)}
+.col.cost{border-color:rgba(220,80,80,.32);background:linear-gradient(180deg,rgba(220,80,80,.05),var(--panel))}
+.col.gain{border-color:rgba(217,164,65,.34);background:linear-gradient(180deg,rgba(217,164,65,.05),var(--panel))}
+.col h2{font-size:23px;font-weight:800;margin-bottom:5px}
+.col .lede{color:#C3CAD4;font-size:15px;margin-bottom:24px}
+.col.cost h2{color:#E88B8B}
+.col.gain h2{color:var(--gold)}
+
+.stat{padding:18px 0;border-top:1px solid var(--edge)}
+.stat:first-of-type{border-top:none;padding-top:0}
+.stat .fig{font-family:"Playfair Display",Georgia,serif;font-size:clamp(38px,6vw,54px);font-weight:800;line-height:1;letter-spacing:-.02em}
+.cost .fig{color:#E88B8B}
+.gain .fig{color:var(--gold)}
+.stat p{font-size:15.5px;color:#D6DCE4;margin-top:8px}
+.src{display:block;font-size:12px;color:#6B7482;margin-top:7px}
+.src a{color:#8C97A6}
+
+.track{height:9px;background:#0A0C10;border:1px solid var(--edge);border-radius:99px;overflow:hidden;margin-top:12px}
+.track i{display:block;height:100%;width:0;border-radius:99px;transition:width 1.3s cubic-bezier(.22,.9,.3,1)}
+.cost .track i{background:linear-gradient(90deg,#7a3030,#E88B8B)}
+.gain .track i{background:linear-gradient(90deg,#B8862C,#D9A441)}
+
+.rings{display:grid;gap:26px;margin-top:34px}
+@media(min-width:700px){.rings{grid-template-columns:repeat(3,1fr)}}
+.ring-card{text-align:center;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:26px 20px}
+.ring{position:relative;width:132px;height:132px;margin:0 auto 14px}
+.ring svg{transform:rotate(-90deg)}
+.ring .bg{stroke:#232A35}
+.ring .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.22,.9,.3,1)}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",Georgia,serif;font-size:31px;font-weight:800}
+.ring-card h3{font-size:17px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin-bottom:6px}
+.ring-card p{font-size:14.4px;color:#C3CAD4}
+
+.calc{background:var(--panel);border:1px solid var(--gold);border-radius:16px;padding:30px 26px;max-width:760px}
+.calc h2{font-size:clamp(23px,3.4vw,32px);font-weight:800;margin-bottom:8px}
+.calc .lede{color:#C3CAD4;font-size:15.5px;margin-bottom:24px}
+.calc-row{display:grid;gap:20px}
+@media(min-width:640px){.calc-row{grid-template-columns:1fr 1fr}}
+.field label{display:block;font-size:14px;font-weight:700;margin-bottom:8px}
+.field .hint{display:block;font-weight:400;color:#8C97A6;font-size:13px;margin-top:3px}
+.field input[type=range]{width:100%;accent-color:var(--gold);height:34px}
+.field .val{font-family:"Playfair Display",Georgia,serif;font-size:28px;font-weight:800;color:var(--gold)}
+.calc-out{margin-top:26px;padding-top:24px;border-top:1px solid var(--edge);text-align:center}
+.calc-out .big{font-family:"Playfair Display",Georgia,serif;font-size:clamp(42px,9vw,76px);font-weight:800;color:var(--gold);line-height:1;letter-spacing:-.02em}
+.calc-out .cap{color:#C3CAD4;font-size:15.5px;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto}
+.calc-note{font-size:13px;color:#6B7482;margin-top:16px;max-width:560px;margin-left:auto;margin-right:auto}
+
+.closer{text-align:center;padding:78px 0;border-top:1px solid var(--edge)}
+.closer h2{font-size:clamp(26px,4vw,42px);font-weight:800;margin-bottom:14px}
+.closer p{color:#C3CAD4;max-width:580px;margin:0 auto 26px}
+.sources{font-size:13.5px;color:#6B7482;padding-bottom:60px}
+.sources h3{font-size:14px;color:#8C97A6;font-family:inherit;margin-bottom:10px;text-transform:uppercase;letter-spacing:.14em}
+.sources li{margin-bottom:6px;list-style:none}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html" aria-current="page">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">The numbers</p>
+    <h1>What it costs to be <em>hard to find</em>.</h1>
+    <p>Every figure on this page comes from published research, and every one is sourced underneath it. Start with your own site — the check below tells you where you actually stand before you read anyone else's numbers.</p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:44px">
+  <div class="wrap">
+    <div data-site-check
+         data-heading="Start with your own site"
+         data-intro="Paste your address. In about ten seconds you'll see what a search engine reads, what a phone visitor gets, and whether an AI assistant could recommend you."></div>
+  </div>
+</section>
+
+<section class="pad" style="border-top:1px solid var(--edge)">
+  <div class="wrap">
+    <p class="kicker">Both sides</p>
+    <h2 class="sec-title">The cost of nothing, next to the value of something</h2>
+    <p class="sub-copy">Left is what happens while you have no site, or one that doesn't work. Right is what a working one does.</p>
+
+    <div class="split">
+      <div class="col cost reveal">
+        <h2>Without one</h2>
+        <p class="lede">Quiet losses. Nobody tells you they happened.</p>
+
+        <div class="stat">
+          <div class="fig" data-count="27" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="27"></i></div>
+          <p>of calls to home-service businesses go unanswered.</p>
+          <span class="src">Invoca, 2025 — analysis of over 60 million calls</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="85" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="85"></i></div>
+          <p>of callers who reach voicemail never call back. They call the next name on the list.</p>
+          <span class="src">Invoca call-tracking research</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="53" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="53"></i></div>
+          <p>of mobile visitors abandon a page that takes more than three seconds to load.</p>
+          <span class="src">Google / SOASTA mobile speed research</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="1200" data-prefix="$">$0</div>
+          <div class="track"><i data-fill="60"></i></div>
+          <p>is roughly what a single missed call costs a home-service business in lost work.</p>
+          <span class="src">Industry call-tracking estimates, home services</span>
+        </div>
+      </div>
+
+      <div class="col gain reveal">
+        <h2>With a good one</h2>
+        <p class="lede">The same customers, landing somewhere that answers them.</p>
+
+        <div class="stat">
+          <div class="fig" data-count="78" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="78"></i></div>
+          <p>of customers buy from the business that responds to them first.</p>
+          <span class="src">Lead-response research, InsideSales / Harvard Business Review</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="21" data-suffix="x">0x</div>
+          <div class="track"><i data-fill="70"></i></div>
+          <p>more likely a lead is to qualify when it's contacted within five minutes instead of thirty.</p>
+          <span class="src">MIT / InsideSales lead-response study</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="46" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="46"></i></div>
+          <p>of all Google searches are looking for something local — a business near the person searching.</p>
+          <span class="src">Google search-intent data</span>
+        </div>
+
+        <div class="stat">
+          <div class="fig" data-count="44" data-suffix="%">0%</div>
+          <div class="track"><i data-fill="44"></i></div>
+          <p>of clicks on a local search go to the top three map results. Everyone else splits what's left.</p>
+          <span class="src">Local search click-through analyses</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pad" style="border-top:1px solid var(--edge);background:#0d1117">
+  <div class="wrap">
+    <p class="kicker">Where your customers already are</p>
+    <h2 class="sec-title">Three numbers worth sitting with</h2>
+    <div class="rings">
+      <div class="ring-card reveal">
+        <div class="ring" data-ring="70"><svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true"><circle class="bg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/><circle class="fg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/></svg><b>0%</b></div>
+        <h3>Arrive on a phone</h3>
+        <p>About seven in ten home-service enquiries start on a mobile screen, usually standing in the problem.</p>
+        <span class="src">Home-services industry mobile traffic data</span>
+      </div>
+      <div class="ring-card reveal">
+        <div class="ring" data-ring="50"><svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true"><circle class="bg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/><circle class="fg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/></svg><b>0%</b></div>
+        <h3>Of trades have no site</h3>
+        <p>Roughly half of local contractors still have no website at all — which is exactly why the half that do get found first.</p>
+        <span class="src">Small-business web presence surveys, 2023–2025</span>
+      </div>
+      <div class="ring-card reveal">
+        <div class="ring" data-ring="75"><svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true"><circle class="bg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/><circle class="fg" cx="66" cy="66" r="58" fill="none" stroke-width="11"/></svg><b>0%</b></div>
+        <h3>Judge you by the site</h3>
+        <p>Most people admit they judge a company's credibility on its website design alone — before they've spoken to anyone.</p>
+        <span class="src">Stanford Web Credibility Research</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pad" style="border-top:1px solid var(--edge)">
+  <div class="wrap">
+    <p class="kicker">Your number, not mine</p>
+    <div class="calc reveal">
+      <h2>What are missed calls costing you?</h2>
+      <p class="lede">Two sliders. This uses your figures, not an average — and it's arithmetic, not a promise about what a website would earn you.</p>
+      <div class="calc-row">
+        <div class="field">
+          <label for="calls">Calls you miss in a typical week
+            <span class="hint">Rings out, goes to voicemail, or comes in while you're on a job.</span>
+          </label>
+          <input type="range" id="calls" min="0" max="30" step="1" value="5">
+          <div class="val"><span id="callsVal">5</span> a week</div>
+        </div>
+        <div class="field">
+          <label for="job">What an average job is worth to you
+            <span class="hint">Roughly what one of those callers would have paid.</span>
+          </label>
+          <input type="range" id="job" min="100" max="5000" step="50" value="1200">
+          <div class="val">$<span id="jobVal">1,200</span></div>
+        </div>
+      </div>
+      <div class="calc-out">
+        <div class="big" id="lost">$0</div>
+        <p class="cap" id="cap">walks away every year, if one in four of those callers would have booked.</p>
+        <p class="calc-note">Assumes a quarter of missed callers would have become paying work — the rest were never going to buy. Adjust the sliders to your own reality; the sum is <em>calls &times; 52 &times; job value &times; 25%</em>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pad sources" style="border-top:1px solid var(--edge)">
+  <div class="wrap">
+    <h3>Where these come from</h3>
+    <ul>
+      <li>Invoca (2025) — call-tracking analysis across 60M+ home-services calls: unanswered call rate, voicemail abandonment.</li>
+      <li>Google / SOASTA — mobile page-speed and bounce research: the three-second threshold.</li>
+      <li>MIT &amp; InsideSales lead-response studies — the five-minute contact window.</li>
+      <li>Harvard Business Review / InsideSales — first-responder advantage in inbound leads.</li>
+      <li>Google search-intent data — share of searches with local intent.</li>
+      <li>Stanford Web Credibility Research — design as a driver of perceived trust.</li>
+      <li>Small-business web-presence surveys, 2023–2025 — share of local trades without a website.</li>
+    </ul>
+    <p style="margin-top:16px">These are industry figures about local businesses in general. They are not predictions about your business, and nothing here is a guarantee of results.</p>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>See yours before you decide.</h2>
+    <p>Text your business name and trade. You get a working preview of your own site within 48 hours, free, before you've paid anything.</p>
+    <a class="btn" href="sms:9172458685">Request my free preview</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script src="scan-widget.js"></script>
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function countUp(node) {
+    var target = parseFloat(node.dataset.count);
+    var prefix = node.dataset.prefix || '';
+    var suffix = node.dataset.suffix || '';
+    if (reduce) { node.textContent = prefix + target.toLocaleString() + suffix; return; }
+    var t0 = null;
+    (function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 1300);
+      var eased = 1 - Math.pow(1 - p, 3);
+      node.textContent = prefix + Math.round(target * eased).toLocaleString() + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+
+  function fillRing(ring) {
+    var pct = parseFloat(ring.dataset.ring);
+    var fg = ring.querySelector('.fg');
+    var num = ring.querySelector('b');
+    var C = 2 * Math.PI * 58;
+    fg.style.strokeDasharray = C.toFixed(1);
+    fg.style.strokeDashoffset = C.toFixed(1);
+    requestAnimationFrame(function () { fg.style.strokeDashoffset = C * (1 - pct / 100); });
+    if (reduce) { num.textContent = pct + '%'; return; }
+    var t0 = null;
+    (function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 1400);
+      num.textContent = Math.round(pct * (1 - Math.pow(1 - p, 3))) + '%';
+      if (p < 1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+
+  function run(n) {
+    if (n.dataset.count) countUp(n);
+    else if (n.dataset.fill) n.style.width = n.dataset.fill + '%';
+    else fillRing(n);
+  }
+
+  var animatable = document.querySelectorAll('[data-count],[data-fill],[data-ring]');
+  if (!('IntersectionObserver' in window)) {
+    animatable.forEach(run);
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        run(e.target);
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    animatable.forEach(function (n) {
+      // already scrolled past (deep link, restored position) — never leave it at zero
+      if (n.getBoundingClientRect().bottom < 0) run(n);
+      else io.observe(n);
+    });
+  }
+
+  // missed-call calculator
+  var calls = document.getElementById('calls');
+  var job = document.getElementById('job');
+  var lost = document.getElementById('lost');
+  var cap = document.getElementById('cap');
+  var CONVERT = 0.25;
+
+  function money(n) { return '$' + Math.round(n).toLocaleString(); }
+  function update() {
+    var c = +calls.value, j = +job.value;
+    document.getElementById('callsVal').textContent = c;
+    document.getElementById('jobVal').textContent = j.toLocaleString();
+    var annual = c * 52 * j * CONVERT;
+    lost.textContent = money(annual);
+    cap.textContent = c === 0
+      ? "Nothing — if you genuinely never miss a call, a website's job is just to bring you more of them."
+      : 'walks away every year, if one in four of those callers would have booked.';
+  }
+  calls.addEventListener('input', update);
+  job.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>

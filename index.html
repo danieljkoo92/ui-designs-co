@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scan-widget.css">
 <style>
 :focus-visible{outline:3px solid #D9A441;outline-offset:2px;border-radius:3px}
 .skip-nav{position:absolute;left:-9999px;top:0;z-index:999;background:#D9A441;color:#0A0C10;padding:12px 18px;font-weight:700;text-decoration:none}
@@ -36,10 +37,21 @@ h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
 
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:linear-gradient(to bottom,rgba(10,12,16,.88),transparent)}
-header .wrap{display:flex;justify-content:space-between;align-items:center}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px}
 .logo{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:21px;color:var(--white);text-decoration:none;white-space:nowrap}
 .logo em{font-style:italic;color:var(--gold)}
 header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:20px}
+.nav a{color:#C3CAD4;text-decoration:none;font-size:14.5px;font-weight:600;white-space:nowrap;transition:color .15s}
+.nav a:hover{color:var(--white)}
+.nav-toggle{display:none;background:rgba(10,12,16,.6);border:1px solid var(--edge);border-radius:6px;color:var(--white);min-height:44px;min-width:44px;cursor:pointer;font-size:20px;line-height:1}
+@media(max-width:900px){
+  .nav{position:fixed;inset:70px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;background:var(--panel);border-bottom:1px solid var(--edge);padding:8px 0;display:none}
+  .nav.open{display:flex}
+  .nav a{padding:14px 24px;font-size:16px;border-bottom:1px solid var(--edge)}
+  .nav-toggle{display:inline-flex;align-items:center;justify-content:center}
+  header .btn.hdr-cta{display:none}
+}
 
 /* the film */
 .film{position:relative;height:100vh;overflow:hidden;background:#000}
@@ -228,7 +240,16 @@ footer .fine{margin-top:18px;font-size:13px}
 <header>
   <div class="wrap">
     <a class="logo" href="#top">UI <em>Designs</em></a>
-    <a class="btn" href="sms:9172458685">Text Daniel</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
   </div>
 </header>
 
@@ -270,6 +291,14 @@ footer .fine{margin-top:18px;font-size:13px}
   <button id="filmToggle" class="film-toggle" type="button" aria-label="Pause the background animation">❚❚</button>
   <div class="hint">Scroll</div>
 </div>
+
+<section class="pad" style="border-bottom:1px solid var(--edge);background:#0d1117">
+  <div class="wrap">
+    <div data-site-check
+         data-heading="Already have a site? Find out what it's doing."
+         data-intro="Paste your address. In about ten seconds you'll see what a search engine reads, what a phone visitor gets, and whether an AI assistant could recommend you — free, no details needed."></div>
+  </div>
+</section>
 
 <section class="pad rebuild" id="rebuild">
   <div class="wrap">
@@ -514,6 +543,7 @@ footer .fine{margin-top:18px;font-size:13px}
         <a href="mailto:uidesignsco@gmail.com">uidesignsco@gmail.com</a>
       </div>
     </div>
+    <p class="legal-links" style="margin-bottom:8px"><a href="work.html">Work</a> · <a href="plans.html">Plans</a> · <a href="why.html">Why a Website</a> · <a href="scan.html">Free Site Check</a> · <a href="how-it-works.html">How It Works</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a></p>
     <p class="legal-links"><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="accessibility.html">Accessibility</a></p>
     <p class="fine">© 2026 UI Designs Co. One person builds your site, and you talk to that person.</p>
   </div>
@@ -684,6 +714,20 @@ document.querySelectorAll('.stat .num').forEach(el => {
 });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
+<script src="scan-widget.js"></script>
 <script src="chat-widget.js" defer></script>
+<script>
+// mobile nav
+(function () {
+  var t = document.querySelector('.nav-toggle'), n = document.getElementById('nav');
+  if (!t || !n) return;
+  t.addEventListener('click', function () {
+    t.setAttribute('aria-expanded', n.classList.toggle('open') ? 'true' : 'false');
+  });
+  n.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { n.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); }
+  });
+})();
+</script>
 </body>
 </html>

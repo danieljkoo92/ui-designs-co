@@ -1,0 +1,53 @@
+/* Self-contained site-check widget. Embedded on index.html, why.html and
+   scan.html, so it only relies on the --gold/--panel/--edge tokens each of
+   those pages already defines. */
+
+.sc{background:var(--panel,#12161D);border:1px solid var(--edge,#232A35);border-radius:16px;padding:26px 24px;max-width:720px}
+.sc h2{font-size:clamp(22px,3vw,30px);font-weight:800;margin-bottom:8px}
+.sc .sc-intro{color:#C3CAD4;font-size:15.5px;margin-bottom:18px}
+.sc-form{display:flex;gap:10px;flex-wrap:wrap}
+.sc-form label{position:absolute;left:-9999px}
+.sc-form input{flex:1 1 240px;min-height:52px;padding:14px 16px;background:#0A0C10;border:1px solid var(--edge,#232A35);border-radius:8px;color:#F2F5F9;font-size:16px;font-family:inherit}
+.sc-form input::placeholder{color:#6B7482}
+.sc-form input:focus-visible{outline:3px solid var(--gold,#D9A441);outline-offset:2px}
+.sc-form button{min-height:52px;padding:14px 26px;background:var(--gold,#D9A441);color:#0A0C10;border:none;border-radius:8px;font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;transition:background .15s}
+.sc-form button:hover:not(:disabled){background:var(--gold-dark,#B8862C)}
+.sc-form button:disabled{opacity:.6;cursor:default}
+.sc-note{color:#8C97A6;font-size:13px;margin-top:10px}
+
+.sc-out{margin-top:22px}
+.sc-out:empty{margin-top:0}
+.sc-msg{padding:14px 16px;border-radius:8px;background:rgba(217,164,65,.08);border:1px solid rgba(217,164,65,.35);color:#E7D3AA;font-size:15px}
+.sc-msg.err{background:rgba(220,80,80,.08);border-color:rgba(220,80,80,.4);color:#F0BDBD}
+
+.sc-head{display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--edge,#232A35)}
+.sc-ring{position:relative;flex:0 0 108px;width:108px;height:108px}
+.sc-ring svg{transform:rotate(-90deg);display:block}
+.sc-ring .bg{stroke:#232A35}
+.sc-ring .fg{stroke:var(--gold,#D9A441);stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.22,.9,.3,1)}
+.sc-ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;font-family:"Playfair Display",Georgia,serif}
+.sc-verdict h3{font-size:21px;font-weight:800;margin-bottom:4px}
+.sc-verdict p{color:#C3CAD4;font-size:15px;max-width:420px}
+.sc-url{font-size:13px;color:#8C97A6;word-break:break-all;margin-top:6px}
+
+.sc-groups{display:flex;flex-direction:column;gap:18px;margin-top:20px}
+.sc-g-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.sc-g-head h4{font-size:16px;font-weight:700;font-family:inherit}
+.sc-g-head span{font-size:14px;font-weight:800;color:var(--gold,#D9A441)}
+.sc-bar{height:7px;background:#0A0C10;border-radius:99px;overflow:hidden;border:1px solid var(--edge,#232A35)}
+.sc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#B8862C,#D9A441);transition:width 1s cubic-bezier(.22,.9,.3,1)}
+.sc-checks{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.sc-checks li{display:flex;gap:10px;font-size:14.4px;line-height:1.5;color:#C3CAD4}
+.sc-checks li b{color:#F2F5F9;font-weight:700}
+.sc-mark{flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.sc-mark.ok{background:rgba(217,164,65,.16);color:#D9A441}
+.sc-mark.no{background:rgba(220,80,80,.14);color:#E88B8B}
+
+.sc-cta{margin-top:24px;padding-top:22px;border-top:1px solid var(--edge,#232A35)}
+.sc-cta p{color:#C3CAD4;font-size:15px;margin-bottom:14px}
+.sc-cta a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 26px;background:var(--gold,#D9A441);color:#0A0C10;text-decoration:none;font-weight:700;border-radius:6px}
+.sc-cta a:hover{background:var(--gold-dark,#B8862C)}
+
+@media(prefers-reduced-motion:reduce){
+  .sc-ring .fg,.sc-bar i{transition:none}
+}

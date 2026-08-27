@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questions — UI Designs Co</title>
+<meta name="description" content="Straight answers on price, ownership, the deposit, timelines, and what happens if you don't like it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.faq-group{margin-bottom:48px}
+.faq-group > h2{font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.q{border-bottom:1px solid var(--edge)}
+.q summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;position:relative;font-size:18px;font-weight:700;color:var(--white)}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:"+";position:absolute;right:6px;top:18px;font-size:26px;font-weight:400;color:var(--gold);line-height:1;transition:transform .2s}
+.q[open] summary::after{transform:rotate(45deg)}
+.q summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:4px}
+.q .a{padding:0 0 22px;color:#C3CAD4;font-size:15.8px;max-width:680px}
+.q .a p{margin-bottom:12px}
+.q .a p:last-child{margin-bottom:0}
+.closer{text-align:center;padding:78px 0;border-top:1px solid var(--edge)}
+.closer h2{font-size:clamp(26px,4vw,42px);font-weight:800;margin-bottom:14px}
+.closer p{color:#C3CAD4;max-width:580px;margin:0 auto 26px}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html" aria-current="page">FAQ</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Questions</p>
+    <h1>The things people actually <em>ask</em>.</h1>
+    <p>Including the ones that are awkward to ask a stranger about money.</p>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap">
+
+    <div class="faq-group">
+      <h2>Money</h2>
+      <details class="q"><summary>Why is it only $1,000? What's the catch?</summary><div class="a">
+        <p>No catch. An agency's price covers an office, a salesperson, an account manager and their own advertising. I have none of that, so I don't charge for any of it. You're paying for design and build time and nothing else.</p>
+        <p>The trade-off is real though: I'm one person. I can't take twenty projects at once, and I'm not the right call for a sixty-page site with logins and inventory.</p>
+      </div></details>
+      <details class="q"><summary>What exactly is the $200 deposit for?</summary><div class="a">
+        <p>The first preview is free — I build it before you've paid anything. If you want changes made to it, that's more design hours, and the deposit covers that time.</p>
+        <p>It's credited toward your build, so if you go ahead you pay $800 more instead of $1,000. It isn't an extra charge. The only person who pays $200 and nothing else is someone who takes the revised design and walks away.</p>
+      </div></details>
+      <details class="q"><summary>Is the deposit refundable?</summary><div class="a">
+        <p>Once the revised preview has been delivered, no — the work has been done at that point. If I fail to deliver it, you get the full $200 back.</p>
+      </div></details>
+      <details class="q"><summary>Can I pay the deposit up front to steer the design?</summary><div class="a">
+        <p>Yes, and some people prefer to. Pay it before the first preview with a style, some reference sites, or a brand look you want matched, and the first pass gets built to your direction instead of mine. Same $200, same credit toward the build.</p>
+      </div></details>
+      <details class="q"><summary>Are there any other costs?</summary><div class="a">
+        <p>A domain name if you don't already own one — that's paid to a registrar, usually around $15 a year, and it stays in your name. Beyond that, no. Monthly plans are optional and clearly priced.</p>
+      </div></details>
+      <details class="q"><summary>How do I pay?</summary><div class="a">
+        <p>Zelle, CashApp, Venmo or Square. Build payment is due before the site goes live, less any deposit already credited.</p>
+      </div></details>
+    </div>
+
+    <div class="faq-group">
+      <h2>The work itself</h2>
+      <details class="q"><summary>How long does it take?</summary><div class="a">
+        <p>Preview within 48 hours of your text. Live 5–7 days after you approve it. The Signature tier takes 10–14 days.</p>
+        <p>Those are targets, not guarantees, and the clock pauses whenever I'm waiting on something from you — photos, your licence number, a decision.</p>
+      </div></details>
+      <details class="q"><summary>What if I don't like it?</summary><div class="a">
+        <p>Then walk. The preview is free and there's no obligation attached to it. If you'd rather have it changed than walk, that's the $200 deposit — and after you buy the build, two full redesigns are included.</p>
+      </div></details>
+      <details class="q"><summary>Do I need to write the words or take photos?</summary><div class="a">
+        <p>No. I write the site from what's public about your business plus what you tell me. If you have good photos of your work, they help a lot and I'll ask for them — but I can build without.</p>
+        <p>What I do need from you are facts: your real licence number, your real hours, your real service area. Those I can't invent, and legally you're responsible for them being accurate.</p>
+      </div></details>
+      <details class="q"><summary>Do I need to know anything technical?</summary><div class="a">
+        <p>Not a thing. You never touch a dashboard, a hosting panel or a domain setting unless you want to. Changes happen by texting me.</p>
+      </div></details>
+      <details class="q"><summary>I already have a website. Is it worth replacing?</summary><div class="a">
+        <p>Sometimes no. Run it through the <a href="scan.html">free site check</a> first — if it scores well, keep it and save your money, and I'll say so.</p>
+        <p>What usually makes replacement worth it: it isn't built for phones, it takes more than three seconds to load, or the phone number isn't tappable. Those cost you calls every week.</p>
+      </div></details>
+      <details class="q"><summary>Can you match a specific look I've seen?</summary><div class="a">
+        <p>Yes. Send me the sites you like. On the Signature tier that's the whole point of it — bring any reference and it gets built.</p>
+      </div></details>
+    </div>
+
+    <div class="faq-group">
+      <h2>Ownership and afterwards</h2>
+      <details class="q"><summary>Who owns the website?</summary><div class="a">
+        <p>You do, once the build is paid for — the design and the code both. Before final payment it's mine, which is standard. Third-party pieces like fonts and libraries keep their own licences, which pass to you as they are.</p>
+      </div></details>
+      <details class="q"><summary>What if I want to leave later?</summary><div class="a">
+        <p>You take the site. Cancel any monthly plan before the next billing date and I hand over what's needed to host it elsewhere. No hostage-taking, no exit fee.</p>
+      </div></details>
+      <details class="q"><summary>Do I have to take a monthly plan?</summary><div class="a">
+        <p>No. The build is one-time and the site works whether or not you take one. Plans exist because a maintained site keeps getting found and an abandoned one slowly stops.</p>
+      </div></details>
+      <details class="q"><summary>What happens if you disappear?</summary><div class="a">
+        <p>Fair question to ask a one-man operation. The site is yours and runs on standard hosting anyone can take over — it isn't locked to some proprietary platform only I can log into. If you're on a plan, cancelling stops the billing immediately.</p>
+      </div></details>
+      <details class="q"><summary>Will you put my business in your portfolio?</summary><div class="a">
+        <p>I'd like to, but tell me in writing if you'd rather I didn't and I won't.</p>
+      </div></details>
+    </div>
+
+    <div class="faq-group">
+      <h2>Results and honesty</h2>
+      <details class="q"><summary>Will this get me to the top of Google?</summary><div class="a">
+        <p>I can't promise that and neither can anyone else — anyone who does is guessing or lying. What I can do is build the site correctly for local search from day one, and on a monthly plan, keep doing that work and show you what was done.</p>
+      </div></details>
+      <details class="q"><summary>How many extra calls will I get?</summary><div class="a">
+        <p>I don't know, and I won't invent a number. It depends on your trade, your area, your reviews and your competition. The <a href="why.html">numbers page</a> shows what's true about local businesses in general — not a prediction about yours.</p>
+      </div></details>
+      <details class="q"><summary>I get all my work from referrals. Why do I need this?</summary><div class="a">
+        <p>You might not. But here's the loss you can't see: a referred customer gets your name, googles it to check you're real, finds nothing, and quietly calls someone else instead. Nobody ever tells you that happened.</p>
+      </div></details>
+      <details class="q"><summary>Are the demo sites real businesses?</summary><div class="a">
+        <p>No — every business name, address, phone number, licence and review on the <a href="work.html">demo sites</a> is invented. They're portfolio pieces showing what a build looks like. Your site gets your real details, and nothing goes live until you've confirmed them.</p>
+      </div></details>
+    </div>
+
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>Still wondering something?</h2>
+    <p>Text it. You'll get a straight answer, including "no" if that's the honest one.</p>
+    <a class="btn" href="sms:9172458685">Text Daniel</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

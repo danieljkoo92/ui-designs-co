@@ -1,0 +1,342 @@
+// Vercel serverless function: POST /api/scan
+// Fetches a visitor-supplied URL and scores it on the things that decide
+// whether a local business gets found, gets called, and gets named by AI
+// assistants. No AI calls — every check below is deterministic.
+
+const dns = require('dns').promises;
+
+const FETCH_TIMEOUT_MS = 8000;
+const SIDE_TIMEOUT_MS = 3500;
+const MAX_BYTES = 2 * 1024 * 1024; // 2MB of HTML is already a failing grade
+const MAX_REDIRECTS = 3;
+const RATE_LIMIT = { windowMs: 60_000, max: 8 };
+
+// Per-instance only — serverless spins up many instances, so this throttles
+// the obvious hammering rather than providing a real global limit.
+const hits = new Map();
+
+function rateLimited(ip) {
+  const now = Date.now();
+  const rec = hits.get(ip);
+  if (!rec || now - rec.start > RATE_LIMIT.windowMs) {
+    hits.set(ip, { start: now, n: 1 });
+    if (hits.size > 5000) hits.clear();
+    return false;
+  }
+  rec.n += 1;
+  return rec.n > RATE_LIMIT.max;
+}
+
+/** Blocks loopback, private, link-local, CGNAT and unique-local ranges. */
+function isPrivateAddress(addr, family) {
+  if (family === 6) {
+    const a = addr.toLowerCase();
+    if (a === '::1' || a === '::') return true;
+    if (a.startsWith('fe80') || a.startsWith('fc') || a.startsWith('fd')) return true;
+    // IPv4-mapped IPv6, e.g. ::ffff:127.0.0.1
+    const m = a.match(/::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+    if (m) return isPrivateAddress(m[1], 4);
+    return false;
+  }
+  const p = addr.split('.').map(Number);
+  if (p.length !== 4 || p.some((n) => Number.isNaN(n))) return true;
+  const [a, b] = p;
+  if (a === 0 || a === 10 || a === 127) return true;
+  if (a === 169 && b === 254) return true;          // link-local / cloud metadata
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT
+  if (a >= 224) return true;                         // multicast / reserved
+  return false;
+}
+
+async function assertPublicUrl(u) {
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') {
+    throw new Error('Only http and https addresses can be checked.');
+  }
+  if (u.port && !['80', '443', '8080', ''].includes(u.port)) {
+    throw new Error('That port is not allowed.');
+  }
+  let addrs;
+  try {
+    addrs = await dns.lookup(u.hostname, { all: true });
+  } catch {
+    throw new Error("That address doesn't resolve. Check the spelling.");
+  }
+  if (!addrs.length || addrs.some((a) => isPrivateAddress(a.address, a.family))) {
+    throw new Error('That address is not reachable from the public internet.');
+  }
+}
+
+/** Fetch with manual redirects so every hop is re-validated. */
+async function safeFetch(startUrl, { method = 'GET', timeout = FETCH_TIMEOUT_MS } = {}) {
+  let url = startUrl;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    await assertPublicUrl(url);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeout);
+    let res;
+    try {
+      res = await fetch(url.href, {
+        method,
+        redirect: 'manual',
+        signal: ctrl.signal,
+        headers: {
+          'user-agent': 'UIDesignsCo-SiteCheck/1.0 (+https://ui-designs-co.vercel.app)',
+          accept: 'text/html,application/xhtml+xml'
+        }
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+    if (res.status >= 300 && res.status < 400 && res.headers.get('location')) {
+      url = new URL(res.headers.get('location'), url);
+      continue;
+    }
+    return { res, finalUrl: url };
+  }
+  throw new Error('That site redirects too many times.');
+}
+
+async function readCapped(res) {
+  const reader = res.body && res.body.getReader ? res.body.getReader() : null;
+  if (!reader) return { text: await res.text(), bytes: 0, truncated: false };
+  const chunks = [];
+  let bytes = 0;
+  let truncated = false;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    bytes += value.length;
+    if (bytes > MAX_BYTES) { truncated = true; reader.cancel(); break; }
+    chunks.push(value);
+  }
+  return { text: Buffer.concat(chunks).toString('utf8'), bytes, truncated };
+}
+
+async function exists(base, path) {
+  try {
+    const { res } = await safeFetch(new URL(path, base), { timeout: SIDE_TIMEOUT_MS });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function analyse(html, finalUrl, meta) {
+  const head = html.slice(0, 200_000);
+  const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ')
+                   .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                   .replace(/<[^>]+>/g, ' ');
+
+  const title = (head.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1];
+  const desc = (head.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
+                head.match(/<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i) || [])[1];
+  const h1s = html.match(/<h1[\s>]/gi) || [];
+  const viewport = /<meta[^>]+name=["']viewport["']/i.test(head);
+  const ogTitle = /property=["']og:(title|image)["']/i.test(head);
+
+  // structured data
+  const ld = [...html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)]
+    .map((m) => m[1]).join(' ');
+  const hasLocalBiz = /"@type"\s*:\s*"?[^"]*(LocalBusiness|Plumber|Electrician|HVACBusiness|HomeAndConstructionBusiness|GeneralContractor|Roofing|MovingCompany|AutoRepair|PestControl|ProfessionalService|Store)/i.test(ld);
+  const hasFaqSchema = /"@type"\s*:\s*"?FAQPage/i.test(ld);
+  const hasOpeningHours = /openingHours/i.test(ld);
+
+  // getting called
+  const telLink = /href=["']tel:/i.test(html);
+  const phoneInText = /(\(\d{3}\)\s*\d{3}[-.\s]?\d{4}|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b)/.test(text);
+  const hasForm = /<form[\s>]/i.test(html);
+  const addressish = /\b\d{1,5}\s+[A-Za-z][A-Za-z.\s]{2,30}\b(street|st\.?|ave|avenue|road|rd\.?|blvd|boulevard|lane|ln\.?|drive|dr\.?|way|place|pl\.?)\b/i.test(text)
+                     || /\b\d{5}(-\d{4})?\b/.test(text);
+  const serviceArea = /\b(serving|service area|we serve|areas we serve|proudly serving)\b/i.test(text);
+  const faqWording = /\b(frequently asked|faq|common questions)\b/i.test(text);
+
+  // images without alt
+  const imgs = html.match(/<img\b[^>]*>/gi) || [];
+  const imgsNoAlt = imgs.filter((t) => !/\balt\s*=/i.test(t)).length;
+
+  const https = finalUrl.protocol === 'https:';
+  const weightKb = Math.round(meta.bytes / 1024);
+  const ms = meta.ms;
+
+  const groups = [
+    {
+      key: 'found',
+      label: 'Getting found on Google',
+      blurb: 'The basics a search engine reads before it decides where to put you.',
+      checks: [
+        { label: 'Page title', pass: !!title && title.trim().length >= 10, weight: 3,
+          good: title ? `"${title.trim().slice(0, 70)}"` : '',
+          bad: title ? 'Your title is too short to say what you do and where.' : 'This page has no title tag at all.' },
+        { label: 'Description for search results', pass: !!desc && desc.trim().length >= 50, weight: 2,
+          good: 'Present, and long enough to be useful.',
+          bad: desc ? 'Too short — Google will invent its own snippet.' : 'Missing, so Google writes your search listing for you.' },
+        { label: 'One clear main heading', pass: h1s.length === 1, weight: 2,
+          good: 'Exactly one main heading.',
+          bad: h1s.length === 0 ? 'No main heading on the page.' : `${h1s.length} competing main headings.` },
+        { label: 'Sitemap', pass: meta.sitemap, weight: 1,
+          good: 'Found at /sitemap.xml.', bad: 'None found — search engines have to guess your pages.' },
+        { label: 'Robots file', pass: meta.robots, weight: 1,
+          good: 'Found at /robots.txt.', bad: 'None found.' },
+        { label: 'Social preview', pass: ogTitle, weight: 1,
+          good: 'Your link previews properly when shared.',
+          bad: 'Shared links show a blank box instead of a preview.' },
+        { label: 'Image descriptions', pass: imgs.length === 0 || imgsNoAlt / imgs.length < 0.3, weight: 1,
+          good: 'Most images are described.',
+          bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors.` }
+      ]
+    },
+    {
+      key: 'phone',
+      label: 'Working on a phone',
+      blurb: 'About 70% of home-service searches happen on a phone.',
+      checks: [
+        { label: 'Built for phone screens', pass: viewport, weight: 3,
+          good: 'Scales to the screen properly.',
+          bad: 'No mobile setup — phone users get a desktop page pinched down to thumbnail size.' },
+        { label: 'Secure (https)', pass: https, weight: 3,
+          good: 'Served securely.',
+          bad: 'Not secure — browsers show visitors a "Not secure" warning next to your name.' },
+        { label: 'Page weight', pass: weightKb < 900, weight: 2,
+          good: `${weightKb} KB of HTML.`,
+          bad: `${weightKb} KB of HTML before images even load — slow on a phone signal.` },
+        { label: 'Response time', pass: ms < 1500, weight: 2,
+          good: `Answered in ${ms} ms.`,
+          bad: `Took ${ms} ms to answer. 53% of mobile visitors leave after three seconds.` }
+      ]
+    },
+    {
+      key: 'calls',
+      label: 'Turning visitors into calls',
+      blurb: 'Being found is worthless if the page does not make contact obvious.',
+      checks: [
+        { label: 'Tap-to-call link', pass: telLink, weight: 3,
+          good: 'Your number is tappable.',
+          bad: 'No tap-to-call. On a phone, a number they have to copy out is a number they do not dial.' },
+        { label: 'Phone number visible', pass: phoneInText, weight: 3,
+          good: 'A phone number appears on the page.',
+          bad: 'No phone number found in the page text.' },
+        { label: 'Contact or quote form', pass: hasForm, weight: 2,
+          good: 'There is a form to fill in.',
+          bad: 'No form — the only way to reach you is to call.' },
+        { label: 'Address or service area', pass: addressish || serviceArea, weight: 2,
+          good: 'Location or service area is stated.',
+          bad: 'Neither an address nor a service area — local searchers cannot tell if you cover them.' }
+      ]
+    },
+    {
+      key: 'ai',
+      label: 'Ready to be recommended by AI',
+      blurb: 'What decides whether an assistant can name you when someone asks for a business like yours.',
+      checks: [
+        { label: 'Business details a machine can read', pass: hasLocalBiz, weight: 4,
+          good: 'Your business is labelled in a format assistants and search engines read directly.',
+          bad: 'No machine-readable business details. Assistants have to guess who and where you are — so they usually name someone else.' },
+        { label: 'Opening hours published', pass: hasOpeningHours, weight: 2,
+          good: 'Hours are published in a readable format.',
+          bad: 'Hours are not published in a format a machine can quote.' },
+        { label: 'Questions answered on the page', pass: hasFaqSchema || faqWording, weight: 2,
+          good: 'You answer common questions.',
+          bad: 'No question-and-answer content — nothing for an assistant to quote as an answer.' },
+        { label: 'Service area stated in words', pass: serviceArea, weight: 2,
+          good: 'You say where you work in plain sentences.',
+          bad: 'Your service area is implied rather than stated, so it cannot be repeated back to someone.' }
+      ]
+    }
+  ];
+
+  let got = 0, total = 0;
+  groups.forEach((g) => {
+    let gg = 0, gt = 0;
+    g.checks.forEach((c) => {
+      gt += c.weight;
+      if (c.pass) gg += c.weight;
+      c.detail = c.pass ? c.good : c.bad;
+      delete c.good; delete c.bad;
+    });
+    g.score = Math.round((gg / gt) * 100);
+    got += gg; total += gt;
+  });
+
+  const score = Math.round((got / total) * 100);
+  const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
+  return { score, groups, failed };
+}
+
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'method not allowed' });
+    return;
+  }
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    res.status(429).json({ error: 'Too many checks from this connection. Give it a minute.' });
+    return;
+  }
+
+  try {
+    let raw = (req.body && req.body.url ? String(req.body.url) : '').trim();
+    if (!raw || raw.length > 300) {
+      res.status(400).json({ error: 'Enter a website address.' });
+      return;
+    }
+    // reject a non-web scheme outright rather than prefixing https:// onto it
+    const scheme = raw.match(/^([a-z][a-z0-9+.\-]*):/i);
+    if (scheme && !/^https?$/i.test(scheme[1])) {
+      res.status(400).json({ error: 'Only http and https addresses can be checked.' });
+      return;
+    }
+    if (!scheme) raw = 'https://' + raw;
+
+    let url;
+    try {
+      url = new URL(raw);
+    } catch {
+      res.status(400).json({ error: "That doesn't look like a web address." });
+      return;
+    }
+
+    const started = Date.now();
+    let fetched;
+    try {
+      fetched = await safeFetch(url);
+    } catch (e) {
+      res.status(400).json({ error: e.message || "Couldn't reach that site." });
+      return;
+    }
+    const ms = Date.now() - started;
+    const { res: pageRes, finalUrl } = fetched;
+
+    if (!pageRes.ok) {
+      res.status(400).json({ error: `That site answered with an error (${pageRes.status}).` });
+      return;
+    }
+    const type = pageRes.headers.get('content-type') || '';
+    if (!/text\/html|application\/xhtml/i.test(type)) {
+      res.status(400).json({ error: 'That address is not a web page.' });
+      return;
+    }
+
+    const { text: html, bytes } = await readCapped(pageRes);
+
+    const [sitemap, robots] = await Promise.all([
+      exists(finalUrl, '/sitemap.xml'),
+      exists(finalUrl, '/robots.txt')
+    ]);
+
+    const result = analyse(html, finalUrl, { bytes, ms, sitemap, robots });
+
+    // Only findings go back to the browser — never the fetched markup.
+    res.status(200).json({
+      url: finalUrl.origin + finalUrl.pathname,
+      score: result.score,
+      failed: result.failed,
+      groups: result.groups
+    });
+  } catch (err) {
+    console.error('scan error', err && err.message);
+    res.status(500).json({ error: 'Something went wrong running that check.' });
+  }
+};

@@ -2,12 +2,20 @@
 User-agent: *
 Allow: /$
 Allow: /index.html
+Allow: /plans.html
+Allow: /why.html
+Allow: /scan.html
+Allow: /how-it-works.html
+Allow: /about.html
+Allow: /faq.html
 Allow: /terms.html
 Allow: /privacy.html
 Allow: /accessibility.html
 
 # Portfolio demos are fictional businesses with sample reviews,
-# sample credentials and sample contact details. Never index them.
+# sample credentials and sample contact details. Never index them,
+# and don't index the gallery that collects them either.
+Disallow: /work.html
 Disallow: /demo-pest.html
 Disallow: /demo-pest-pro.html
 Disallow: /demo-hvac.html
