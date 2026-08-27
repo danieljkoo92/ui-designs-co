@@ -54,10 +54,11 @@ header .btn{min-height:44px;padding:10px 18px;font-size:13px;white-space:nowrap}
 .scatter .mid-msg .big em{font-style:normal;color:#7ED09A}
 .scatter .mid-msg .sub{margin-top:12px;font-size:clamp(13px,1.6vw,17px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);text-shadow:0 2px 14px rgba(0,0,0,.9)}
 .scatter .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:6;pointer-events:none}
-.scatter .scroll-cue{position:absolute;left:0;right:0;bottom:14%;z-index:5;display:flex;flex-direction:column;align-items:center;text-align:center;pointer-events:none;padding:0 22px}
-.scatter .scroll-cue .cue-txt{font-size:clamp(28px,4.5vw,56px);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.95)}
-.scatter .scroll-cue .chev{margin-top:10px;color:#fff;font-size:30px;line-height:1;text-shadow:0 2px 14px rgba(0,0,0,.9);animation:cue-bob 1.3s ease-in-out infinite}
-@keyframes cue-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+.scatter .scroll-cue{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:0 22px}
+.scatter .scroll-cue .cue-txt{font-size:clamp(44px,7.5vw,104px);font-weight:900;line-height:1.02;letter-spacing:-.02em;color:#fff;text-shadow:0 6px 40px rgba(0,0,0,1),0 0 22px rgba(0,0,0,.9);animation:cue-flash 1.1s ease-in-out infinite}
+.scatter .scroll-cue .chev{margin-top:16px;color:#fff;font-size:44px;line-height:1;text-shadow:0 2px 14px rgba(0,0,0,.9);animation:cue-bob 1.3s ease-in-out infinite}
+@keyframes cue-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
+@keyframes cue-flash{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.97)}}
 .scatter .critter{position:absolute;z-index:4;pointer-events:none;background-image:url(img/critter.png);background-size:800% 100%;background-repeat:no-repeat;filter:brightness(0);opacity:0;width:190px;aspect-ratio:520/220;will-change:transform}
 .scatter .meter-box{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;width:min(320px,70vw);z-index:5}
 .scatter .meter{height:3px;background:rgba(32,36,42,.18);border-radius:2px;overflow:hidden}
@@ -134,9 +135,9 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
   .scatter .frame,.scatter video{position:absolute}
   .scatter .mid-msg .big{font-size:clamp(30px,9vw,40px)}
   .scatter .meter-box{position:relative;bottom:auto;margin:10px auto 26px}
-  .scatter .scroll-cue{bottom:auto;top:calc(66px + 48vh - 96px)}
-  .scatter .scroll-cue .cue-txt{font-size:24px}
-  .scatter .scroll-cue .chev{font-size:22px;margin-top:6px}
+  .scatter .scroll-cue{inset:auto 0;top:66px;height:48vh}
+  .scatter .scroll-cue .cue-txt{font-size:clamp(34px,10vw,44px)}
+  .scatter .scroll-cue .chev{font-size:30px;margin-top:10px}
   .scatter .critter{width:110px}
 }
 </style>
