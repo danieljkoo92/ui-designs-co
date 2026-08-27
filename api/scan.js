@@ -124,7 +124,9 @@ async function exists(base, path) {
 }
 
 function analyse(html, finalUrl, meta) {
-  const head = html.slice(0, 200_000);
+  // Search the whole document, not a leading slice — big sites push <title>
+  // and their meta tags past 200KB of inline script before the head closes.
+  const head = html;
   const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ')
                    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
                    .replace(/<[^>]+>/g, ' ');
@@ -166,12 +168,12 @@ function analyse(html, finalUrl, meta) {
       label: 'Getting found on Google',
       blurb: 'The basics a search engine reads before it decides where to put you.',
       checks: [
-        { label: 'Page title', pass: !!title && title.trim().length >= 10, weight: 3,
-          good: title ? `"${title.trim().slice(0, 70)}"` : '',
-          bad: title ? 'Your title is too short to say what you do and where.' : 'This page has no title tag at all.' },
-        { label: 'Description for search results', pass: !!desc && desc.trim().length >= 50, weight: 2,
+        { label: 'Page title', pass: !!title && title.trim().length >= 30, weight: 3,
+          good: `"${title ? title.trim().slice(0, 70) : ''}"`,
+          bad: title ? `"${title.trim().slice(0, 40)}" — too short to say what you do and where you do it.` : 'This page has no title tag at all.' },
+        { label: 'Description for search results', pass: !!desc && desc.trim().length >= 70, weight: 2,
           good: 'Present, and long enough to be useful.',
-          bad: desc ? 'Too short — Google will invent its own snippet.' : 'Missing, so Google writes your search listing for you.' },
+          bad: desc ? 'Too short — Google will ignore it and invent its own snippet.' : 'Missing, so Google writes your search listing for you.' },
         { label: 'One clear main heading', pass: h1s.length === 1, weight: 2,
           good: 'Exactly one main heading.',
           bad: h1s.length === 0 ? 'No main heading on the page.' : `${h1s.length} competing main headings.` },
@@ -198,12 +200,12 @@ function analyse(html, finalUrl, meta) {
         { label: 'Secure (https)', pass: https, weight: 3,
           good: 'Served securely.',
           bad: 'Not secure — browsers show visitors a "Not secure" warning next to your name.' },
-        { label: 'Page weight', pass: weightKb < 900, weight: 2,
+        { label: 'Page weight', pass: weightKb < 400, weight: 2,
           good: `${weightKb} KB of HTML.`,
-          bad: `${weightKb} KB of HTML before images even load — slow on a phone signal.` },
-        { label: 'Response time', pass: ms < 1500, weight: 2,
+          bad: `${weightKb} KB of HTML before a single image loads — heavy on a phone signal.` },
+        { label: 'Response time', pass: ms < 900, weight: 2,
           good: `Answered in ${ms} ms.`,
-          bad: `Took ${ms} ms to answer. 53% of mobile visitors leave after three seconds.` }
+          bad: `Took ${ms} ms just to answer, before anything renders. 53% of mobile visitors leave by three seconds.` }
       ]
     },
     {
@@ -241,12 +243,17 @@ function analyse(html, finalUrl, meta) {
           bad: 'No question-and-answer content — nothing for an assistant to quote as an answer.' },
         { label: 'Service area stated in words', pass: serviceArea, weight: 2,
           good: 'You say where you work in plain sentences.',
-          bad: 'Your service area is implied rather than stated, so it cannot be repeated back to someone.' }
+          bad: 'Your service area is implied rather than stated, so it cannot be repeated back to someone.' },
+        // Deliberately low weight: llms.txt is an emerging convention, and as of
+        // 2026 the major AI crawlers mostly still read the HTML instead. Worth
+        // having, not worth pretending it drives citations on its own.
+        { label: 'llms.txt file', pass: meta.llms, weight: 1,
+          good: 'Present — a plain summary of your business written for AI tools to read.',
+          bad: 'None found. It is a newer convention that most sites skip, so having one is a cheap edge rather than a fix.' }
       ]
     }
   ];
 
-  let got = 0, total = 0;
   groups.forEach((g) => {
     let gg = 0, gt = 0;
     g.checks.forEach((c) => {
@@ -256,12 +263,25 @@ function analyse(html, finalUrl, meta) {
       delete c.good; delete c.bad;
     });
     g.score = Math.round((gg / gt) * 100);
-    got += gg; total += gt;
   });
 
-  const score = Math.round((got / total) * 100);
+  // Weighted by what actually costs a local business work, rather than a flat
+  // average — otherwise easy wins like https quietly carry a failing site.
+  const GROUP_WEIGHT = { found: 0.25, phone: 0.20, calls: 0.25, ai: 0.30 };
+  let score = Math.round(groups.reduce((sum, g) => sum + g.score * GROUP_WEIGHT[g.key], 0));
+
+  // A site can fail in ways no amount of passing elsewhere makes up for.
+  // Each cap is a ceiling, not a deduction.
+  const caps = [];
+  if (!viewport) caps.push([40, 'it is not built for phone screens']);
+  if (!https) caps.push([45, 'it is not served securely']);
+  if (!telLink && !phoneInText) caps.push([50, 'there is no phone number on it']);
+  if (!title) caps.push([55, 'it has no page title']);
+  if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details']);
+  caps.forEach((c) => { score = Math.min(score, c[0]); });
+
   const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
-  return { score, groups, failed };
+  return { score, groups, failed, caps: caps.map((c) => c[1]) };
 }
 
 module.exports = async function handler(req, res) {
@@ -321,18 +341,20 @@ module.exports = async function handler(req, res) {
 
     const { text: html, bytes } = await readCapped(pageRes);
 
-    const [sitemap, robots] = await Promise.all([
+    const [sitemap, robots, llms] = await Promise.all([
       exists(finalUrl, '/sitemap.xml'),
-      exists(finalUrl, '/robots.txt')
+      exists(finalUrl, '/robots.txt'),
+      exists(finalUrl, '/llms.txt')
     ]);
 
-    const result = analyse(html, finalUrl, { bytes, ms, sitemap, robots });
+    const result = analyse(html, finalUrl, { bytes, ms, sitemap, robots, llms });
 
     // Only findings go back to the browser — never the fetched markup.
     res.status(200).json({
       url: finalUrl.origin + finalUrl.pathname,
       score: result.score,
       failed: result.failed,
+      caps: result.caps,
       groups: result.groups
     });
   } catch (err) {

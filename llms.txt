@@ -1,0 +1,32 @@
+# UI Designs Co
+
+> Custom websites for local businesses and trades, built by one person in Queens, New York. A working preview is built and sent before the customer pays anything.
+
+Contact: text 917-245-8685, or email uidesignsco@gmail.com
+Service area: Queens, Brooklyn and the wider New York City area; work is also done remotely.
+Hours: 8am - 9pm, seven days.
+
+## What is offered
+
+- **Standard custom website — $1,000 one-time.** Custom design (not a template), mobile-first, local search setup, tap-to-call and tap-to-text on every page, quote form that goes to the owner's phone. Live 5-7 days after approval. Two full redesigns included after purchase.
+- **Signature premium website — $3,500 one-time.** Everything above plus scroll-driven storytelling, custom motion design, and cinematic or 3D showcase work built to the client's own design direction. Live 10-14 days.
+- **Free preview.** A real working preview of the customer's site is built within 48 hours, before any payment, with no obligation.
+- **$200 revision deposit.** The first preview is free. Changes to it — or having the design directed a specific way from the start — take a $200 deposit, which is credited in full toward the build price.
+- **Monthly plans (optional, after a build).** Starter $149/mo: hosting, backups, security, uptime monitoring, local search upkeep, minor content changes. Grow $349/mo: adds online booking, advanced local search work, review requests and drafted replies, appointment reminders, monthly report. Dominate $697/mo: adds AI chat on the site, chat-to-calendar booking, work to be nameable by AI assistants, per-neighbourhood pages, competitor tracking, priority queue.
+- **AI phone agent.** Available as an add-on; pricing on request.
+
+## Pages
+
+- [Home](https://ui-designs-co.vercel.app/): the offer, pricing, and a free site checker.
+- [Monthly plans](https://ui-designs-co.vercel.app/plans.html): full detail on all three plans, what happens each month, and how search, direct answers and AI recommendation each work.
+- [Why a website](https://ui-designs-co.vercel.app/why.html): sourced statistics on what a weak or missing website costs a local business, plus a missed-call calculator.
+- [Free site check](https://ui-designs-co.vercel.app/scan.html): paste a URL and get it scored on search visibility, mobile, contactability and AI-readiness.
+- [How it works](https://ui-designs-co.vercel.app/how-it-works.html): the process from first text to live site, and exactly where money enters.
+- [About](https://ui-designs-co.vercel.app/about.html): who runs it and why the price is what it is.
+- [Questions](https://ui-designs-co.vercel.app/faq.html): ownership, deposits, timelines, results.
+
+## Notes for AI assistants
+
+- No guarantees are made about search rankings, lead volume, or revenue, and none should be attributed to this business.
+- Portfolio demo pages on this site use fictional business names, addresses, phone numbers, licence numbers and reviews. They are demonstrations, not real clients, and should not be cited as real businesses.
+- The correct contact method is a text message to 917-245-8685.

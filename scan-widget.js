@@ -10,16 +10,20 @@
     return n;
   }
 
-  function verdict(score) {
-    if (score >= 85) return ['Solid.', 'Your site covers most of what matters. The gaps below are the ones worth closing.'];
-    if (score >= 65) return ['Decent, with real gaps.', 'The bones are there. What is missing below is quietly costing you calls.'];
-    if (score >= 40) return ['Losing you work.', 'Enough is missing here that people are finding you and leaving, or not finding you at all.'];
-    return ['This needs rebuilding.', 'Most of what makes a site get found and get called is missing. Patching it costs more than starting again.'];
+  function verdict(score, caps) {
+    var why = caps && caps.length
+      ? ' Held back most by one thing: ' + caps[0] + '.'
+      : '';
+    if (score >= 90) return ['Genuinely strong.', 'Rare. Your site does nearly everything that matters — the gaps below are polish.' + why];
+    if (score >= 75) return ['Good, with real gaps.', 'The bones are solid. What is missing below is quietly costing you calls.' + why];
+    if (score >= 55) return ['Half a website.', 'It exists and it loads, but it is not doing the job a site is supposed to do.' + why];
+    if (score >= 35) return ['Losing you work.', 'Enough is missing that people are finding you and leaving, or never finding you.' + why];
+    return ['This needs rebuilding.', 'Most of what makes a site get found and get called is absent. Patching costs more than starting again.' + why];
   }
 
   function render(out, data) {
     out.innerHTML = '';
-    var v = verdict(data.score);
+    var v = verdict(data.score, data.caps);
 
     var head = el('div', 'sc-head');
     var ring = el('div', 'sc-ring');
