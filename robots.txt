@@ -1,0 +1,20 @@
+# UI Designs Co
+User-agent: *
+Allow: /$
+Allow: /index.html
+Allow: /terms.html
+Allow: /privacy.html
+Allow: /accessibility.html
+
+# Portfolio demos are fictional businesses with sample reviews,
+# sample credentials and sample contact details. Never index them.
+Disallow: /demo-pest.html
+Disallow: /demo-hvac.html
+Disallow: /demo-tree.html
+Disallow: /demo-moving.html
+Disallow: /demo-driving.html
+Disallow: /demo-auto.html
+Disallow: /api/
+
+# Internal template, not for search engines
+Disallow: /CLIENT-AGREEMENT.md

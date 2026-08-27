@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
 <style>
+:focus-visible{outline:3px solid #D9A441;outline-offset:2px;border-radius:3px}
+.skip-nav{position:absolute;left:-9999px;top:0;z-index:999;background:#D9A441;color:#0A0C10;padding:12px 18px;font-weight:700;text-decoration:none}
+.skip-nav:focus{left:8px;top:8px}
 :root{
   --void:#0A0C10;
   --panel:#12161D;
@@ -69,6 +72,7 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
 .cutwrap{position:absolute;left:0;right:0;bottom:12vh;text-align:center;z-index:2}
 .cutwrap .k{display:block;letter-spacing:.24em;font-size:12px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
 .cutwrap .t{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:clamp(38px,7vw,92px);line-height:1;text-shadow:0 4px 40px rgba(0,0,0,.9)}
+.film-toggle{position:absolute;right:14px;bottom:14px;z-index:6;width:44px;height:44px;border-radius:50%;background:rgba(10,12,16,.75);border:1px solid var(--edge);color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;backdrop-filter:blur(6px)}.film-toggle:hover{border-color:var(--gold)}
 /* film progress */
 .film .hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:var(--steel);font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
 
@@ -101,8 +105,8 @@ section.pad{padding:100px 0;position:relative}
 .newsite .n-logo{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:17px;color:#fff}
 .newsite .n-logo i{font-style:italic;color:var(--gold)}
 .newsite .n-call{border:1px solid #2a3340;border-radius:6px;padding:6px 12px;font-size:12px;color:#fff}
-.newsite h4{font-family:"Playfair Display",Georgia,serif;font-size:clamp(20px,2.6vw,34px);line-height:1.1;color:#fff;font-weight:800;max-width:70%}
-.newsite h4 i{font-style:italic;color:var(--gold)}
+.newsite h3.n-head-title{font-family:"Playfair Display",Georgia,serif;font-size:clamp(20px,2.6vw,34px);line-height:1.1;color:#fff;font-weight:800;max-width:70%}
+.newsite h3.n-head-title i{font-style:italic;color:var(--gold)}
 .newsite .n-sub{color:#8C97A6;font-size:13px;margin:10px 0 18px;max-width:60%}
 .newsite .n-cta{display:inline-block;background:var(--gold);color:#0A0C10;font-weight:700;font-size:13px;border-radius:5px;padding:9px 16px;width:max-content}
 .newsite .n-cards{display:flex;gap:10px;margin-top:auto}
@@ -194,6 +198,9 @@ footer .f-row{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-co
 footer a{color:var(--white);text-decoration:none;font-weight:600}
 footer a:hover{color:var(--gold)}
 footer strong{font-family:"Playfair Display",Georgia,serif;color:var(--white);font-size:17px}
+footer .legal-links{margin-top:16px;font-size:13.5px}
+footer .legal-links a{color:var(--steel);font-weight:400;text-decoration:underline}
+footer .legal-links a:hover{color:var(--gold)}
 footer .fine{margin-top:18px;font-size:13px}
 
 .sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,12,16,.92);backdrop-filter:blur(6px);border-top:1px solid var(--edge)}
@@ -216,6 +223,7 @@ footer .fine{margin-top:18px;font-size:13px}
 </style>
 </head>
 <body>
+<a class="skip-nav" href="#rebuild">Skip to main content</a>
 
 <header>
   <div class="wrap">
@@ -259,6 +267,7 @@ footer .fine{margin-top:18px;font-size:13px}
       <a class="btn btn-ghost" href="#rebuild">See what I build ↓</a>
     </div>
   </div>
+  <button id="filmToggle" class="film-toggle" type="button" aria-label="Pause the background animation">❚❚</button>
   <div class="hint">Scroll</div>
 </div>
 
@@ -284,7 +293,7 @@ footer .fine{margin-top:18px;font-size:13px}
     <div class="site after-site" id="afterSite">
       <div class="newsite">
         <div class="n-head"><span class="n-logo">TONY'S <i>HVAC</i></span><span class="n-call">(718) 555-0198</span></div>
-        <h4>No heat? No AC? <i>Fixed today.</i></h4>
+        <h3 class="n-head-title">No heat? No AC? <i>Fixed today.</i></h3>
         <p class="n-sub">Licensed HVAC repair across Queens. Upfront pricing, same-day emergency service, financing available.</p>
         <span class="n-cta">Get an emergency visit</span>
         <div class="n-cards">
@@ -504,6 +513,7 @@ footer .fine{margin-top:18px;font-size:13px}
         <a href="mailto:uidesignsco@gmail.com">uidesignsco@gmail.com</a>
       </div>
     </div>
+    <p class="legal-links"><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="accessibility.html">Accessibility</a></p>
     <p class="fine">© 2026 UI Designs Co. One person builds your site, and you talk to that person.</p>
   </div>
 </footer>
@@ -607,6 +617,7 @@ function applyMotion(){
   if (mq.matches) {
     if (film) film.kill();
     vid.pause(); vid.style.display = 'none';
+    if (typeof filmToggle !== 'undefined' && filmToggle) filmToggle.style.display = 'none';
     acts[current].classList.remove('on'); current = 5;
     acts[5].classList.add('on');
   } else {
@@ -617,6 +628,18 @@ function applyMotion(){
 mq.addEventListener('change', applyMotion);
 applyMotion();
 vid.addEventListener('error', () => { vid.style.display = 'none'; }, { once: true });
+
+/* pause/play the hero film — WCAG 2.2.2 Pause, Stop, Hide */
+const filmToggle = document.getElementById('filmToggle');
+let filmPaused = false;
+function setFilmPaused(p){
+  filmPaused = p;
+  if (p) { if (film) film.pause(); vid.pause(); filmToggle.textContent = '\u25b6';
+           filmToggle.setAttribute('aria-label','Play the background animation'); }
+  else   { if (film) film.resume(); vid.play().catch(()=>{}); filmToggle.textContent = '\u275a\u275a';
+           filmToggle.setAttribute('aria-label','Pause the background animation'); }
+}
+filmToggle.addEventListener('click', () => setFilmPaused(!filmPaused));
 
 /* ---- scroll reveals ---- */
 if (!mq.matches) {

@@ -45,6 +45,8 @@ BEHAVIOR RULES
 - THE CLOSE: once you have all three (business name, trade, phone number), confirm the details back in one short sentence, then output an SMS button using this exact format on its own line:
 [SMS_BUTTON]Hi Daniel — free preview please. Business: {business name}. Trade: {trade}. Phone: {phone}.[/SMS_BUTTON]
 The site renders that as a tappable button that opens their messages app pre-filled. Use it only when you have all three pieces. Never show the bracket syntax in your conversational text.
+- You are an automated assistant, not Daniel. Never invent a commitment, discount, deadline or custom quote that is not in THE OFFER above. If pushed for one, say: "Daniel confirms all quotes himself — text him at 917-245-8685 and he'll give you a straight answer."
+- Never state or imply a payback period, guaranteed number of calls/leads/customers, or a search ranking result.
 - Plain, confident, friendly. No hype words, no exclamation-point pileups. These are practical people reading between jobs.`;
 
 module.exports = async function handler(req, res) {
@@ -109,6 +111,18 @@ module.exports = async function handler(req, res) {
       res.status(502).json({ error: 'upstream' });
       return;
     }
+
+    // Keep a record of what the assistant told people (Vercel runtime logs).
+    try {
+      const lastUser = clean.filter((m) => m.role === 'user').pop();
+      console.log(JSON.stringify({
+        event: 'chat',
+        at: new Date().toISOString(),
+        turns: clean.length,
+        user: lastUser ? lastUser.content.slice(0, 300) : null,
+        assistant: reply.slice(0, 600)
+      }));
+    } catch (e) { /* logging must never break a reply */ }
 
     res.status(200).json({ reply });
   } catch (err) {

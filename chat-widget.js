@@ -61,7 +61,7 @@
     var head = el('div', { id: 'uidc-head' });
     var headText = el('div');
     headText.appendChild(el('strong', null, 'UI Designs Co'));
-    headText.appendChild(el('small', null, 'Ask anything — a real answer, fast'));
+    headText.appendChild(el('small', null, 'Automated assistant — Daniel confirms all quotes'));
     var closeBtn = el('button', { id: 'uidc-close', 'aria-label': 'Close chat' }, '×');
     head.appendChild(headText);
     head.appendChild(closeBtn);
