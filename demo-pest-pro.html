@@ -46,14 +46,14 @@ header .btn{min-height:44px;padding:10px 18px;font-size:13px;white-space:nowrap}
 /* pinned hero — the scatter */
 .scatter{position:relative;height:100vh;overflow:hidden;background:#DDD}
 .scatter .frame{position:absolute;inset:0;background-size:cover;background-position:center top}
-.scatter .infested{background-image:url(img/pest-infested.jpg)}
+.scatter .infested{background-image:url(img/pest-dark.jpg)}
 .scatter .clean{background-image:url(img/pest-clean.jpg);opacity:0;will-change:opacity}
 .scatter video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:none}
-.scatter .reveal-line{position:absolute;left:0;right:0;bottom:0;padding:16vh 22px 9vh;text-align:center;z-index:5;opacity:0;transform:translateY(24px);will-change:opacity,transform;pointer-events:none;background:linear-gradient(to top,rgba(255,255,255,.96) 42%,rgba(255,255,255,.75) 70%,transparent)}
-.scatter .reveal-line .big{font-size:clamp(38px,6.5vw,84px);font-weight:900;line-height:1.02;letter-spacing:-.02em;color:var(--ink);text-shadow:0 2px 18px rgba(255,255,255,.85)}
-.scatter .reveal-line .big em{font-style:normal;color:var(--green)}
-.scatter .reveal-line .sub{margin-top:12px;font-size:clamp(14px,1.8vw,18px);font-weight:500;color:var(--soft)}
-.scatter .reveal-line .row{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
+.scatter .mid-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:5;opacity:0;pointer-events:none;padding:0 22px}
+.scatter .mid-msg .big{font-size:clamp(36px,6vw,80px);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:#fff;text-shadow:0 4px 34px rgba(0,0,0,.95)}
+.scatter .mid-msg .big em{font-style:normal;color:#7ED09A}
+.scatter .mid-msg .sub{margin-top:12px;font-size:clamp(13px,1.6vw,17px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);text-shadow:0 2px 14px rgba(0,0,0,.9)}
+.scatter .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:6;pointer-events:none}
 .scatter .meter-box{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;width:min(320px,70vw);z-index:5}
 .scatter .meter{height:3px;background:rgba(32,36,42,.18);border-radius:2px;overflow:hidden}
 .scatter .meter i{display:block;height:100%;width:0;background:var(--green)}
@@ -120,13 +120,13 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
 @media(prefers-reduced-motion:reduce){
   .fade{opacity:1;transform:none}
   .scatter .clean{opacity:1}
-  .scatter .reveal-line{opacity:1;transform:none}
+  .scatter .mid-msg{display:none}
 }
 @media(max-width:767px){
   .scatter{height:auto;min-height:0}
   .scatter .stage-m{position:relative;height:48vh;margin-top:66px}
   .scatter .frame,.scatter video{position:absolute}
-  .scatter .reveal-line{position:relative;bottom:auto;padding:26px 0 10px}
+  .scatter .mid-msg .big{font-size:clamp(30px,9vw,40px)}
   .scatter .meter-box{position:relative;bottom:auto;margin:10px auto 26px}
 }
 </style>
@@ -150,14 +150,11 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
     <div class="frame clean" id="cleanFrame"></div>
     <video id="scatterVid" muted playsinline preload="auto" src="img/pest-scatter.mp4" aria-hidden="true"></video>
   </div>
-  <div class="reveal-line" id="revealLine">
-    <p class="big">Gone. <em>Just like that.</em></p>
-    <p class="sub">That’s what a PestFree visit looks like.</p>
-    <div class="row">
-      <a class="btn" href="tel:+15551234567">Get a Free Inspection</a>
-      <a class="btn btn-ghost" href="#book">Request a callback</a>
-    </div>
+  <div class="mid-msg" id="midMsg">
+    <p class="big">We can <em>fix this.</em></p>
+    <p class="sub">PestFree Exterminating</p>
   </div>
+  <div class="flash" id="flash"></div>
   <div class="meter-box" aria-hidden="true">
     <div class="meter"><i id="meter"></i></div>
     <div class="labels"><span>Infested</span><span>Pest free</span></div>
@@ -255,7 +252,8 @@ let triggers = [];
 
 const vid = document.getElementById('scatterVid');
 const cleanFrame = document.getElementById('cleanFrame');
-const revealLine = document.getElementById('revealLine');
+const midMsg = document.getElementById('midMsg');
+const flash = document.getElementById('flash');
 const meter = document.getElementById('meter');
 let vidReady = false;
 vid.addEventListener('canplaythrough', () => {
@@ -273,11 +271,45 @@ function buildMotion() {
     document.querySelector('header').classList.remove('hidden-hero');
     cleanFrame.style.opacity = 1;
     vid.style.display = 'none';
-    gsap.set(revealLine, { opacity: 1, y: 0 });
+    midMsg.style.display = 'none'; flash.style.display = 'none';
     meter.style.width = '100%';
     gsap.set('.fade', { opacity: 1, y: 0 });
     return;
   }
+  // pinned scatter scrub: video timeline + reveal text fade
+  // created FIRST so triggers below it account for the pin spacer
+  const s = { p: 0 };
+  const mobile = matchMedia('(max-width: 767px)').matches;
+  triggers.push(ScrollTrigger.create({
+    trigger: '.scatter',
+    start: 'top top',
+    end: mobile ? '+=110%' : '+=160%',
+    pin: true, scrub: 1,
+    animation: gsap.to(s, {
+      p: 1, ease: 'none',
+      onUpdate: () => {
+        if (vidReady && vid.duration) {
+          vid.currentTime = Math.min(vid.duration - .05, s.p * vid.duration);
+        } else {
+          cleanFrame.style.opacity = s.p;
+        }
+        meter.style.width = (s.p * 100) + '%';
+        // mid-scroll message: in over the dark phase, out before the purge finishes
+        const p = s.p;
+        let m = 0;
+        if (p > .12 && p < .34) m = (p - .12) / .10;        // fade in
+        else if (p >= .34 && p <= .52) m = 1;               // hold
+        else if (p > .52 && p < .66) m = 1 - (p - .52)/.14; // fade out
+        midMsg.style.opacity = Math.max(0, Math.min(1, m));
+        midMsg.style.transform = 'translateY(' + (14 * (1 - Math.min(1, m))) + 'px)';
+        // the flash: sharp in just before the clean page, soft out after
+        let f = 0;
+        if (p > .80 && p <= .87) f = (p - .80) / .07;
+        else if (p > .87 && p < .985) f = 1 - (p - .87)/.115;
+        flash.style.opacity = Math.max(0, Math.min(1, f));
+      }
+    })
+  }));
   // header appears once the scatter act is done (desktop pin only)
   const hdr = document.querySelector('header');
   const mobileHdr = matchMedia('(max-width: 767px)').matches;
@@ -297,30 +329,6 @@ function buildMotion() {
       animation: gsap.fromTo(el, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
     }));
   });
-  // pinned scatter scrub: video timeline + reveal text fade
-  const s = { p: 0 };
-  const mobile = matchMedia('(max-width: 767px)').matches;
-  triggers.push(ScrollTrigger.create({
-    trigger: '.scatter',
-    start: mobile ? 'top 25%' : 'top top',
-    end: mobile ? '+=110%' : '+=160%',
-    pin: !mobile, scrub: 1,
-    animation: gsap.to(s, {
-      p: 1, ease: 'none',
-      onUpdate: () => {
-        if (vidReady && vid.duration) {
-          vid.currentTime = Math.min(vid.duration - .05, s.p * vid.duration);
-        } else {
-          cleanFrame.style.opacity = s.p;
-        }
-        meter.style.width = (s.p * 100) + '%';
-        // the line fades in as the pests clear out
-        const t = Math.max(0, Math.min(1, (s.p - .55) / .3));
-        revealLine.style.opacity = t;
-        revealLine.style.transform = 'translateY(' + (24 * (1 - t)) + 'px)';
-      }
-    })
-  }));
 }
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
 addEventListener('resize', () => ScrollTrigger.refresh());
