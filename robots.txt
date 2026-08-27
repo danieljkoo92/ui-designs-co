@@ -9,6 +9,7 @@ Allow: /accessibility.html
 # Portfolio demos are fictional businesses with sample reviews,
 # sample credentials and sample contact details. Never index them.
 Disallow: /demo-pest.html
+Disallow: /demo-pest-pro.html
 Disallow: /demo-hvac.html
 Disallow: /demo-tree.html
 Disallow: /demo-moving.html

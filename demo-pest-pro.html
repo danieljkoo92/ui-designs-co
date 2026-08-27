@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PestFree Exterminating — Pest Control Done Right</title>
+<meta name="description" content="Professional pest control you can count on. Safe. Effective. Guaranteed. Call (555) 123-4567.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+.demo-badge{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;background:rgba(10,12,16,.9);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:7px 13px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(6px)}.demo-badge:hover{border-color:#fff}@media(max-width:719px){.demo-badge{bottom:auto;top:calc(8px + env(safe-area-inset-top));left:8px;font-size:10px;padding:6px 10px}}
+:focus-visible{outline:3px solid #1B8040;outline-offset:2px;border-radius:3px}
+.skip-nav{position:absolute;left:-9999px;top:0;z-index:999;background:#1B8040;color:#fff;padding:12px 18px;font-weight:700;text-decoration:none}
+.skip-nav:focus{left:8px;top:8px}
+:root{
+  --green:#1B8040;
+  --green-dark:#136330;
+  --ink:#20242A;
+  --soft:#5C6670;
+  --paper:#FFFFFF;
+  --mist:#F2F6F2;
+  --line:#E1E8E1;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1100px;width:100%;margin:0 auto;padding:0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 26px;background:var(--green);color:#fff;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
+.btn:hover{background:var(--green-dark);transform:translateY(-3px)}
+.btn-ghost{background:transparent;border:2px solid var(--green);color:var(--green)}
+.btn-ghost:hover{background:var(--mist);color:var(--green-dark)}
+.kicker{text-transform:uppercase;letter-spacing:.2em;font-size:12px;font-weight:700;color:var(--green);margin-bottom:12px}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);transition:opacity .35s,visibility .35s}
+header.hidden-hero{opacity:0;visibility:hidden;pointer-events:none}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:66px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:900;font-size:19px;letter-spacing:.01em;white-space:nowrap}
+.logo .mark{width:34px;height:34px;flex-shrink:0}
+.logo span b{color:var(--green)}
+.logo small{display:block;font-size:9px;letter-spacing:.34em;font-weight:700;color:var(--soft);line-height:1}
+header .btn{min-height:44px;padding:10px 18px;font-size:13px;white-space:nowrap}
+
+/* pinned hero — the scatter */
+.scatter{position:relative;height:100vh;overflow:hidden;background:#DDD}
+.scatter .frame{position:absolute;inset:0;background-size:cover;background-position:center top}
+.scatter .infested{background-image:url(img/pest-infested.jpg)}
+.scatter .clean{background-image:url(img/pest-clean.jpg);opacity:0;will-change:opacity}
+.scatter video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:none}
+.scatter .reveal-line{position:absolute;left:0;right:0;bottom:0;padding:16vh 22px 9vh;text-align:center;z-index:5;opacity:0;transform:translateY(24px);will-change:opacity,transform;pointer-events:none;background:linear-gradient(to top,rgba(255,255,255,.96) 42%,rgba(255,255,255,.75) 70%,transparent)}
+.scatter .reveal-line .big{font-size:clamp(38px,6.5vw,84px);font-weight:900;line-height:1.02;letter-spacing:-.02em;color:var(--ink);text-shadow:0 2px 18px rgba(255,255,255,.85)}
+.scatter .reveal-line .big em{font-style:normal;color:var(--green)}
+.scatter .reveal-line .sub{margin-top:12px;font-size:clamp(14px,1.8vw,18px);font-weight:500;color:var(--soft)}
+.scatter .reveal-line .row{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
+.scatter .meter-box{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;width:min(320px,70vw);z-index:5}
+.scatter .meter{height:3px;background:rgba(32,36,42,.18);border-radius:2px;overflow:hidden}
+.scatter .meter i{display:block;height:100%;width:0;background:var(--green)}
+.scatter .labels{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:7px;font-weight:700}
+
+/* sections */
+section.pad{padding:88px 0}
+.sec-title{font-size:clamp(28px,4.5vw,42px);font-weight:900;letter-spacing:-.01em;margin-bottom:10px;line-height:1.12}
+.sub-copy{color:var(--soft);max-width:560px;margin-bottom:40px;font-size:16.5px}
+
+.services{background:var(--paper)}
+.svc-grid{display:grid;gap:18px}
+@media(min-width:800px){.svc-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:520px) and (max-width:799px){.svc-grid{grid-template-columns:1fr 1fr}}
+.svc{border:1px solid var(--line);border-radius:12px;padding:26px 22px;text-align:center;transition:transform .25s,box-shadow .25s,border-color .25s}
+.svc:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(27,128,64,.12);border-color:var(--green)}
+.svc .ico{font-size:30px;margin-bottom:12px}
+.svc h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.svc p{font-size:14px;color:var(--soft)}
+
+.pests{background:var(--green);color:#fff}
+.pests .sec-title{color:#fff;text-align:center}
+.pest-row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:38px}
+@media(min-width:720px){.pest-row{grid-template-columns:repeat(6,1fr)}}
+.pest{text-align:center}
+.pest .bubble{width:84px;height:84px;border-radius:50%;background:#fff;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .25s}
+.pest:hover .bubble{transform:translateY(-5px) scale(1.05)}
+.pest span{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+.why{background:var(--mist)}
+.why-grid{display:grid;gap:18px}
+@media(min-width:800px){.why-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:520px) and (max-width:799px){.why-grid{grid-template-columns:1fr 1fr}}
+.why-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px 20px}
+.why-card .ico{font-size:24px;margin-bottom:10px}
+.why-card h3{font-size:16px;font-weight:700;margin-bottom:5px}
+.why-card p{font-size:13.5px;color:var(--soft)}
+
+.book{background:var(--paper)}
+.book-grid{display:grid;gap:36px}
+@media(min-width:860px){.book-grid{grid-template-columns:1fr 1fr}}
+.book form{display:grid;gap:13px}
+.book label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);font-weight:700}
+.book input,.book select,.book textarea{width:100%;padding:13px 14px;background:var(--paper);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:16px;font-family:inherit}
+.book input:focus,.book select:focus,.book textarea:focus{outline:3px solid var(--green);outline-offset:1px}
+.info p{color:var(--soft);margin-bottom:16px;font-size:15.5px}
+.info .big{font-weight:900;font-size:26px;color:var(--ink)}
+.info a{color:var(--green);font-weight:700}
+.hours{list-style:none;margin:16px 0;font-size:15px;color:var(--soft)}
+.hours li{display:flex;justify-content:space-between;max-width:280px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.areas{font-size:14px;color:var(--soft);line-height:1.8}
+
+footer{background:var(--ink);color:#B9C1C9;padding:38px 0 110px;font-size:14px}
+@media(min-width:720px){footer{padding-bottom:38px}}
+footer a{color:#fff;text-decoration:none;font-weight:600}
+footer a:hover{color:#7ED09A}
+footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
+
+.sticky-call{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-top:1px solid var(--line);display:flex;gap:10px}
+.sticky-call .btn{flex:1}
+@media(min-width:720px){.sticky-call{display:none}}
+
+.fade{opacity:0;transform:translateY(22px)}
+@media(prefers-reduced-motion:reduce){
+  .fade{opacity:1;transform:none}
+  .scatter .clean{opacity:1}
+  .scatter .reveal-line{opacity:1;transform:none}
+}
+@media(max-width:767px){
+  .scatter{height:auto;min-height:0}
+  .scatter .stage-m{position:relative;height:48vh;margin-top:66px}
+  .scatter .frame,.scatter video{position:absolute}
+  .scatter .reveal-line{position:relative;bottom:auto;padding:26px 0 10px}
+  .scatter .meter-box{position:relative;bottom:auto;margin:10px auto 26px}
+}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#services">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="PestFree Exterminating home">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2L35 8v10c0 9.5-6.4 16.5-15 20C11.4 34.5 5 27.5 5 18V8L20 2z" fill="#1B8040"/><circle cx="20" cy="17" r="5" fill="#fff"/><path d="M20 22c-3 0-5 2.4-5 6h10c0-3.6-2-6-5-6z" fill="#fff"/><path d="M13 13l-3-3M27 13l3-3M12 19H8M32 19h-4M14 25l-3 3M26 25l3 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>PEST<b>FREE</b><small>EXTERMINATING</small></span>
+    </a>
+    <a class="btn" href="tel:+15551234567">Get a Free Inspection</a>
+  </div>
+</header>
+
+<div class="scatter" id="top" aria-label="Scroll to watch the pests scatter and the page come clean">
+  <div class="stage-m">
+    <div class="frame infested"></div>
+    <div class="frame clean" id="cleanFrame"></div>
+    <video id="scatterVid" muted playsinline preload="auto" src="img/pest-scatter.mp4" aria-hidden="true"></video>
+  </div>
+  <div class="reveal-line" id="revealLine">
+    <p class="big">Gone. <em>Just like that.</em></p>
+    <p class="sub">That’s what a PestFree visit looks like.</p>
+    <div class="row">
+      <a class="btn" href="tel:+15551234567">Get a Free Inspection</a>
+      <a class="btn btn-ghost" href="#book">Request a callback</a>
+    </div>
+  </div>
+  <div class="meter-box" aria-hidden="true">
+    <div class="meter"><i id="meter"></i></div>
+    <div class="labels"><span>Infested</span><span>Pest free</span></div>
+  </div>
+</div>
+
+<section class="pad services" id="services">
+  <div class="wrap">
+    <p class="kicker fade">What we do</p>
+    <h2 class="sec-title fade">Every pest. Every property.</h2>
+    <div class="svc-grid">
+      <div class="svc fade"><div class="ico">🏠</div><h3>Residential Services</h3><p>Comprehensive solutions for your home, keeping your family safe from pests.</p></div>
+      <div class="svc fade"><div class="ico">🏢</div><h3>Commercial Services</h3><p>Customized pest management plans for businesses of all sizes and industries.</p></div>
+      <div class="svc fade"><div class="ico">🪵</div><h3>Termite Control</h3><p>Advanced treatment and protection against termite infestations.</p></div>
+      <div class="svc fade"><div class="ico">✅</div><h3>Guaranteed Results</h3><p>We stand behind our work. If pests return, so do we — at no extra cost.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad pests">
+  <div class="wrap">
+    <h2 class="sec-title fade">Common pests we eliminate</h2>
+    <div class="pest-row">
+      <div class="pest fade"><div class="bubble">🪳</div><span>Roaches</span></div>
+      <div class="pest fade"><div class="bubble">🐜</div><span>Ants</span></div>
+      <div class="pest fade"><div class="bubble">🐭</div><span>Mice</span></div>
+      <div class="pest fade"><div class="bubble">🐀</div><span>Rats</span></div>
+      <div class="pest fade"><div class="bubble">🛏️</div><span>Bed Bugs</span></div>
+      <div class="pest fade"><div class="bubble">🐛</div><span>Termites</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad why">
+  <div class="wrap">
+    <p class="kicker fade">Why choose PestFree</p>
+    <h2 class="sec-title fade">Safe for your family. Fatal for pests.</h2>
+    <div class="why-grid">
+      <div class="why-card fade"><div class="ico">🛡️</div><h3>Licensed &amp; Insured</h3><p>Your protection is our priority.</p></div>
+      <div class="why-card fade"><div class="ico">🌿</div><h3>Eco-Friendly Solutions</h3><p>Safe for kids, pets and the environment.</p></div>
+      <div class="why-card fade"><div class="ico">⚡</div><h3>Fast &amp; Reliable Service</h3><p>We respond quickly and get the job done.</p></div>
+      <div class="why-card fade"><div class="ico">💯</div><h3>Satisfaction Guaranteed</h3><p>We stand behind every service.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad book" id="book">
+  <div class="wrap">
+    <p class="kicker fade">Free inspection</p>
+    <h2 class="sec-title fade">See something crawling? Say the word.</h2>
+    <p class="sub-copy fade">Fill this out and we call you back the same day, usually within the hour.</p>
+    <div class="book-grid">
+      <form onsubmit="event.preventDefault();this.innerHTML='<p style=&quot;font-size:18px&quot;>Got it — we will call you shortly to set up your free inspection.</p>'">
+        <div><label for="f-name">Name</label><input id="f-name" required autocomplete="name"></div>
+        <div><label for="f-phone">Phone</label><input id="f-phone" type="tel" required autocomplete="tel"></div>
+        <div><label for="f-pest">What are you seeing?</label><select id="f-pest"><option>Roaches</option><option>Ants</option><option>Mice / rats</option><option>Bed bugs</option><option>Termites</option><option>Not sure — something moved</option></select></div>
+        <div><label for="f-note">Anything else?</label><textarea id="f-note" rows="3"></textarea></div>
+        <button class="btn" type="submit">Request my free inspection</button>
+      </form>
+      <div class="info">
+        <p class="big">PestFree Exterminating</p>
+        <p>62-18 Fresh Pond Rd, Ridgewood, NY 11385<br>
+        <a href="tel:+15551234567">(555) 123-4567</a></p>
+        <ul class="hours">
+          <li><span>Mon–Fri</span><span>7am – 7pm</span></li>
+          <li><span>Saturday</span><span>8am – 4pm</span></li>
+          <li><span>Sunday</span><span>Emergencies only</span></li>
+        </ul>
+        <p class="areas"><strong style="color:var(--ink)">Service area:</strong> Ridgewood, Glendale, Middle Village, Maspeth, Forest Hills, Rego Park, Elmhurst, Woodhaven, Bushwick.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    PestFree Exterminating · 62-18 Fresh Pond Rd, Ridgewood, NY 11385 · <a href="tel:+15551234567">(555) 123-4567</a>
+    <p class="fine">© 2026 PestFree Exterminating. Demo site by <a href="index.html">UI Designs Co</a> — PestFree Exterminating is a fictional business; the credentials, address and phone number on this page are samples, not real.</p>
+  </div>
+</footer>
+
+<div class="sticky-call">
+  <a class="btn" href="tel:+15551234567">Call (555) 123-4567</a>
+  <a class="btn btn-ghost" href="#book" style="flex:0 0 auto">Inspect</a>
+</div>
+
+<a class="demo-badge" href="index.html" title="This is a portfolio demo. The business, credentials and address on this page are fictional.">Demo — fictional business</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+let triggers = [];
+
+const vid = document.getElementById('scatterVid');
+const cleanFrame = document.getElementById('cleanFrame');
+const revealLine = document.getElementById('revealLine');
+const meter = document.getElementById('meter');
+let vidReady = false;
+vid.addEventListener('canplaythrough', () => {
+  if (mq.matches) return;
+  vidReady = true;
+  vid.pause();
+  vid.style.display = 'block';
+}, { once: true });
+vid.load();
+vid.addEventListener('error', () => { vid.style.display = 'none'; vidReady = false; }, { once: true });
+
+function buildMotion() {
+  triggers.forEach(t => t.kill()); triggers = [];
+  if (mq.matches) {
+    document.querySelector('header').classList.remove('hidden-hero');
+    cleanFrame.style.opacity = 1;
+    vid.style.display = 'none';
+    gsap.set(revealLine, { opacity: 1, y: 0 });
+    meter.style.width = '100%';
+    gsap.set('.fade', { opacity: 1, y: 0 });
+    return;
+  }
+  // header appears once the scatter act is done (desktop pin only)
+  const hdr = document.querySelector('header');
+  const mobileHdr = matchMedia('(max-width: 767px)').matches;
+  if (!mobileHdr) {
+    hdr.classList.add('hidden-hero');
+    triggers.push(ScrollTrigger.create({
+      trigger: '#services', start: 'top 55%',
+      onEnter: () => hdr.classList.remove('hidden-hero'),
+      onLeaveBack: () => hdr.classList.add('hidden-hero')
+    }));
+  } else {
+    hdr.classList.remove('hidden-hero');
+  }
+  gsap.utils.toArray('.fade').forEach(el => {
+    triggers.push(ScrollTrigger.create({
+      trigger: el, start: 'top 86%',
+      animation: gsap.fromTo(el, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
+    }));
+  });
+  // pinned scatter scrub: video timeline + reveal text fade
+  const s = { p: 0 };
+  const mobile = matchMedia('(max-width: 767px)').matches;
+  triggers.push(ScrollTrigger.create({
+    trigger: '.scatter',
+    start: mobile ? 'top 25%' : 'top top',
+    end: mobile ? '+=110%' : '+=160%',
+    pin: !mobile, scrub: 1,
+    animation: gsap.to(s, {
+      p: 1, ease: 'none',
+      onUpdate: () => {
+        if (vidReady && vid.duration) {
+          vid.currentTime = Math.min(vid.duration - .05, s.p * vid.duration);
+        } else {
+          cleanFrame.style.opacity = s.p;
+        }
+        meter.style.width = (s.p * 100) + '%';
+        // the line fades in as the pests clear out
+        const t = Math.max(0, Math.min(1, (s.p - .55) / .3));
+        revealLine.style.opacity = t;
+        revealLine.style.transform = 'translateY(' + (24 * (1 - t)) + 'px)';
+      }
+    })
+  }));
+}
+mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
+addEventListener('resize', () => ScrollTrigger.refresh());
+buildMotion();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+</script>
+</body>
+</html>
