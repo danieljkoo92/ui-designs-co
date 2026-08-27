@@ -59,7 +59,6 @@ header .btn{min-height:44px;padding:10px 18px;font-size:13px;white-space:nowrap}
 .scatter .scroll-cue .chev{margin-top:16px;color:#fff;font-size:44px;line-height:1;text-shadow:0 2px 14px rgba(0,0,0,.9);animation:cue-bob 1.3s ease-in-out infinite}
 @keyframes cue-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
 @keyframes cue-flash{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.97)}}
-.scatter .critter{position:absolute;z-index:4;pointer-events:none;background-image:url(img/critter.png);background-size:800% 100%;background-repeat:no-repeat;filter:brightness(0);opacity:0;width:190px;aspect-ratio:520/220;will-change:transform}
 .scatter .meter-box{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;width:min(320px,70vw);z-index:5}
 .scatter .meter{height:3px;background:rgba(32,36,42,.18);border-radius:2px;overflow:hidden}
 .scatter .meter i{display:block;height:100%;width:0;background:var(--green)}
@@ -127,17 +126,19 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
   .fade{opacity:1;transform:none}
   .scatter .clean{opacity:1}
   .scatter .mid-msg{display:none}
-  .scatter .scroll-cue,.scatter .critter{display:none}
+  .scatter .scroll-cue{display:none}
 }
-/* A portrait screen can't show a 16:9 site frame edge-to-edge without cropping
-   most of it away, so on any screen squarer than 5:4 the frame becomes a preview
-   card on a dark stage with the story text underneath. */
+/* Portrait screens get their own tall, full-bleed version of the site frame
+   instead of a cropped landscape one. Swapped by viewport shape, not width,
+   so phones and portrait tablets both get it. */
 @media(max-aspect-ratio:5/4){
   .scatter{height:100vh;height:100dvh;background:#0B0D09}
-  .scatter .stage-m{position:absolute;left:0;right:0;top:10%;aspect-ratio:1600/893;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.55)}
-  .scatter .frame{background-position:center center}
-  .scatter .mid-msg,.scatter .scroll-cue{top:calc(10% + 56vw);bottom:96px;inset-inline:0;height:auto;justify-content:flex-start;padding-top:30px}
-  .scatter .meter-box{bottom:100px}
+  .scatter .infested{background-image:url(img/pest-dark-m.jpg)}
+  .scatter .clean{background-image:url(img/pest-clean-m.jpg)}
+  /* full page width, anchored top — never clip the site's own edges */
+  .scatter .frame{background-size:contain;background-position:center top}
+  .scatter video{object-fit:contain;object-position:center top}
+  .scatter .meter-box{bottom:96px}
   .scatter .meter{background:rgba(255,255,255,.22)}
   .scatter .labels{color:rgba(255,255,255,.75)}
 }
@@ -145,7 +146,6 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
   .scatter .mid-msg .big{font-size:clamp(30px,9vw,40px)}
   .scatter .scroll-cue .cue-txt{font-size:clamp(34px,10vw,44px)}
   .scatter .scroll-cue .chev{font-size:30px;margin-top:10px}
-  .scatter .critter{width:110px}
 }
 </style>
 </head>
@@ -166,10 +166,7 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
   <div class="stage-m">
     <div class="frame infested"></div>
     <div class="frame clean" id="cleanFrame"></div>
-    <video id="scatterVid" muted playsinline preload="auto" src="img/pest-scatter.mp4" aria-hidden="true"></video>
-    <div class="critter" id="cr1" aria-hidden="true"></div>
-    <div class="critter" id="cr2" aria-hidden="true"></div>
-    <div class="critter" id="cr3" aria-hidden="true"></div>
+    <video id="scatterVid" muted playsinline preload="auto" aria-hidden="true"></video>
   </div>
   <div class="mid-msg" id="midMsg">
     <p class="big">We can <em>fix this.</em></p>
@@ -283,22 +280,28 @@ const meter = document.getElementById('meter');
 const scrollCue = document.getElementById('scrollCue');
 const scatterEl = document.querySelector('.scatter');
 const meterBox = document.querySelector('.meter-box');
-// fleeing critters: real Muybridge gait frames, position + stride both scroll-driven
-const CRITTERS = [
-  { el: document.getElementById('cr1'), a: .04, b: .40, top: '18%', dir: 1 },
-  { el: document.getElementById('cr2'), a: .22, b: .60, top: '46%', dir: -1 },
-  { el: document.getElementById('cr3'), a: .45, b: .78, top: '72%', dir: 1 }
-];
-CRITTERS.forEach(c => { c.el.style.top = c.top; });
+const PORTRAIT = '(max-aspect-ratio: 5/4)';
 let vidReady = false;
 vid.addEventListener('canplaythrough', () => {
   if (mq.matches) return;
   vidReady = true;
   vid.pause();
   vid.style.display = 'block';
-}, { once: true });
-vid.load();
-vid.addEventListener('error', () => { vid.style.display = 'none'; vidReady = false; }, { once: true });
+});
+vid.addEventListener('error', () => { vid.style.display = 'none'; vidReady = false; });
+
+// portrait screens play the tall cut of the film; landscape plays the wide one
+let loadedPortrait = null;
+function syncVideoSource() {
+  const p = matchMedia(PORTRAIT).matches;
+  if (p === loadedPortrait) return;
+  loadedPortrait = p;
+  vidReady = false;
+  vid.style.display = 'none';
+  vid.src = p ? 'img/pest-scatter-m.mp4' : 'img/pest-scatter.mp4';
+  vid.load();
+}
+syncVideoSource();
 
 function buildMotion() {
   triggers.forEach(t => t.kill()); triggers = [];
@@ -315,8 +318,7 @@ function buildMotion() {
   // pinned scatter scrub: video timeline + reveal text fade
   // created FIRST so triggers below it account for the pin spacer
   const s = { p: 0 };
-  // must match the CSS breakpoint that letterboxes the frame on portrait screens
-  const portrait = matchMedia('(max-aspect-ratio: 5/4)').matches;
+  const portrait = matchMedia(PORTRAIT).matches;
   triggers.push(ScrollTrigger.create({
     trigger: '.scatter',
     start: 'top top',
@@ -346,25 +348,13 @@ function buildMotion() {
         flash.style.opacity = Math.max(0, Math.min(1, f));
         // scroll cue: gone the moment scrolling starts
         scrollCue.style.opacity = Math.max(0, 1 - p / .06);
-        // letterbox surround rides the flash from dark to clean
+        // portrait: the band under the page rides the flash from dark to clean
         if (portrait) {
           const t = Math.max(0, Math.min(1, (p - .80) / .16));
           scatterEl.style.backgroundColor =
             'rgb(' + Math.round(11 + t * 244) + ',' + Math.round(13 + t * 242) + ',' + Math.round(9 + t * 246) + ')';
           meterBox.style.opacity = 1 - t;
         }
-        // critters flee across the page; 3 gait cycles per crossing
-        const W = document.querySelector('.scatter').offsetWidth;
-        CRITTERS.forEach(c => {
-          const w = (p - c.a) / (c.b - c.a);
-          if (w <= 0 || w >= 1) { c.el.style.opacity = 0; return; }
-          c.el.style.opacity = .45;
-          const frame = Math.floor(w * 24) % 8;
-          c.el.style.backgroundPosition = (frame * 100 / 7) + '% 0';
-          const cw = c.el.offsetWidth + 40;
-          const x = c.dir > 0 ? -cw + w * (W + 2 * cw) : W + cw - w * (W + 2 * cw) - c.el.offsetWidth;
-          c.el.style.transform = 'translateX(' + x + 'px)' + (c.dir < 0 ? ' scaleX(-1)' : '');
-        });
       }
     })
   }));
@@ -384,7 +374,7 @@ function buildMotion() {
   });
 }
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
-addEventListener('resize', () => ScrollTrigger.refresh());
+addEventListener('resize', () => { syncVideoSource(); buildMotion(); ScrollTrigger.refresh(); });
 buildMotion();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
