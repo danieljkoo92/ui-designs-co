@@ -21,7 +21,7 @@
 
 Designer will design and build a website for Client:
 
-- [ ] **Standard build — $1,000** — custom design, mobile-first, built-in local SEO setup, tap-to-call and tap-to-text, quote form, 2 full redesigns included.
+- [ ] **Standard build — $1,000** — custom design, mobile-first, built-in local SEO setup, tap-to-call and tap-to-text, quote form, 2 full redesigns included after purchase.
 - [ ] **Signature build — $3,500** — everything above, plus scroll-driven storytelling, custom motion design, and cinematic or 3D showcase work built to Client's design direction.
 
 Pages / sections agreed: ________________________________________________
@@ -33,6 +33,7 @@ Anything not written above is out of scope and gets quoted separately before it'
 | Stage | Target |
 |---|---|
 | Preview delivered | 48 hours from receiving Client's business details |
+| Revised preview delivered | 48 hours from the revision deposit clearing |
 | Standard build live | 5–7 days from Client's approval and content delivery |
 | Signature build live | 10–14 days from Client's approval and content delivery |
 
@@ -40,8 +41,8 @@ These are targets, not guarantees. The clock starts when Designer has the conten
 
 ## 3. Money
 
-- **Preview:** free.
-- **Design-direction request (optional):** $100, paid up front, for a first pass built to Client's stated direction. Non-refundable once that directed preview is delivered; refunded in full if it is not; credited toward the build price if Client proceeds.
+- **Preview:** free. The first preview carries no charge and no obligation.
+- **Revision deposit:** $200, paid before any revision work on the preview begins — including a first pass built to Client's stated design direction. Non-refundable once the revised or directed preview is delivered; refunded in full if it is not; credited toward the build price if Client proceeds.
 - **Build:** $__________ , due __________________________ (e.g. 50% to start, 50% before launch).
 - **Monthly plan (optional, after launch):** [ ] Starter $149 [ ] Grow $349 [ ] Dominate $697 — billed monthly in advance, cancel any time before the next billing date.
 - Payment by Zelle, CashApp, Venmo, or Square.
