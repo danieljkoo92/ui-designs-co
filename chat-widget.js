@@ -27,6 +27,7 @@
     '.uidc-m{max-width:85%;padding:10px 14px;border-radius:14px;font-size:15px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}',
     '.uidc-bot{background:#FFFFFF;color:#0A0C10;border:1px solid #8C97A6;border-bottom-left-radius:4px;align-self:flex-start}',
     '.uidc-user{background:#D9A441;color:#fff;border-bottom-right-radius:4px;align-self:flex-end}',
+    '.uidc-bot a{color:#8a6410;font-weight:700}',
     '.uidc-sms{display:inline-flex;align-items:center;justify-content:center;min-height:48px;background:#D9A441;color:#fff;font-weight:700;font-size:15px;text-decoration:none;border-radius:8px;padding:12px 18px;align-self:flex-start;margin-top:2px}',
     '#uidc-typing{display:none;align-self:flex-start;padding:12px 16px;background:#FFFFFF;border:1px solid #8C97A6;border-radius:14px;border-bottom-left-radius:4px}',
     '#uidc-typing span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#D9A441;margin:0 2px;animation:uidcB 1.2s infinite}',
@@ -99,7 +100,7 @@
     document.getElementById('uidc-panel').style.display = 'flex';
     document.getElementById('uidc-bubble').style.display = 'none';
     if (history.length === 0) {
-      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds custom websites for local businesses, and the first preview is free. What kind of business do you run?");
+      addBot("Hey — I'm the assistant for UI Designs Co. Daniel builds custom websites for local businesses, and the first preview is free. What kind of business do you run? If you've already got a site, I can run a free check on it instead.");
     }
   }
 
@@ -121,9 +122,30 @@
 
   function addBot(text) {
     var d = el('div', { 'class': 'uidc-m uidc-bot' }, text);
+    linkifyPages(d);
     msgsEl().insertBefore(d, typingEl());
     maybeAddSmsButton(text);
     scrollDown();
+  }
+
+  /* The model answers with paths like "/scan.html"; make those tappable.
+     Built from DOM nodes against a fixed page list — the reply is model
+     output, so it never touches innerHTML. */
+  var PAGE_PATH = /\/(work|plans|why|scan|how-it-works|about|faq)\.html/g;
+  function linkifyPages(node) {
+    var text = node.textContent, m, last = 0, hit = false;
+    var frag = document.createDocumentFragment();
+    PAGE_PATH.lastIndex = 0;
+    while ((m = PAGE_PATH.exec(text)) !== null) {
+      hit = true;
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      frag.appendChild(el('a', { href: m[0].slice(1) }, m[0]));
+      last = m.index + m[0].length;
+    }
+    if (!hit) return;
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    node.textContent = '';
+    node.appendChild(frag);
   }
 
   function addUser(text) {
