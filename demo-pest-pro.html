@@ -45,7 +45,7 @@ header .btn{min-height:44px;padding:10px 18px;font-size:13px;white-space:nowrap}
 
 /* pinned hero — the scatter */
 .scatter{position:relative;height:100vh;overflow:hidden;background:#DDD}
-.scatter .frame{position:absolute;inset:0;background-size:cover;background-position:center top}
+.scatter .frame{position:absolute;inset:0;background-size:cover;background-position:center top;background-repeat:no-repeat}
 .scatter .infested{background-image:url(img/pest-dark.jpg)}
 .scatter .clean{background-image:url(img/pest-clean.jpg);opacity:0;will-change:opacity}
 .scatter video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:none}
@@ -129,13 +129,20 @@ footer .fine{margin-top:14px;font-size:12.5px;opacity:.75}
   .scatter .mid-msg{display:none}
   .scatter .scroll-cue,.scatter .critter{display:none}
 }
+/* A portrait screen can't show a 16:9 site frame edge-to-edge without cropping
+   most of it away, so on any screen squarer than 5:4 the frame becomes a preview
+   card on a dark stage with the story text underneath. */
+@media(max-aspect-ratio:5/4){
+  .scatter{height:100vh;height:100dvh;background:#0B0D09}
+  .scatter .stage-m{position:absolute;left:0;right:0;top:10%;aspect-ratio:1600/893;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.55)}
+  .scatter .frame{background-position:center center}
+  .scatter .mid-msg,.scatter .scroll-cue{top:calc(10% + 56vw);bottom:96px;inset-inline:0;height:auto;justify-content:flex-start;padding-top:30px}
+  .scatter .meter-box{bottom:100px}
+  .scatter .meter{background:rgba(255,255,255,.22)}
+  .scatter .labels{color:rgba(255,255,255,.75)}
+}
 @media(max-width:767px){
-  .scatter{height:auto;min-height:0}
-  .scatter .stage-m{position:relative;height:48vh;margin-top:66px}
-  .scatter .frame,.scatter video{position:absolute}
   .scatter .mid-msg .big{font-size:clamp(30px,9vw,40px)}
-  .scatter .meter-box{position:relative;bottom:auto;margin:10px auto 26px}
-  .scatter .scroll-cue{inset:auto 0;top:66px;height:48vh}
   .scatter .scroll-cue .cue-txt{font-size:clamp(34px,10vw,44px)}
   .scatter .scroll-cue .chev{font-size:30px;margin-top:10px}
   .scatter .critter{width:110px}
@@ -274,6 +281,8 @@ const midMsg = document.getElementById('midMsg');
 const flash = document.getElementById('flash');
 const meter = document.getElementById('meter');
 const scrollCue = document.getElementById('scrollCue');
+const scatterEl = document.querySelector('.scatter');
+const meterBox = document.querySelector('.meter-box');
 // fleeing critters: real Muybridge gait frames, position + stride both scroll-driven
 const CRITTERS = [
   { el: document.getElementById('cr1'), a: .04, b: .40, top: '18%', dir: 1 },
@@ -298,6 +307,7 @@ function buildMotion() {
     cleanFrame.style.opacity = 1;
     vid.style.display = 'none';
     midMsg.style.display = 'none'; flash.style.display = 'none';
+    scatterEl.style.backgroundColor = '#fff';
     meter.style.width = '100%';
     gsap.set('.fade', { opacity: 1, y: 0 });
     return;
@@ -305,11 +315,12 @@ function buildMotion() {
   // pinned scatter scrub: video timeline + reveal text fade
   // created FIRST so triggers below it account for the pin spacer
   const s = { p: 0 };
-  const mobile = matchMedia('(max-width: 767px)').matches;
+  // must match the CSS breakpoint that letterboxes the frame on portrait screens
+  const portrait = matchMedia('(max-aspect-ratio: 5/4)').matches;
   triggers.push(ScrollTrigger.create({
     trigger: '.scatter',
     start: 'top top',
-    end: mobile ? '+=110%' : '+=160%',
+    end: portrait ? '+=110%' : '+=160%',
     pin: true, scrub: 1,
     animation: gsap.to(s, {
       p: 1, ease: 'none',
@@ -335,6 +346,13 @@ function buildMotion() {
         flash.style.opacity = Math.max(0, Math.min(1, f));
         // scroll cue: gone the moment scrolling starts
         scrollCue.style.opacity = Math.max(0, 1 - p / .06);
+        // letterbox surround rides the flash from dark to clean
+        if (portrait) {
+          const t = Math.max(0, Math.min(1, (p - .80) / .16));
+          scatterEl.style.backgroundColor =
+            'rgb(' + Math.round(11 + t * 244) + ',' + Math.round(13 + t * 242) + ',' + Math.round(9 + t * 246) + ')';
+          meterBox.style.opacity = 1 - t;
+        }
         // critters flee across the page; 3 gait cycles per crossing
         const W = document.querySelector('.scatter').offsetWidth;
         CRITTERS.forEach(c => {
@@ -350,19 +368,14 @@ function buildMotion() {
       }
     })
   }));
-  // header appears once the scatter act is done (desktop pin only)
+  // header stays out of the way until the scatter act is done
   const hdr = document.querySelector('header');
-  const mobileHdr = matchMedia('(max-width: 767px)').matches;
-  if (!mobileHdr) {
-    hdr.classList.add('hidden-hero');
-    triggers.push(ScrollTrigger.create({
-      trigger: '#services', start: 'top 55%',
-      onEnter: () => hdr.classList.remove('hidden-hero'),
-      onLeaveBack: () => hdr.classList.add('hidden-hero')
-    }));
-  } else {
-    hdr.classList.remove('hidden-hero');
-  }
+  hdr.classList.add('hidden-hero');
+  triggers.push(ScrollTrigger.create({
+    trigger: '#services', start: 'top 55%',
+    onEnter: () => hdr.classList.remove('hidden-hero'),
+    onLeaveBack: () => hdr.classList.add('hidden-hero')
+  }));
   gsap.utils.toArray('.fade').forEach(el => {
     triggers.push(ScrollTrigger.create({
       trigger: el, start: 'top 86%',
