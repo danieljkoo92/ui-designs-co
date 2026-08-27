@@ -212,6 +212,7 @@
           var visible = data.reply.replace(/\[SMS_BUTTON\][\s\S]*?\[\/SMS_BUTTON\]/g, '').trim();
           if (visible) {
             var d = el('div', { 'class': 'uidc-m uidc-bot' }, visible);
+            linkifyPages(d);
             msgsEl().insertBefore(d, typingEl());
           }
           maybeAddSmsButton(data.reply);
