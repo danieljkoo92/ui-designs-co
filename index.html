@@ -63,9 +63,9 @@ h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
 .reveal{opacity:0;transform:translateY(24px)}
 @media(prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none}
-  .cutslide,.act,.act .line,.act h1,.act .sub,.act .cta-row,.act .tagline{transition:opacity .3s ease;transform:none;filter:none;clip-path:none;animation:none!important}
-  .act.leaving,.cutslide.leaving,.cutslide.entering{filter:none;clip-path:none;transform:none;animation:none!important}
-  .act.on .shots::before,#a2.on .line::after,#a4.on .tagline::after,#a5.on .cta-row .btn::before,.flash.hit{animation:none!important;display:none}
+  .cutslide,.act,.act .line,.act h1,.act .sub,.act .cta-row,.act .tagline,.act .ch{transition:opacity .3s ease!important;transform:none!important;filter:none!important;clip-path:none!important;animation:none!important;opacity:1!important}
+  .cutslide{filter:none!important}
+  .act.on .shots::before,#a2.on .line::after,#a4.on .tagline .caret,#a5.on .cta-row .btn::before,.flash.hit{animation:none!important;display:none!important}
 }
 
 /* header */
@@ -105,41 +105,27 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
 .act .sub{transition-delay:.2s}
 .act .cta-row{transition-delay:.3s}
 
-/* ============ FUTURISTIC EXITS ============ */
-/* .leaving is set on the outgoing act just before .on is removed */
+/* ============ TRANSITION MOTION ============
+   The heavy lifting is JS: per-character 3D shatter, matrix-decode text
+   scramble, and SVG turbulence liquid warp on the cut slides. CSS here only
+   holds decorative sweeps + the 3D perspective the characters rotate in. */
 
-/* a1 exit — text shatter: blur, scale up, split into gold pixels */
-#a1.leaving .line{transition:opacity .5s ease,filter .5s ease,transform .5s cubic-bezier(.7,0,.84,0);opacity:0;filter:blur(14px) brightness(1.6);transform:scale(1.15) translateY(-10px);text-shadow:0 0 24px var(--gold),0 4px 40px rgba(0,0,0,.85)}
+.film{perspective:1400px;perspective-origin:50% 45%}
+.act{transform-style:preserve-3d}
+.act .line,.act h1,.act .tagline{transform-style:preserve-3d}
+.act .ch{transform-origin:50% 50%;backface-visibility:hidden;will-change:transform,opacity,filter}
+.act .ch.gold{color:var(--gold);text-shadow:0 0 18px var(--gold)}
 
-/* ac exit — scanline collapse: horizontal bands compress to a single line */
-#ac.leaving{clip-path:inset(48% 0 48% 0);opacity:.9;transition:clip-path .55s cubic-bezier(.85,0,.15,1),opacity .55s ease}
+/* Cut slides get an SVG turbulence filter — the filter's scale attr is
+   animated in JS from 0 to 80 (melt out) then back to 0 (settle in). */
+.cutslide{filter:url(#warp)}
+.cutslide.melting{opacity:0!important;transition:opacity .6s ease}
 
-/* a2 exit — text lift + blur (feeds into the 3D pinch of a3) */
-#a2.leaving .line{transition:opacity .45s ease,filter .45s ease,transform .5s ease-in;opacity:0;filter:blur(10px);transform:translateY(-28px)}
-
-/* a3 exit — shots pinch away (scale down, rotate out) */
-#a3.leaving .shot-desktop{transition:transform .55s cubic-bezier(.7,0,.84,0),opacity .55s;transform:scale(.4) rotateY(-40deg);opacity:0}
-#a3.leaving .shot-phone{transition:transform .55s cubic-bezier(.7,0,.84,0),opacity .55s;transform:scale(.4) rotateY(40deg);opacity:0}
-
-/* a4 exit — cloud dissolves, tagline drops with a chromatic-split shadow */
-#a4.leaving{opacity:0;transition:opacity .5s ease}
-#a4.leaving .tagline{transition:transform .5s ease-in,text-shadow .5s;transform:translateY(24px);text-shadow:-3px 0 0 rgba(217,164,65,.6),3px 0 0 rgba(140,151,166,.5),0 4px 30px rgba(0,0,0,.95)}
-
-/* a5 exit — CTA slides down, headline dims (before the loop flash) */
-#a5.leaving .line{transition:opacity .35s ease,transform .35s ease-in;opacity:0;transform:translateY(-14px)}
-#a5.leaving .cta-row{transition:opacity .35s ease,transform .35s ease-in;opacity:0;transform:translateY(24px)}
-
-/* ============ SIGNATURE ENTRANCES ============ */
-/* one-shot keyframes, no infinite loops */
-
-@keyframes goldWipe{
-  0%{clip-path:inset(0 100% 0 0)}
-  100%{clip-path:inset(0 0 0 0)}
-}
+/* Decorative motion the character work sits on top of */
 @keyframes ringPulse{
   0%{transform:translate(-50%,-50%) scale(.4);opacity:.9}
   70%{opacity:.5}
-  100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}
+  100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}
 }
 @keyframes shimmer{
   0%{background-position:-200% 0}
@@ -153,38 +139,22 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
   0%{clip-path:inset(0 100% 0 0)}
   100%{clip-path:inset(0 0 0 0)}
 }
+@keyframes flashHit{
+  0%{opacity:0}
+  15%{opacity:.9}
+  100%{opacity:0}
+}
 
-/* gold ring behind the site shots on a3 entry */
-.act.on .shots::before{content:"";position:absolute;left:50%;top:50%;width:min(560px,58vw);aspect-ratio:1;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 40px rgba(217,164,65,.6),inset 0 0 40px rgba(217,164,65,.3);animation:ringPulse .9s ease-out forwards;pointer-events:none}
+.act.on .shots::before{content:"";position:absolute;left:50%;top:50%;width:min(560px,58vw);aspect-ratio:1;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 60px rgba(217,164,65,.7),inset 0 0 40px rgba(217,164,65,.35);animation:ringPulse 1s ease-out forwards;pointer-events:none;z-index:0}
 
-/* underline scan under a2 headline on entry */
 #a2 .line{position:relative;padding-bottom:12px}
-#a2.on .line::after{content:"";position:absolute;left:15%;right:15%;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold) 80%,transparent);animation:underlineScan .7s cubic-bezier(.5,0,.5,1) .35s both;box-shadow:0 0 12px var(--gold)}
+#a2.on .line::after{content:"";position:absolute;left:15%;right:15%;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold) 80%,transparent);animation:underlineScan .7s cubic-bezier(.5,0,.5,1) .35s both;box-shadow:0 0 14px var(--gold)}
 
-/* typewriter caret sweep across a4 tagline */
-#a4.on .tagline{position:relative;overflow:hidden}
-#a4.on .tagline::after{content:"";position:absolute;top:0;bottom:0;right:0;width:3px;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:caretSweep .8s steps(20) .1s both}
+#a4.on .tagline{position:relative}
+#a4.on .tagline .caret{position:absolute;top:0;bottom:0;right:0;width:3px;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:caretSweep .8s steps(20) .1s both}
 
-/* gold-glow shimmer sweep across CTA buttons on a5 entry */
 #a5.on .cta-row .btn{position:relative;overflow:hidden}
-#a5.on .cta-row .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.6) 50%,transparent 70%);background-size:200% 100%;animation:shimmer 1.3s ease-out .35s 1 forwards;pointer-events:none}
-
-/* ============ CUTSLIDE GLITCH TRANSITION ============ */
-/* between industry cuts: outgoing slide gets 3 offset bands for a beat,
-   incoming slide bleeds up through a diagonal wipe */
-.cutslide.leaving{animation:glitchBands .32s steps(4) forwards;transition:none;opacity:1;transform:none}
-@keyframes glitchBands{
-  0%,100%{clip-path:none;transform:translateX(0)}
-  20%{clip-path:polygon(0 0,100% 0,100% 30%,0 30%);transform:translateX(-18px)}
-  40%{clip-path:polygon(0 30%,100% 30%,100% 60%,0 60%);transform:translateX(22px)}
-  60%{clip-path:polygon(0 60%,100% 60%,100% 100%,0 100%);transform:translateX(-14px)}
-  80%{clip-path:none;opacity:.4;transform:translateX(6px)}
-}
-.cutslide.entering{opacity:1;visibility:visible;transform:scale(1);animation:diagonalWipe .55s cubic-bezier(.85,0,.15,1) forwards;transition:none}
-@keyframes diagonalWipe{
-  0%{clip-path:polygon(0 100%,0 100%,0 100%,0 100%)}
-  100%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
-}
+#a5.on .cta-row .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:200% 100%;animation:shimmer 1.3s ease-out .35s 1 forwards;pointer-events:none}
 
 /* ============ FLASH OVERLAY (loop point) ============ */
 .flash{position:absolute;inset:0;background:var(--gold);opacity:0;pointer-events:none;z-index:5;mix-blend-mode:screen}
@@ -368,6 +338,17 @@ footer .fine{margin-top:18px;font-size:13px}
 <body>
 <a class="skip-nav" href="#rebuild">Skip to main content</a>
 
+<!-- SVG turbulence filter used by the cut-slide liquid warp.
+     The scale attribute of feDisplacementMap is animated from JS. -->
+<svg width="0" height="0" style="position:absolute;left:-9999px" aria-hidden="true">
+  <defs>
+    <filter id="warp" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence id="warpNoise" type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="3" result="noise"/>
+      <feDisplacementMap id="warpMap" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
 <header>
   <div class="wrap">
     <a class="logo" href="#top">UI <em>Designs</em></a>
@@ -411,7 +392,7 @@ footer .fine{margin-top:18px;font-size:13px}
   </div>
   <div class="act" id="a4">
     <div class="cloud" id="cloud" aria-hidden="true"></div>
-    <p class="tagline">Not templates. <em style="font-style:italic;color:var(--gold)">Brands.</em></p>
+    <p class="tagline">Not templates. <em style="font-style:italic;color:var(--gold)">Brands.</em><span class="caret"></span></p>
   </div>
   <div class="act" id="a5">
     <p class="line">Your business deserves<br>a <em>better website.</em></p>
@@ -697,48 +678,213 @@ const vid = document.getElementById('filmVid');
 const actIds = ['a1','ac','a2','a3','a4','a5'];
 const acts = actIds.map(id => document.getElementById(id));
 let current = 0;
-/* setAct — mark the outgoing act .leaving so its signature exit plays,
-   then swap classes on the next frame so both animations can render together.
-   The .leaving class is cleaned up after the exit anim completes so the act
-   is ready for its next entrance. */
+
+/* ============================================================
+   TRANSITION ENGINE
+   Per-act headlines pre-split into character spans. Each act picks
+   from three signature moves for entrance/exit:
+     shatterOut  — every char blasts off in a random 3D vector
+     assembleIn  — chars fly in from scattered 3D positions
+     decodeIn    — chars scramble through random glyphs then lock
+                   (that "terminal decode" look)
+   Cut slides run an SVG feDisplacementMap warp animated in JS —
+   the image liquefies as it fades out and settles as it fades in.
+   ============================================================ */
+
+/* Wrap every animatable headline's text nodes in .ch spans. Spaces
+   become NBSP so word gaps survive layout. */
+function wrapChars(el){
+  const walk = (node) => {
+    [...node.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        c.textContent.split('').forEach(ch => {
+          const sp = document.createElement('span');
+          sp.className = 'ch';
+          sp.textContent = ch === ' ' ? '\u00a0' : ch;
+          if (ch === ' ') sp.classList.add('sp');
+          frag.appendChild(sp);
+        });
+        node.replaceChild(frag, c);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') {
+        walk(c);
+      }
+    });
+  };
+  walk(el);
+}
+
+const chr = {};
+document.querySelectorAll('#a1 .line, #a2 .line, #a4 .tagline, #a5 .line').forEach(el => {
+  wrapChars(el);
+  const actId = el.closest('.act').id;
+  const spans = [...el.querySelectorAll('.ch')];
+  chr[actId] = { root: el, chars: spans, origs: spans.map(sp => sp.textContent) };
+});
+Object.values(chr).forEach(({chars}) => {
+  gsap.set(chars, {opacity: 1, transform: 'none'});
+});
+
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+/* per-character 3D shatter (exit) */
+function shatterOut(actId, done){
+  const rec = chr[actId];
+  if (!rec) { done && done(); return; }
+  gsap.killTweensOf(rec.chars);
+  gsap.to(rec.chars, {
+    duration: 0.55,
+    x: () => rand(-380, 380),
+    y: () => rand(-220, 220),
+    z: () => rand(-600, 400),
+    rotationX: () => rand(-540, 540),
+    rotationY: () => rand(-540, 540),
+    scale: () => rand(0.15, 0.5),
+    filter: 'blur(10px) brightness(1.4)',
+    color: () => (Math.random() > 0.6 ? '#D9A441' : ''),
+    opacity: 0,
+    ease: 'power3.in',
+    stagger: { each: 0.008, from: 'random' },
+    onComplete: done
+  });
+}
+
+/* per-character assemble from 3D scatter (entry) */
+function assembleIn(actId){
+  const rec = chr[actId];
+  if (!rec) return;
+  gsap.killTweensOf(rec.chars);
+  rec.chars.forEach((sp, i) => { sp.textContent = rec.origs[i]; sp.style.color = ''; sp.style.textShadow = ''; });
+  gsap.set(rec.chars, {
+    x: () => rand(-260, 260),
+    y: () => rand(-180, 180),
+    z: () => rand(-800, -300),
+    rotationX: () => rand(-180, 180),
+    rotationY: () => rand(-180, 180),
+    scale: () => rand(0.4, 0.9),
+    filter: 'blur(8px)',
+    opacity: 0
+  });
+  gsap.to(rec.chars, {
+    duration: 0.85,
+    x: 0, y: 0, z: 0,
+    rotationX: 0, rotationY: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    opacity: 1,
+    ease: 'back.out(1.6)',
+    stagger: { each: 0.022, from: 'random' }
+  });
+}
+
+/* terminal-style scramble decode (entry) */
+const GLYPHS = '0123456789!@#$%&*<>[]{}/\\|=+-ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function decodeIn(actId){
+  const rec = chr[actId];
+  if (!rec) return;
+  gsap.killTweensOf(rec.chars);
+  gsap.set(rec.chars, {
+    x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0,
+    scale: 1, filter: 'none', opacity: 1
+  });
+  rec.chars.forEach((sp, i) => {
+    const orig = rec.origs[i];
+    if (orig === '\u00a0' || /\s/.test(orig)) { sp.textContent = orig; sp.style.color = ''; return; }
+    let ticks = 6 + Math.floor(Math.random() * 10);
+    const startDelay = 40 + i * 22;
+    sp.style.color = 'var(--gold)';
+    sp.style.textShadow = '0 0 14px var(--gold)';
+    const step = () => {
+      if (ticks <= 0) {
+        sp.textContent = orig;
+        sp.style.color = '';
+        sp.style.textShadow = '';
+        return;
+      }
+      sp.textContent = pick(GLYPHS);
+      ticks--;
+      setTimeout(step, 42);
+    };
+    setTimeout(step, startDelay);
+  });
+}
+
+/* SVG turbulence: liquefy the cut slide as it dissolves */
+const warpMap = document.getElementById('warpMap');
+const warpNoise = document.getElementById('warpNoise');
+function warpTo(targetScale, dur){
+  if (!warpMap) return;
+  const obj = { s: parseFloat(warpMap.getAttribute('scale')) || 0 };
+  gsap.killTweensOf(obj);
+  gsap.to(obj, {
+    duration: dur, s: targetScale, ease: 'power2.inOut',
+    onUpdate: () => warpMap.setAttribute('scale', obj.s.toFixed(1))
+  });
+}
+function warpSlideOut(){ if (!mq.matches) warpTo(80, 0.5); }
+function warpSlideIn(){
+  if (mq.matches) return;
+  if (warpNoise) warpNoise.setAttribute('seed', String(Math.floor(Math.random() * 999)));
+  warpTo(0, 0.6);
+}
+
+/* which entrance style each act uses when it comes on-screen */
+const ENTRANCE = { a1: 'assemble', a2: 'decode', a4: 'decode', a5: 'assemble' };
+function runEntrance(actId){
+  const style = ENTRANCE[actId];
+  if (style === 'assemble') assembleIn(actId);
+  else if (style === 'decode') decodeIn(actId);
+}
+
+/* setAct — master switch, with per-act exit/entrance choreography */
 function setAct(n){
   if (n === current) return;
   const outgoing = acts[current];
-  outgoing.classList.add('leaving');
-  requestAnimationFrame(() => {
-    outgoing.classList.remove('on');
-    acts[n].classList.add('on');
-    /* strip .leaving after the longest exit clears (~600ms) */
-    setTimeout(() => outgoing.classList.remove('leaving'), 620);
-  });
-  current = n;
+  const outId = actIds[current];
+  const inId = actIds[n];
 
-  if (actIds[n] === 'a4') { scatterCloud(); flyCloud(); }
-  if (actIds[n] === 'a3') {
-    gsap.fromTo('.shot-desktop', {scale:1.1, opacity:0}, {scale:1, opacity:1, duration:.55, ease:'power3.out'});
-    gsap.fromTo('.shot-phone', {y:50, opacity:0}, {y:14, opacity:1, duration:.55, delay:.1, ease:'power3.out'});
+  if (mq.matches) {
+    outgoing.classList.remove('on');
+  } else if (chr[outId]) {
+    shatterOut(outId);
+    setTimeout(() => outgoing.classList.remove('on'), 480);
+  } else if (outId === 'ac') {
+    warpSlideOut();
+    setTimeout(() => outgoing.classList.remove('on'), 500);
+  } else if (outId === 'a3') {
+    gsap.to('.shot-desktop', {duration: .55, scale: 0.3, rotationY: -60, opacity: 0, ease: 'power3.in'});
+    gsap.to('.shot-phone',   {duration: .55, scale: 0.3, rotationY:  60, opacity: 0, ease: 'power3.in'});
+    setTimeout(() => outgoing.classList.remove('on'), 500);
+  } else {
+    outgoing.classList.remove('on');
   }
-  /* loop flash — hit when we're returning to act 0 */
-  if (n === 0 && !mq.matches) {
-    const f = document.getElementById('flash');
-    f.classList.remove('hit'); void f.offsetWidth; f.classList.add('hit');
-  }
+
+  const enterDelay = mq.matches ? 0 : 220;
+  setTimeout(() => {
+    acts[n].classList.add('on');
+
+    if (inId === 'a4') { scatterCloud(); flyCloud(); }
+    if (inId === 'a3') {
+      gsap.fromTo('.shot-desktop',
+        {scale: 0.3, rotationY: -60, opacity: 0, z: -400},
+        {scale: 1, rotationY: -8, z: 0, opacity: 1, duration: .8, ease: 'power3.out'});
+      gsap.fromTo('.shot-phone',
+        {scale: 0.3, rotationY: 60, opacity: 0, z: -400},
+        {scale: 1, rotationY: 10, z: 0, opacity: 1, duration: .8, delay: .1, ease: 'power3.out'});
+    }
+    if (inId === 'ac') warpSlideIn();
+    else runEntrance(inId);
+    if (inId === 'a4' && chr.a4) setTimeout(() => runEntrance('a4'), 300);
+
+    if (n === 0 && !mq.matches) {
+      const f = document.getElementById('flash');
+      f.classList.remove('hit'); void f.offsetWidth; f.classList.add('hit');
+    }
+  }, enterDelay);
+
+  current = n;
 }
-/* char-split the opening line */
-const l1 = document.getElementById('line1');
-(function wrapChars(node){
-  [...node.childNodes].forEach(c => {
-    if (c.nodeType === 3) {
-      const frag = document.createDocumentFragment();
-      c.textContent.split('').forEach(ch => {
-        const sp = document.createElement('span');
-        sp.className = 'ch'; sp.textContent = ch === ' ' ? ' ' : ch;
-        frag.appendChild(sp);
-      });
-      node.replaceChild(frag, c);
-    } else wrapChars(c);
-  });
-})(l1);
 
 /* portfolio cloud */
 const cloud = document.getElementById('cloud');
@@ -770,26 +916,46 @@ scatterCloud();
 /* industry hard cuts */
 const slides = [...document.querySelectorAll('.cutslide')];
 const cutLabel = document.getElementById('cutLabel');
-/* showSlide — signature glitch-then-diagonal-wipe between industry cuts.
-   Outgoing slide plays glitchBands, incoming plays diagonalWipe, label re-fades. */
+/* showSlide — SVG turbulence liquid warp between industry cuts.
+   Outgoing slide MELTS out (scale up to 80, then fade), incoming slide
+   SETTLES in (fade in while scale unwinds to 0). Label is decoded matrix-style. */
 let prevSlide = -1;
 function showSlide(i){
   const incoming = slides[i];
   const outgoing = prevSlide >= 0 ? slides[prevSlide] : null;
-  if (outgoing && outgoing !== incoming && !mq.matches) {
-    outgoing.classList.add('leaving');
-    setTimeout(() => {
-      outgoing.classList.remove('show','leaving','entering');
-    }, 320);
-  } else if (outgoing) {
-    outgoing.classList.remove('show','leaving','entering');
+  slides.forEach((sl,j) => { if (j !== i && j !== prevSlide) sl.classList.remove('show'); });
+
+  if (mq.matches) {
+    if (outgoing && outgoing !== incoming) outgoing.classList.remove('show');
+    incoming.classList.add('show');
+    cutLabel.textContent = incoming.dataset.label;
+  } else {
+    if (outgoing && outgoing !== incoming) {
+      warpSlideOut();
+      setTimeout(() => {
+        outgoing.classList.remove('show');
+        incoming.classList.add('show');
+        warpSlideIn();
+      }, 380);
+    } else {
+      incoming.classList.add('show');
+      warpSlideIn();
+    }
+    const target = incoming.dataset.label;
+    let ticks = 8;
+    const step = () => {
+      if (ticks <= 0) { cutLabel.textContent = target; return; }
+      let out = '';
+      const settled = target.length - Math.ceil(ticks * target.length / 8);
+      for (let k = 0; k < target.length; k++) {
+        out += (k < settled) ? target[k] : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      }
+      cutLabel.textContent = out;
+      ticks--;
+      setTimeout(step, 45);
+    };
+    setTimeout(step, 260);
   }
-  slides.forEach((sl,j) => { if (j !== i && j !== prevSlide) sl.classList.remove('show','leaving','entering'); });
-  incoming.classList.remove('leaving');
-  incoming.classList.add('show','entering');
-  setTimeout(() => incoming.classList.remove('entering'), 560);
-  cutLabel.textContent = incoming.dataset.label;
-  gsap.fromTo(cutLabel, {y:16, opacity:0, letterSpacing:'.4em'}, {y:0, opacity:1, letterSpacing:'0em', duration:.5, ease:'power3.out'});
   prevSlide = i;
 }
 
@@ -800,7 +966,7 @@ function buildFilm(){
   film = gsap.timeline({ repeat: -1 });
   // Paced so each act can actually be read: ~3.5s a card, 1.4s a cut slide.
   // The closing CTA holds longest because it is the one that has to land.
-  film.call(() => { setAct(0); gsap.fromTo('#line1 .ch', {opacity:0, y:22}, {opacity:1, y:0, duration:.4, ease:'power2.out', stagger:.022}); }, null, 0);
+  film.call(() => { setAct(0); runEntrance('a1'); }, null, 0);
   film.call(() => { setAct(1); showSlide(0); }, null, 3.8);
   film.call(() => showSlide(1), null, 5.2);
   film.call(() => showSlide(2), null, 6.6);
