@@ -184,11 +184,30 @@ function analyse(html, finalUrl, meta) {
                 head.match(/<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i) || [])[1];
   const h1s = html.match(/<h1[\s>]/gi) || [];
   const viewport = /<meta[^>]+name=["']viewport["']/i.test(head);
-  const ogTitle = /property=["']og:(title|image)["']/i.test(head);
+  // Social preview: og:image is what actually makes the card render as a rich
+  // preview instead of a blank tile. og:title alone isn't enough.
+  const ogImage = /property=["']og:image["']/i.test(head);
+  const twitterCard = /name=["']twitter:(card|image)["']/i.test(head);
+
+  // Font-display: swap — fonts that block the first paint until they load
+  // are one of the top LCP killers. Skip the check on pages that load no
+  // custom fonts at all.
+  const usesCustomFonts = /<link[^>]+fonts\.(googleapis|gstatic)\.com|@font-face/i.test(html);
+  const fontDisplaySwap = !usesCustomFonts || /display\s*=\s*swap|font-display\s*:\s*swap/i.test(html);
+
+  // Render-blocking scripts: any <script src=...> without async/defer/type=module
+  // in the head blocks the first paint. Cheap to fix, big performance win.
+  const blockingScripts = (html.match(/<script\b[^>]*\ssrc\s*=[^>]*>/gi) || [])
+    .filter((tag) => !/\b(async|defer|type\s*=\s*["']module["'])\b/i.test(tag)).length;
 
   // structured data
   const ld = [...html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)]
     .map((m) => m[1]).join(' ');
+
+  // Content freshness: an explicit publish/modify date, either in JSON-LD or
+  // sent as the Last-Modified response header. Answer engines heavily prefer
+  // content they can date.
+  const hasFreshDate = /"date(Published|Modified)"/i.test(ld) || !!meta.lastModified;
   const hasLocalBiz = /"@type"\s*:\s*"?[^"]*(LocalBusiness|Plumber|Electrician|HVACBusiness|HomeAndConstructionBusiness|GeneralContractor|Roofing|MovingCompany|AutoRepair|PestControl|ProfessionalService|Store)/i.test(ld);
   const hasFaqSchema = /"@type"\s*:\s*"?FAQPage/i.test(ld);
   const hasOpeningHours = /openingHours/i.test(ld);
@@ -304,9 +323,12 @@ function analyse(html, finalUrl, meta) {
           good: 'Found at /sitemap.xml.', bad: 'None found — search engines have to guess your pages.' },
         { label: 'Robots file', pass: meta.robots, weight: 1,
           good: 'Found at /robots.txt.', bad: 'None found.' },
-        { label: 'Social preview', pass: ogTitle, weight: 1,
-          good: 'Your link previews properly when shared.',
-          bad: 'Shared links show a blank box instead of a preview.' },
+        { label: 'Social preview image', pass: ogImage, weight: 1,
+          good: 'Your link shows a rich preview card when shared.',
+          bad: 'No og:image tag — shared links show a blank box instead of a preview card.' },
+        { label: 'Twitter card', pass: twitterCard, weight: 1,
+          good: 'Twitter and X render your link as a rich preview.',
+          bad: 'No twitter:card tag — X, Twitter and Slack all fall back to a plain-text link.' },
         { label: 'Image descriptions', pass: imgs.length === 0 || imgsNoAlt / imgs.length < 0.3, weight: 1,
           good: 'Most images are described.',
           bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors.` },
@@ -338,6 +360,15 @@ function analyse(html, finalUrl, meta) {
         { label: 'Page weight', pass: weightKb < 400, weight: 2,
           good: `${weightKb} KB of HTML.`,
           bad: `${weightKb} KB of HTML before a single image loads — heavy on a phone signal.` },
+        { label: 'Fonts load without blocking text', pass: fontDisplaySwap, weight: 1,
+          good: 'Custom fonts use font-display: swap — text shows immediately with a fallback while the font loads.',
+          bad: 'Custom fonts are loaded without font-display: swap. Visitors stare at a blank space where your text should be until the font arrives. Add &display=swap to the Google Fonts URL, or `font-display: swap` to your @font-face rules.' },
+        { label: 'Not too many scripts blocking the page', pass: blockingScripts < 3, weight: 1,
+          good: `Under 3 render-blocking scripts (${blockingScripts}).`,
+          bad: `${blockingScripts} render-blocking scripts on this page. Each one delays the first paint on phones. Add "defer" or "async" to the script tags that don't need to run before the page shows.` },
+        { label: 'Security headers set', pass: !!meta.csp || !!meta.referrerPolicy, weight: 1,
+          good: 'Security response headers are set — a signal Google reads as a well-maintained site.',
+          bad: 'No Content-Security-Policy or Referrer-Policy header. These are cheap wins — Vercel can set them in vercel.json or a middleware. Search engines treat their presence as a maintenance signal.' },
         { label: 'Response time', pass: ms < 900, weight: 2,
           good: `Answered in ${ms} ms.`,
           bad: `Took ${ms} ms just to answer, before anything renders. 53% of mobile visitors leave by three seconds.` }
@@ -387,6 +418,9 @@ function analyse(html, finalUrl, meta) {
         { label: 'Headings written as questions', pass: questionRatio === null || questionRatio >= 0.25, weight: 2,
           good: 'Your headings match the questions people actually ask.',
           bad: 'Your headings are labels rather than questions. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for.' },
+        { label: 'Content freshness signal', pass: hasFreshDate, weight: 2,
+          good: 'The page carries a publish or modified date — an assistant knows how fresh the answer is.',
+          bad: 'No datePublished or dateModified in your schema, and no Last-Modified header from the server. AI assistants prefer sources they can date, and will pass over undated pages when a rival has the same fact with a fresh date on it.' },
         { label: 'Opening hours published', pass: hasOpeningHours, weight: 2,
           good: 'Hours are published in a readable format.',
           bad: 'Hours are not published in a format a machine can quote.' },
@@ -511,7 +545,10 @@ module.exports = async function handler(req, res) {
 
     const result = analyse(html, finalUrl, {
       bytes, ms, sitemap, llms, robotsBody, robots: robotsBody != null,
-      xRobotsTag: pageRes.headers.get('x-robots-tag') || ''
+      xRobotsTag: pageRes.headers.get('x-robots-tag') || '',
+      csp: pageRes.headers.get('content-security-policy') || '',
+      referrerPolicy: pageRes.headers.get('referrer-policy') || '',
+      lastModified: pageRes.headers.get('last-modified') || ''
     });
 
     // Only findings go back to the browser — never the fetched markup.
