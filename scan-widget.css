@@ -64,6 +64,9 @@
 .sc-cta p{color:#C3CAD4;font-size:15px;margin-bottom:14px}
 .sc-cta a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 26px;background:var(--gold,#D9A441);color:#0A0C10;text-decoration:none;font-weight:700;border-radius:6px}
 .sc-cta a:hover{background:var(--gold-dark,#B8862C)}
+.sc-cta-pair{display:flex;gap:10px;flex-wrap:wrap}
+.sc-cta a.sc-ghost{background:transparent;color:var(--gold,#D9A441);border:1px solid var(--gold,#D9A441)}
+.sc-cta a.sc-ghost:hover{background:rgba(217,164,65,.12);color:var(--gold,#D9A441)}
 
 @media(prefers-reduced-motion:reduce){
   .sc-ring .fg,.sc-bar i{transition:none}

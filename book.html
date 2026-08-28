@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Consultation Call — UI Designs Co</title>
+<meta name="description" content="Request a free consultation call about your website. Tell me your trade and what is not working, and I call you back within 24 hours. No obligation, no sales script.">
+<link rel="canonical" href="https://ui-designs-co.vercel.app/book.html">
+<meta property="og:title" content="Book a Consultation Call — UI Designs Co">
+<meta property="og:description" content="Free consultation call about your website. I call back within 24 hours.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.bk{max-width:640px}
+.bk-form{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.bk-row{display:flex;flex-direction:column;gap:6px}
+@media(min-width:640px){.bk-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+.bk-form label{font-size:14px;font-weight:700;color:#F2F5F9}
+.bk-form label .opt{font-weight:400;color:#8C97A6}
+.bk-form input,.bk-form select,.bk-form textarea{min-height:52px;padding:14px 16px;background:#0A0C10;border:1px solid var(--edge);border-radius:8px;color:#F2F5F9;font-size:16px;font-family:inherit;width:100%}
+.bk-form textarea{min-height:110px;resize:vertical;line-height:1.5}
+.bk-form input::placeholder,.bk-form textarea::placeholder{color:#6B7482}
+.bk-form input:focus-visible,.bk-form select:focus-visible,.bk-form textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.bk-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.bk-form button{min-height:54px;padding:15px 30px;background:var(--gold);color:#0A0C10;border:none;border-radius:8px;font-weight:700;font-size:16.5px;cursor:pointer;font-family:inherit;transition:background .15s}
+.bk-form button:hover:not(:disabled){background:var(--gold-dark)}
+.bk-form button:disabled{opacity:.6;cursor:default}
+.bk-note{color:#8C97A6;font-size:13.5px}
+.bk-msg{padding:18px 20px;border-radius:10px;font-size:15.5px;line-height:1.6}
+.bk-msg.ok{background:rgba(217,164,65,.09);border:1px solid rgba(217,164,65,.4);color:#E7D3AA}
+.bk-msg.err{background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.4);color:#F0BDBD}
+.bk-what{margin-top:44px;padding-top:32px;border-top:1px solid var(--edge)}
+.bk-what h2{font-size:20px;font-weight:800;margin-bottom:14px}
+.bk-what ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.bk-what li{font-size:15px;color:#C3CAD4;padding-left:17px;position:relative;line-height:1.55}
+.bk-what li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+</style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://ui-designs-co.vercel.app/"},
+{"@type":"ListItem","position":2,"name":"Book a Consultation","item":"https://ui-designs-co.vercel.app/book.html"}]}
+</script>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="index.html">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="book.html">Book a Call</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Free consultation</p>
+    <h1>Tell me what's not working. I'll <em>call you back</em> within 24 hours.</h1>
+    <p>No sales script and no obligation. You tell me your trade and what your site is or isn't doing, and I tell you straight whether it's worth fixing, rebuilding, or leaving alone.</p>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:40px">
+  <div class="wrap bk">
+    <form class="bk-form" id="bk-form" novalidate>
+      <div class="bk-pair">
+        <div class="bk-row">
+          <label for="bk-name">Your name</label>
+          <input type="text" id="bk-name" name="name" autocomplete="name" required placeholder="Mike Torres">
+        </div>
+        <div class="bk-row">
+          <label for="bk-phone">Phone number</label>
+          <input type="tel" id="bk-phone" name="phone" autocomplete="tel" required placeholder="917-245-8685">
+        </div>
+      </div>
+
+      <div class="bk-pair">
+        <div class="bk-row">
+          <label for="bk-business">Business name <span class="opt">(optional)</span></label>
+          <input type="text" id="bk-business" name="business" autocomplete="organization" placeholder="Torres Plumbing">
+        </div>
+        <div class="bk-row">
+          <label for="bk-site">Current website <span class="opt">(optional)</span></label>
+          <input type="text" id="bk-site" name="site" autocomplete="url" placeholder="torresplumbing.com">
+        </div>
+      </div>
+
+      <div class="bk-row">
+        <label for="bk-when">Best time to reach you</label>
+        <select id="bk-when" name="when">
+          <option value="Anytime">Anytime</option>
+          <option value="Morning (8am-12pm)">Morning — 8am to noon</option>
+          <option value="Afternoon (12pm-5pm)">Afternoon — noon to 5pm</option>
+          <option value="Evening (5pm-8pm)">Evening — 5pm to 8pm</option>
+          <option value="Weekend">Weekend</option>
+        </select>
+      </div>
+
+      <div class="bk-row">
+        <label for="bk-notes">What's going on? <span class="opt">(optional)</span></label>
+        <textarea id="bk-notes" name="notes" placeholder="Phone stopped ringing after we redid the site. Not sure if it's the site or something else."></textarea>
+      </div>
+
+      <div class="bk-hp" aria-hidden="true">
+        <label for="bk-company">Company</label>
+        <input type="text" id="bk-company" name="company" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button type="submit">Request my call</button>
+      <p class="bk-note">Your details go straight to me and nowhere else. No mailing list, no third party, no follow-up spam.</p>
+    </form>
+
+    <div id="bk-out" aria-live="polite"></div>
+
+    <div class="bk-what">
+      <h2>What happens on the call</h2>
+      <ul>
+        <li>Fifteen minutes, usually less. I call the number you gave me.</li>
+        <li>I'll have already looked at your site before we speak, so you're not walking me through it.</li>
+        <li>You get a straight answer: what's costing you calls, what's fine, and roughly what fixing it involves.</li>
+        <li>If a rebuild doesn't make sense for you, I'll say so. I'd rather tell you that than sell you one.</li>
+        <li>No contract, no deposit, nothing to sign to have the conversation.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="index.html">Home</a>
+      <a href="work.html">Work</a>
+      <a href="plans.html">Plans</a>
+      <a href="why.html">Why a Website</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="book.html">Book a Call</a>
+    </div>
+    <p class="f-contact">
+      <a href="tel:+19172458685">Call 917-245-8685</a> &middot;
+      <a href="sms:9172458685">Text 917-245-8685</a> &middot;
+      <a href="mailto:uidesignsco@gmail.com">uidesignsco@gmail.com</a><br>
+      <span class="muted">Serving Queens, Brooklyn and the wider New York City area &mdash; and remotely anywhere.</span>
+    </p>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('bk-form');
+  var out = document.getElementById('bk-out');
+  var btn = form.querySelector('button[type=submit]');
+
+  // Arriving from the site checker — carry the URL and score over so the
+  // visitor isn't retyping what they just gave us.
+  var q = new URLSearchParams(location.search);
+  if (q.get('site')) {
+    document.getElementById('bk-site').value = q.get('site');
+    var sc = q.get('score');
+    if (sc && /^\d{1,3}$/.test(sc)) {
+      document.getElementById('bk-notes').value =
+        'Ran the site check on my site and scored ' + sc + '/100. What would you fix first?';
+    }
+  }
+
+  function msg(cls, text) {
+    out.innerHTML = '';
+    var d = document.createElement('div');
+    d.className = 'bk-msg ' + cls;
+    d.textContent = text;
+    out.appendChild(d);
+    out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = {};
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+
+    if (!data.name || !data.name.trim()) { msg('err', 'Please add your name so I know who I am calling.'); return; }
+    var digits = (data.phone || '').replace(/\D/g, '');
+    if (digits.length !== 10 && !(digits.length === 11 && digits[0] === '1')) {
+      msg('err', 'That phone number does not look right. Ten digits, area code included.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    out.innerHTML = '';
+
+    fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+      .then(function (r) {
+        if (!r.ok || r.body.error) { msg('err', r.body.error || 'That did not go through. Text me at 917-245-8685 instead.'); return; }
+        form.style.display = 'none';
+        msg('ok', 'Got it, ' + data.name.trim().split(' ')[0] + '. I will call you on ' + data.phone + ' within 24 hours — usually a lot sooner. If you would rather not wait, text me at 917-245-8685.');
+      })
+      .catch(function () {
+        msg('err', 'Could not reach the server just now. Text me at 917-245-8685 and I will pick it up from there.');
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = 'Request my call';
+      });
+  });
+})();
+</script>
+</body>
+</html>

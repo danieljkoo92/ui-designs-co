@@ -119,10 +119,15 @@
       ? 'That is ' + data.failed + ' thing' + (data.failed === 1 ? '' : 's') + ' working against you. Send me the list and I will tell you which ones actually matter for your trade — and what a fixed version would look like. The preview is free.'
       : 'Your site is in good shape. If you want a second opinion on how it converts visitors into calls, text me.';
     cta.appendChild(el('p', null, line));
+    var links = el('div', 'sc-cta-pair');
     var link = el('a', null, 'Text me my results');
     var msg = 'Hi Daniel - I ran the site check on ' + data.url + ' and scored ' + data.score + '/100. What would you fix?';
     link.href = 'sms:' + PHONE + '?&body=' + encodeURIComponent(msg);
-    cta.appendChild(link);
+    links.appendChild(link);
+    var book = el('a', 'sc-ghost', 'Book a call instead');
+    book.href = 'book.html?site=' + encodeURIComponent(data.url) + '&score=' + data.score;
+    links.appendChild(book);
+    cta.appendChild(links);
     out.appendChild(cta);
 
     // animate the ring + number

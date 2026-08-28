@@ -9,6 +9,7 @@ Allow: /scan.html
 Allow: /how-it-works.html
 Allow: /about.html
 Allow: /faq.html
+Allow: /book.html
 Allow: /terms.html
 Allow: /privacy.html
 Allow: /accessibility.html
