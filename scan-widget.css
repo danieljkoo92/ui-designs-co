@@ -43,6 +43,13 @@
 .sc-mark.ok{background:rgba(217,164,65,.16);color:#D9A441}
 .sc-mark.no{background:rgba(220,80,80,.14);color:#E88B8B}
 
+/* Top-3 preview: blur the rest, prompt a text-message unlock. */
+.sc-checks .sc-locked{filter:blur(4.5px) saturate(.6);opacity:.55;letter-spacing:1px;user-select:none;pointer-events:none}
+.sc-checks .sc-locked-note{display:block;margin-top:6px;padding:10px 0 2px;border-top:1px dashed rgba(217,164,65,.28);font-size:13.5px;font-weight:700;font-style:italic}
+.sc-checks .sc-locked-note a{color:var(--gold,#D9A441);text-decoration:underline;text-underline-offset:3px}
+.sc-checks .sc-locked-note a:hover{color:var(--gold-dark,#B8862C)}
+@media(prefers-reduced-motion:reduce){.sc-checks .sc-locked{filter:none;opacity:.35}}
+
 .sc-cta{margin-top:24px;padding-top:22px;border-top:1px solid var(--edge,#232A35)}
 .sc-cta p{color:#C3CAD4;font-size:15px;margin-bottom:14px}
 .sc-cta a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 26px;background:var(--gold,#D9A441);color:#0A0C10;text-decoration:none;font-weight:700;border-radius:6px}

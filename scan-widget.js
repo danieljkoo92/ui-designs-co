@@ -55,9 +55,18 @@
       var fill = el('i');
       bar.appendChild(fill);
       box.appendChild(bar);
+      // Show the top 3 checks per category, blur the rest. Order fails-first
+      // (weight desc) so the customer sees the actual problems, and the
+      // locked ones are the tension that makes them text.
+      var ordered = g.checks.slice().sort(function (a, b) {
+        if (a.pass !== b.pass) return a.pass ? 1 : -1;
+        return (b.weight || 0) - (a.weight || 0);
+      });
+      var TOP = 3;
       var ul = el('ul', 'sc-checks');
-      g.checks.forEach(function (c) {
-        var li = el('li');
+      ordered.forEach(function (c, i) {
+        var locked = i >= TOP;
+        var li = el('li', locked ? 'sc-locked' : null);
         var mark = el('span', 'sc-mark ' + (c.pass ? 'ok' : 'no'), c.pass ? '✓' : '✕');
         li.appendChild(mark);
         var body = el('span');
@@ -66,6 +75,14 @@
         li.appendChild(body);
         ul.appendChild(li);
       });
+      if (ordered.length > TOP) {
+        var note = el('li', 'sc-locked-note');
+        var msg = 'Hi Daniel - unlock the full check for ' + data.url + '.';
+        var a = el('a', null, '+ ' + (ordered.length - TOP) + ' more — text me for the full report');
+        a.href = 'sms:' + PHONE + '?&body=' + encodeURIComponent(msg);
+        note.appendChild(a);
+        ul.appendChild(note);
+      }
       box.appendChild(ul);
       groups.appendChild(box);
       requestAnimationFrame(function () { fill.style.width = g.score + '%'; });
