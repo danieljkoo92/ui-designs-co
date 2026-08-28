@@ -192,6 +192,22 @@ function analyse(html, finalUrl, meta) {
   const hasLocalBiz = /"@type"\s*:\s*"?[^"]*(LocalBusiness|Plumber|Electrician|HVACBusiness|HomeAndConstructionBusiness|GeneralContractor|Roofing|MovingCompany|AutoRepair|PestControl|ProfessionalService|Store)/i.test(ld);
   const hasFaqSchema = /"@type"\s*:\s*"?FAQPage/i.test(ld);
   const hasOpeningHours = /openingHours/i.test(ld);
+  const hasBreadcrumb = /"@type"\s*:\s*"?BreadcrumbList/i.test(ld);
+
+  // meta robots noindex — the "please don't rank me" flag, usually left on
+  // from a staging site by accident. Also honor X-Robots-Tag if the server sent one.
+  const metaRobots = (head.match(/<meta[^>]+name=["']robots["'][^>]+content=["']([^"']*)["']/i) || [])[1] || '';
+  const xRobots = String(meta.xRobotsTag || '');
+  const noindex = /\bnoindex\b/i.test(metaRobots) || /\bnoindex\b/i.test(xRobots);
+
+  // canonical URL — the tag that tells search engines which URL of a page
+  // is the real one, so duplicates don't fight for the same ranking.
+  const canonicalUrl = (head.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i) ||
+                        head.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["']/i) || [])[1] || '';
+
+  // html lang attribute — screen readers use it, and Google uses it as a
+  // language hint. Trivial to add, common to miss.
+  const hasLang = /<html\b[^>]*\blang\s*=\s*["'][a-zA-Z][^"']*["']/i.test(head);
 
   // getting called
   const telLink = /href=["']tel:/i.test(html);
@@ -293,7 +309,19 @@ function analyse(html, finalUrl, meta) {
           bad: 'Shared links show a blank box instead of a preview.' },
         { label: 'Image descriptions', pass: imgs.length === 0 || imgsNoAlt / imgs.length < 0.3, weight: 1,
           good: 'Most images are described.',
-          bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors.` }
+          bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors.` },
+        { label: 'Not set to "do not index"', pass: !noindex, weight: 5,
+          good: 'Search engines are allowed to list this page.',
+          bad: 'This page has a "noindex" instruction on it — you are actively telling Google to keep it out of results. Usually left on by mistake from a staging site or a plugin default. Nothing else on the checklist matters until this is off.' },
+        { label: 'Canonical URL', pass: !!canonicalUrl, weight: 2,
+          good: `Points to ${canonicalUrl.slice(0, 60)}${canonicalUrl.length > 60 ? '…' : ''} — search engines know which URL is the real one.`,
+          bad: 'No canonical tag. If the same page is reachable at more than one address, search engines have to guess which one to rank, and split the credit between them.' },
+        { label: 'Language declared', pass: hasLang, weight: 1,
+          good: 'The page tells screen readers and Google what language it is in.',
+          bad: 'No lang attribute on the html tag. Add lang="en" — a one-line fix that helps accessibility tools and search engines.' },
+        { label: 'Enough content to rank', pass: words >= 300, weight: 2,
+          good: `${words} words on the page — plenty for search engines to work with.`,
+          bad: `Only ${words} words on the page. Search engines struggle to rank very thin pages — a service page needs roughly 300+ words describing what you do, where, and how.` }
       ]
     },
     {
@@ -347,6 +375,9 @@ function analyse(html, finalUrl, meta) {
           bad: clientRendered
             ? 'The page arrives almost empty and fills in with JavaScript. Google can still read it, but most AI assistants cannot run JavaScript — to them this page is blank.'
             : 'Only part of the content is in the page itself; the rest loads with JavaScript, which most AI assistants never run.' },
+        { label: 'Breadcrumb trail machines can read', pass: hasBreadcrumb, weight: 1,
+          good: 'BreadcrumbList schema on the page — search engines and AI tools know where this page sits in your site.',
+          bad: 'No BreadcrumbList schema. It is what puts the "Home › Services › Drain Cleaning" trail under your listing in Google, and it helps AI assistants understand your site structure.' },
         { label: 'Business details a machine can read', pass: hasLocalBiz, weight: 4,
           good: 'Your business is labelled in a format assistants and search engines read directly.',
           bad: 'No machine-readable business details. Assistants have to guess who and where you are — so they usually name someone else.' },
@@ -408,6 +439,7 @@ function analyse(html, finalUrl, meta) {
   if (!title) caps.push([55, 'it has no page title']);
   if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details']);
   if (placeholderHits.length) caps.push([45, 'unreplaced template placeholders like {{city}} are visible on the page']);
+  if (noindex) caps.push([0, 'the page has a "noindex" instruction telling Google to keep it out of search results']);
   caps.forEach((c) => { score = Math.min(score, c[0]); });
 
   const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
@@ -478,7 +510,8 @@ module.exports = async function handler(req, res) {
     ]);
 
     const result = analyse(html, finalUrl, {
-      bytes, ms, sitemap, llms, robotsBody, robots: robotsBody != null
+      bytes, ms, sitemap, llms, robotsBody, robots: robotsBody != null,
+      xRobotsTag: pageRes.headers.get('x-robots-tag') || ''
     });
 
     // Only findings go back to the browser — never the fetched markup.
