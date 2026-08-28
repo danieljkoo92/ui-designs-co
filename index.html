@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UI Designs Co — Custom Websites That Get You Calls</title>
 <meta name="description" content="Custom websites for local businesses. Any trade, any industry. Free preview built before you pay a cent. Text 917-245-8685.">
+<link rel="canonical" href="https://ui-designs-co.vercel.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
@@ -17,6 +18,7 @@
   "name": "UI Designs Co",
   "description": "Custom websites for local businesses and trades. A working preview is built before you pay anything.",
   "url": "https://ui-designs-co.vercel.app/",
+  "dateModified": "2026-08-28",
   "telephone": "+1-917-245-8685",
   "email": "uidesignsco@gmail.com",
   "priceRange": "$1,000-$3,500",
@@ -37,10 +39,60 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://ui-designs-co.vercel.app/#build-standard",
+      "name": "Custom website build",
+      "serviceType": "Website design and development",
+      "description": "A custom website built for one local business, live in 5 to 7 days, with two full redesigns included.",
+      "provider": { "@type": "ProfessionalService", "name": "UI Designs Co", "url": "https://ui-designs-co.vercel.app/" },
+      "areaServed": [
+        { "@type": "City", "name": "New York City" },
+        { "@type": "AdministrativeArea", "name": "Queens" },
+        { "@type": "AdministrativeArea", "name": "Brooklyn" }
+      ],
+      "offers": { "@type": "Offer", "price": "1000", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://ui-designs-co.vercel.app/#build-signature",
+      "name": "Signature website build",
+      "serviceType": "Premium website design and development",
+      "description": "Scroll-driven storytelling, custom motion design and a cinematic showcase. Live in 10 to 14 days.",
+      "provider": { "@type": "ProfessionalService", "name": "UI Designs Co", "url": "https://ui-designs-co.vercel.app/" },
+      "areaServed": { "@type": "City", "name": "New York City" },
+      "offers": { "@type": "Offer", "price": "3500", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://ui-designs-co.vercel.app/#care-plans",
+      "name": "Website care plans",
+      "serviceType": "Website hosting, maintenance and local SEO",
+      "description": "Monthly plans covering hosting, backups, security, local search upkeep, booking and review automation.",
+      "provider": { "@type": "ProfessionalService", "name": "UI Designs Co", "url": "https://ui-designs-co.vercel.app/" },
+      "areaServed": { "@type": "City", "name": "New York City" },
+      "offers": [
+        { "@type": "Offer", "name": "Starter", "price": "149", "priceCurrency": "USD",
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": "149", "priceCurrency": "USD", "billingDuration": 1, "billingIncrement": 1, "unitCode": "MON" } },
+        { "@type": "Offer", "name": "Grow", "price": "349", "priceCurrency": "USD",
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": "349", "priceCurrency": "USD", "billingDuration": 1, "billingIncrement": 1, "unitCode": "MON" } },
+        { "@type": "Offer", "name": "Dominate", "price": "697", "priceCurrency": "USD",
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": "697", "priceCurrency": "USD", "billingDuration": 1, "billingIncrement": 1, "unitCode": "MON" } }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :focus-visible{outline:3px solid #D9A441;outline-offset:2px;border-radius:3px}
 .skip-nav{position:absolute;left:-9999px;top:0;z-index:999;background:#D9A441;color:#0A0C10;padding:12px 18px;font-weight:700;text-decoration:none}
 .skip-nav:focus{left:8px;top:8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+figure.ba{margin:0}
 :root{
   --void:#0A0C10;
   --panel:#12161D;
@@ -419,7 +471,8 @@ footer .fine{margin-top:18px;font-size:13px}
     <h2 class="sec-title reveal">Most local sites still look like 2009.</h2>
     <p class="sub-copy reveal">Keep scrolling — that's the rebuild. Same business, same phone number. A customer only sees one of these and decides in three seconds.</p>
   </div>
-  <div class="ba">
+  <figure class="ba">
+    <figcaption class="sr-only">Illustration only. "Tony's HVAC" is a fictional business used to compare a dated website with a rebuilt one. It is not a UI Designs Co client, and the name, phone number and email shown are not real.</figcaption>
     <div class="site before-site">
       <div class="oldsite">
         <div class="banner">★ TONY'S HVAC &amp; HEATING REPAIR ★</div>
@@ -446,7 +499,7 @@ footer .fine{margin-top:18px;font-size:13px}
       </div>
     </div>
     <div class="seam" id="baSeam"></div>
-  </div>
+  </figure>
   <div class="ba-labels wrap"><span>What they have</span><span>What they get</span></div>
   <p class="ba-note"><a class="btn" href="sms:9172458685">Request Personal Website Preview (FREE)</a></p>
 </section>
@@ -456,12 +509,12 @@ footer .fine{margin-top:18px;font-size:13px}
     <p class="kicker reveal">What it costs to stay invisible</p>
     <h2 class="sec-title reveal">The work you never hear about</h2>
     <div class="stats">
-      <div class="stat reveal"><div class="num" data-count="46" data-suffix="%">0%</div><p>of all Google searches are looking for something local. If you're not there, a competitor is.</p></div>
-      <div class="stat reveal"><div class="num" data-count="78" data-suffix="%">0%</div><p>of customers hire the first business that responds.</p></div>
-      <div class="stat reveal"><div class="num" data-count="1200" data-prefix="$">$0</div><p>is what one missed call costs a home-service business. They don't leave voicemails.</p></div>
-      <div class="stat reveal"><div class="num" data-count="27" data-suffix="%">0%</div><p>of calls to home-service businesses go unanswered (Invoca, 60M+ calls).</p></div>
-      <div class="stat reveal"><div class="num" data-count="85" data-suffix="%">0%</div><p>of callers who reach voicemail never call back.</p></div>
-      <div class="stat reveal"><div class="num" data-count="53" data-suffix="%">0%</div><p>of mobile visitors leave a page that takes more than 3 seconds to load.</p></div>
+      <div class="stat reveal"><div class="num" data-count="46" data-suffix="%">46%</div><p>of all Google searches are looking for something local. If you're not there, a competitor is.</p></div>
+      <div class="stat reveal"><div class="num" data-count="78" data-suffix="%">78%</div><p>of customers hire the first business that responds.</p></div>
+      <div class="stat reveal"><div class="num" data-count="1200" data-prefix="$">$1,200</div><p>is what one missed call costs a home-service business. They don't leave voicemails.</p></div>
+      <div class="stat reveal"><div class="num" data-count="27" data-suffix="%">27%</div><p>of calls to home-service businesses go unanswered (Invoca, 60M+ calls).</p></div>
+      <div class="stat reveal"><div class="num" data-count="85" data-suffix="%">85%</div><p>of callers who reach voicemail never call back.</p></div>
+      <div class="stat reveal"><div class="num" data-count="53" data-suffix="%">53%</div><p>of mobile visitors leave a page that takes more than 3 seconds to load.</p></div>
     </div>
     <p class="closer reveal">Referrals still Google you. When a happy customer passes your name along and that person finds nothing, they hire whoever shows up instead. You never find out it happened.</p>
   </div>
@@ -1038,6 +1091,9 @@ if (mq.matches) {
 document.querySelectorAll('.stat .num').forEach(el => {
   const target = +el.dataset.count, pre = el.dataset.prefix || '', suf = el.dataset.suffix || '';
   if (mq.matches) { el.textContent = pre + target.toLocaleString() + suf; return; }
+  // The true figure ships in the HTML so crawlers and answer engines read it.
+  // Do NOT blank it here — the tween's first onUpdate writes 0 when the trigger
+  // fires, so if the trigger never fires the real number stays on screen.
   const obj = { v: 0 };
   ScrollTrigger.create({
     trigger: el, start: 'top 85%', once: true,

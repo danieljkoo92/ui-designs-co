@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Why a Website — the numbers | UI Designs Co</title>
 <meta name="description" content="What it costs a local business to have no website or a weak one, and what a good one does. Sourced numbers, and a calculator for your own.">
+<link rel="canonical" href="https://ui-designs-co.vercel.app/why.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
@@ -67,6 +68,12 @@
 .sources h3{font-size:14px;color:#8C97A6;font-family:inherit;margin-bottom:10px;text-transform:uppercase;letter-spacing:.14em}
 .sources li{margin-bottom:6px;list-style:none}
 </style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://ui-designs-co.vercel.app/"},
+{"@type":"ListItem","position":2,"name":"Why a Website","item":"https://ui-designs-co.vercel.app/why.html"}]}
+</script>
 </head>
 <body>
 <a class="skip-nav" href="#main">Skip to main content</a>
@@ -116,28 +123,28 @@
         <p class="lede">Quiet losses. Nobody tells you they happened.</p>
 
         <div class="stat">
-          <div class="fig" data-count="27" data-suffix="%">0%</div>
+          <div class="fig" data-count="27" data-suffix="%">27%</div>
           <div class="track"><i data-fill="27"></i></div>
           <p>of calls to home-service businesses go unanswered.</p>
           <span class="src">Invoca, 2025 — analysis of over 60 million calls</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="85" data-suffix="%">0%</div>
+          <div class="fig" data-count="85" data-suffix="%">85%</div>
           <div class="track"><i data-fill="85"></i></div>
           <p>of callers who reach voicemail never call back. They call the next name on the list.</p>
           <span class="src">Invoca call-tracking research</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="53" data-suffix="%">0%</div>
+          <div class="fig" data-count="53" data-suffix="%">53%</div>
           <div class="track"><i data-fill="53"></i></div>
           <p>of mobile visitors abandon a page that takes more than three seconds to load.</p>
           <span class="src">Google / SOASTA mobile speed research</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="1200" data-prefix="$">$0</div>
+          <div class="fig" data-count="1200" data-prefix="$">$1,200</div>
           <div class="track"><i data-fill="60"></i></div>
           <p>is roughly what a single missed call costs a home-service business in lost work.</p>
           <span class="src">Industry call-tracking estimates, home services</span>
@@ -149,28 +156,28 @@
         <p class="lede">The same customers, landing somewhere that answers them.</p>
 
         <div class="stat">
-          <div class="fig" data-count="78" data-suffix="%">0%</div>
+          <div class="fig" data-count="78" data-suffix="%">78%</div>
           <div class="track"><i data-fill="78"></i></div>
           <p>of customers buy from the business that responds to them first.</p>
           <span class="src">Lead-response research, InsideSales / Harvard Business Review</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="21" data-suffix="x">0x</div>
+          <div class="fig" data-count="21" data-suffix="x">21x</div>
           <div class="track"><i data-fill="70"></i></div>
           <p>more likely a lead is to qualify when it's contacted within five minutes instead of thirty.</p>
           <span class="src">MIT / InsideSales lead-response study</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="46" data-suffix="%">0%</div>
+          <div class="fig" data-count="46" data-suffix="%">46%</div>
           <div class="track"><i data-fill="46"></i></div>
           <p>of all Google searches are looking for something local — a business near the person searching.</p>
           <span class="src">Google search-intent data</span>
         </div>
 
         <div class="stat">
-          <div class="fig" data-count="44" data-suffix="%">0%</div>
+          <div class="fig" data-count="44" data-suffix="%">44%</div>
           <div class="track"><i data-fill="44"></i></div>
           <p>of clicks on a local search go to the top three map results. Everyone else splits what's left.</p>
           <span class="src">Local search click-through analyses</span>
@@ -298,6 +305,9 @@
     var prefix = node.dataset.prefix || '';
     var suffix = node.dataset.suffix || '';
     if (reduce) { node.textContent = prefix + target.toLocaleString() + suffix; return; }
+    // The true figure ships in the HTML so crawlers and answer engines read it.
+    // Do NOT blank it here — the first rAF step writes 0 anyway, so if this
+    // never runs the real number stays on screen instead of a stuck zero.
     var t0 = null;
     (function step(ts) {
       if (t0 === null) t0 = ts;
