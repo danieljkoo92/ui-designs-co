@@ -26,6 +26,31 @@
     var v = verdict(data.score, data.caps);
 
     var head = el('div', 'sc-head');
+
+    // Minimize collapses to the header, close clears the whole result.
+    // Positioned as an overlay in the corner so the score card layout stays put.
+    var tools = el('div', 'sc-tools');
+    var minBtn = el('button', 'sc-tool');
+    minBtn.type = 'button';
+    minBtn.setAttribute('aria-label', 'Minimize results');
+    minBtn.title = 'Minimize';
+    minBtn.textContent = '–';
+    var closeBtn = el('button', 'sc-tool');
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close results');
+    closeBtn.title = 'Close';
+    closeBtn.textContent = '×';
+    tools.appendChild(minBtn);
+    tools.appendChild(closeBtn);
+    out.appendChild(tools);
+    minBtn.addEventListener('click', function () {
+      var min = out.classList.toggle('sc-minimized');
+      minBtn.textContent = min ? '+' : '–';
+      minBtn.setAttribute('aria-label', min ? 'Expand results' : 'Minimize results');
+      minBtn.title = min ? 'Expand' : 'Minimize';
+    });
+    closeBtn.addEventListener('click', function () { out.innerHTML = ''; });
+
     var ring = el('div', 'sc-ring');
     var R = 48, C = 2 * Math.PI * R;
     ring.innerHTML =
