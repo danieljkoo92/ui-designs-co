@@ -80,7 +80,9 @@ async function e2e() {
     'AI assistants allowed to read the site',
     'Readable without JavaScript',
     'Facts worth quoting',
-    'Headings written as questions'
+    'Headings written as questions',
+    'FAQ answers actually on the page',
+    'No template placeholders leaking through'
   ]) {
     assert.ok(labels.includes(needed), `missing check: ${needed}. got: ${labels.join(' | ')}`);
   }

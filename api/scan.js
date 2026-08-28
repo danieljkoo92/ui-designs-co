@@ -146,6 +146,31 @@ async function fetchRobots(base) {
   }
 }
 
+// Walk a JSON-LD graph and return every FAQPage's {q, a} entries. Used by
+// the "answers rendered where schema claims" check below.
+function extractFaqEntities(jsonld) {
+  const out = [];
+  const seen = new WeakSet();
+  const walk = (node) => {
+    if (!node || typeof node !== 'object' || seen.has(node)) return;
+    seen.add(node);
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    const t = node['@type'];
+    const isFaq = Array.isArray(t) ? t.some((x) => /FAQPage/i.test(x)) : /FAQPage/i.test(t || '');
+    if (isFaq && Array.isArray(node.mainEntity)) {
+      for (const q of node.mainEntity) {
+        const question = String((q && (q.name || q.text)) || '').trim();
+        const acc = q && q.acceptedAnswer;
+        const answer = String((acc && (acc.text || acc.name)) || '').trim();
+        if (question) out.push({ q: question, a: answer });
+      }
+    }
+    for (const v of Object.values(node)) walk(v);
+  };
+  walk(jsonld);
+  return out;
+}
+
 function analyse(html, finalUrl, meta) {
   // Search the whole document, not a leading slice — big sites push <title>
   // and their meta tags past 200KB of inline script before the head closes.
@@ -176,6 +201,36 @@ function analyse(html, finalUrl, meta) {
                      || /\b\d{5}(-\d{4})?\b/.test(text);
   const serviceArea = /\b(serving|service area|we serve|areas we serve|proudly serving)\b/i.test(text);
   const faqWording = /\b(frequently asked|faq|common questions)\b/i.test(text);
+
+  // Parsed JSON-LD blocks (as objects) — needed for the FAQ rendering-gap check
+  // below. Reads block-by-block so a single malformed script doesn't drop the
+  // rest.
+  const jsonldParsed = [];
+  for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
+    try { jsonldParsed.push(JSON.parse(m[1].trim())); } catch { /* ignore */ }
+  }
+  const faqEntries = extractFaqEntities(jsonldParsed);
+
+  // Q&A is fully rendered only when BOTH the question is a visible heading
+  // AND the answer text is in the body. Same rule as the citable skill.
+  const headingTextsLc = [...html.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
+    .map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase())
+    .filter(Boolean);
+  const bodyLc = text.toLowerCase();
+  const faqRendered = faqEntries.filter((f) => {
+    const qKey = f.q.toLowerCase().split(/\s+/).slice(0, 5).join(' ');
+    const qShown = qKey.length >= 6 && headingTextsLc.some((h) => h.includes(qKey));
+    const aShown = f.a.length >= 30 && bodyLc.includes(f.a.toLowerCase().slice(0, 40));
+    return qShown && aShown;
+  }).length;
+  const faqHubGap = faqEntries.length >= 4 && (faqRendered / faqEntries.length) < 0.6;
+
+  // Unreplaced template placeholders in the visible text — the classic
+  // city-template bug: {{city}}, [LOCATION], %CITY_NAME%, ${area}. Requires
+  // 3+ chars inside so plain prose like [1] or {x} does not false-positive.
+  const PLACEHOLDER_RE = /(\{\{\s*[\w\-.\|:]{2,40}\s*\}\}|\[[A-Z_]{3,40}\]|%[A-Z_]{3,40}%|\$\{\s*[\w\-.]{2,40}\s*\})/g;
+  const placeholderHits = text.match(PLACEHOLDER_RE) || [];
+  const placeholderUniq = [...new Set(placeholderHits)];
 
   // images without alt
   const imgs = html.match(/<img\b[^>]*>/gi) || [];
@@ -307,6 +362,12 @@ function analyse(html, finalUrl, meta) {
         { label: 'Questions answered on the page', pass: hasFaqSchema || faqWording, weight: 2,
           good: 'You answer common questions.',
           bad: 'No question-and-answer content — nothing for an assistant to quote as an answer.' },
+        { label: 'FAQ answers actually on the page', pass: !faqHubGap, weight: 3,
+          good: faqEntries.length ? `All ${faqEntries.length} FAQ answers your schema promises are in the page.` : 'Nothing to check — there is no FAQ schema on this page.',
+          bad: `Your FAQ schema promises ${faqEntries.length} answers but only ${faqRendered} are actually in the page — the rest are labels with no answer text a machine can read. That is a common pattern on FAQ hubs that load the answers with JavaScript. AI assistants see the labels and nothing to quote.` },
+        { label: 'No template placeholders leaking through', pass: placeholderHits.length === 0, weight: 3,
+          good: 'No unreplaced template variables in the page text.',
+          bad: `Unreplaced template placeholder(s) on the page: ${placeholderUniq.slice(0, 3).join(', ')}${placeholderUniq.length > 3 ? ` +${placeholderUniq.length - 3} more` : ''}. This usually means a city or service template ran the substitution for other pages and skipped this one. Retrieval quotes the placeholder as if it were real content.` },
         { label: 'Service area stated in words', pass: serviceArea, weight: 2,
           good: 'You say where you work in plain sentences.',
           bad: 'Your service area is implied rather than stated, so it cannot be repeated back to someone.' },
@@ -346,6 +407,7 @@ function analyse(html, finalUrl, meta) {
   if (!telLink && !phoneInText) caps.push([50, 'there is no phone number on it']);
   if (!title) caps.push([55, 'it has no page title']);
   if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details']);
+  if (placeholderHits.length) caps.push([45, 'unreplaced template placeholders like {{city}} are visible on the page']);
   caps.forEach((c) => { score = Math.min(score, c[0]); });
 
   const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
