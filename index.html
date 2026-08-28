@@ -61,7 +61,10 @@ h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
 .btn-ghost:hover{background:var(--panel)}
 .kicker{text-transform:uppercase;letter-spacing:.2em;font-size:12px;font-weight:700;color:var(--gold);margin-bottom:14px}
 .reveal{opacity:0;transform:translateY(24px)}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none}
+  .cutslide,.act .line,.act h1,.act .sub,.act .cta-row,.act .tagline{transition:none;transform:none}
+}
 
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:linear-gradient(to bottom,rgba(10,12,16,.88),transparent)}
@@ -91,6 +94,11 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
 .act h1,.act .line{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:clamp(34px,5.6vw,74px);line-height:1.08;letter-spacing:-.01em;text-shadow:0 4px 40px rgba(0,0,0,.85)}
 .act .line em{font-style:italic;color:var(--gold)}
 .act .ch{display:inline-block}
+/* transition between acts: the copy rises as the act fades in */
+.act .line,.act h1,.act .sub,.act .cta-row,.act .tagline{opacity:0;transform:translateY(20px);transition:opacity .65s ease .1s,transform .65s cubic-bezier(.22,.9,.3,1) .1s}
+.act.on .line,.act.on h1,.act.on .sub,.act.on .cta-row,.act.on .tagline{opacity:1;transform:none}
+.act .sub{transition-delay:.2s}
+.act .cta-row{transition-delay:.3s}
 .act .sub{margin-top:18px;font-size:clamp(15px,2vw,19px);color:#C3CAD4;max-width:520px;text-shadow:0 2px 14px rgba(0,0,0,.9)}
 .act .cta-row{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 /* act 3: macro site shots */
@@ -106,8 +114,8 @@ header .btn{min-height:44px;padding:10px 18px;font-size:15px;white-space:nowrap}
 .cloud .fly img{width:100%;height:100%;object-fit:cover;object-position:top}
 .act .tagline{position:relative;z-index:2;font-family:"Playfair Display",Georgia,serif;font-size:clamp(24px,3.4vw,44px);font-weight:700;text-shadow:0 4px 30px rgba(0,0,0,.95)}
 /* industry cuts */
-.cutslide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;visibility:hidden}
-.cutslide.show{opacity:1;visibility:visible}
+.cutslide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;visibility:hidden;transform:scale(1.07);transition:opacity .85s ease,transform 6s ease-out,visibility .85s}
+.cutslide.show{opacity:1;visibility:visible;transform:scale(1)}
 .cutslide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,16,.88) 6%,transparent 45%)}
 .cutwrap{position:absolute;left:0;right:0;bottom:12vh;text-align:center;z-index:2}
 .cutwrap .k{display:block;letter-spacing:.24em;font-size:12px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
@@ -291,7 +299,7 @@ footer .fine{margin-top:18px;font-size:13px}
   </div>
   <div class="act" id="ac">
     <div class="cutslide" data-label="HVAC" style="background-image:url(img/cuts/hvac.jpg)"></div>
-    <div class="cutslide" data-label="Auto body" style="background-image:url(img/car-wrecked.jpg)"></div>
+    <div class="cutslide" data-label="Auto body" style="background-image:url(img/car-pristine.jpg)"></div>
     <div class="cutslide" data-label="Roofing" style="background-image:url(img/cuts/roofing.jpg)"></div>
     <div class="cutslide" data-label="Contractors" style="background-image:url(img/cuts/contractor.jpg)"></div>
     <div class="cutwrap"><span class="k">Built for</span><span class="t" id="cutLabel">HVAC</span></div>
@@ -662,16 +670,18 @@ let film;
 function buildFilm(){
   if (film) film.kill();
   film = gsap.timeline({ repeat: -1 });
+  // Paced so each act can actually be read: ~3.5s a card, 1.4s a cut slide.
+  // The closing CTA holds longest because it is the one that has to land.
   film.call(() => { setAct(0); gsap.fromTo('#line1 .ch', {opacity:0, y:22}, {opacity:1, y:0, duration:.4, ease:'power2.out', stagger:.022}); }, null, 0);
-  film.call(() => { setAct(1); showSlide(0); }, null, 1.6);
-  film.call(() => showSlide(1), null, 2.35);
-  film.call(() => showSlide(2), null, 3.1);
-  film.call(() => showSlide(3), null, 3.85);
-  film.call(() => setAct(2), null, 4.7);   // YOUR BUSINESS. REBUILT ONLINE.
-  film.call(() => setAct(3), null, 6.1);   // site shots
-  film.call(() => setAct(4), null, 7.8);   // portfolio explosion
-  film.call(() => setAct(5), null, 9.7);   // closing CTA
-  film.call(() => {}, null, 11.6);         // loop point
+  film.call(() => { setAct(1); showSlide(0); }, null, 3.8);
+  film.call(() => showSlide(1), null, 5.2);
+  film.call(() => showSlide(2), null, 6.6);
+  film.call(() => showSlide(3), null, 8.0);
+  film.call(() => setAct(2), null, 9.6);   // YOUR BUSINESS. REBUILT ONLINE.
+  film.call(() => setAct(3), null, 13.0);  // site shots
+  film.call(() => setAct(4), null, 16.4);  // portfolio explosion
+  film.call(() => setAct(5), null, 19.8);  // closing CTA
+  film.call(() => {}, null, 24.4);         // loop point
 }
 function applyMotion(){
   if (mq.matches) {
