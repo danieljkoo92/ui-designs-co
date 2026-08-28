@@ -93,6 +93,10 @@
       requestAnimationFrame(function () {
         fg.style.strokeDashoffset = C * (1 - data.score / 100);
       });
+      // Write the real score first. If rAF is throttled — a background tab, a
+      // slow phone — the visitor reads their actual score instead of a 0 that
+      // never climbs.
+      num.textContent = data.score;
       var t0 = null;
       (function step(ts) {
         if (t0 === null) t0 = ts;

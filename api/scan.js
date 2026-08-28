@@ -4,6 +4,7 @@
 // assistants. No AI calls — every check below is deterministic.
 
 const dns = require('dns').promises;
+const { AI_AGENTS, blockedAgents } = require('./_robots');
 
 const FETCH_TIMEOUT_MS = 8000;
 const SIDE_TIMEOUT_MS = 3500;
@@ -114,12 +115,34 @@ async function readCapped(res) {
   return { text: Buffer.concat(chunks).toString('utf8'), bytes, truncated };
 }
 
+// A 200 is not proof the file is there. Plenty of hosts answer every unknown
+// path with an HTML error page, which would otherwise let us tell someone they
+// have a sitemap when they do not. Nothing here should ever be HTML.
 async function exists(base, path) {
   try {
     const { res } = await safeFetch(new URL(path, base), { timeout: SIDE_TIMEOUT_MS });
-    return res.ok;
+    if (!res.ok) return false;
+    const type = res.headers.get('content-type') || '';
+    return !/text\/html|application\/xhtml/i.test(type);
   } catch {
     return false;
+  }
+}
+
+// robots.txt has to be read, not just counted — its contents decide whether the
+// AI crawlers can see the site at all. Capped hard: no robots.txt needs 256KB.
+async function fetchRobots(base) {
+  try {
+    const { res } = await safeFetch(new URL('/robots.txt', base), { timeout: SIDE_TIMEOUT_MS });
+    if (!res.ok) return null;
+    const type = res.headers.get('content-type') || '';
+    // A SPA host that answers every path with index.html would otherwise have
+    // its HTML parsed as robots directives.
+    if (type && !/text\/plain/i.test(type)) return null;
+    const body = await res.text();
+    return body.length > 256 * 1024 ? body.slice(0, 256 * 1024) : body;
+  } catch {
+    return null;
   }
 }
 
@@ -161,6 +184,35 @@ function analyse(html, finalUrl, meta) {
   const https = finalUrl.protocol === 'https:';
   const weightKb = Math.round(meta.bytes / 1024);
   const ms = meta.ms;
+
+  // --- the two things that decide whether an AI assistant can see the site ---
+
+  // 1. Can the AI crawlers fetch it at all. Usually blocked by accident: a
+  //    wildcard Disallow, a host's "block AI scrapers" toggle, a plugin default.
+  const blockedAi = blockedAgents(meta.robotsBody, finalUrl.pathname, AI_AGENTS);
+
+  // 2. Does the content exist before JavaScript runs. Google renders; most
+  //    answer engines do not, so a client-rendered page can rank well and still
+  //    be invisible to every assistant.
+  const words = text.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
+  const frameworkRoot = /__NEXT_DATA__|id=["']root["']|id=["']__nuxt["']|ng-version|data-reactroot|id=["']app["']/i.test(html);
+  const serverRendered = words >= 400 || !frameworkRoot;
+  const clientRendered = frameworkRoot && words < 150;
+
+  // What an assistant can actually quote: numbers, prices, timeframes.
+  // Adjectives are unquotable — nothing cites "premium quality service".
+  const factTokens = (text.match(
+    /\$\s?\d[\d,]*|\b\d[\d,]*(?:\.\d+)?\s?(?:%|percent|years?|months?|weeks?|days?|hours?|hrs?|minutes?|mins?|miles?|ft|feet|gallons?|lbs?|degrees?)|\b(?:19|20)\d{2}\b|\b\d[\d,]{2,}\b/gi
+  ) || []).length;
+  const factsPer500 = words >= 200 ? (factTokens / words) * 500 : null;
+
+  // Headings shaped like the questions people type are what gets extracted.
+  const headingTexts = [...html.matchAll(/<h[2-3]\b[^>]*>([\s\S]*?)<\/h[2-3]>/gi)]
+    .map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+  const questionHeadings = headingTexts.filter((t) =>
+    /\?$/.test(t) || /^(how|what|why|when|where|who|can|do|does|is|are|should|will)\b/i.test(t)).length;
+  const questionRatio = headingTexts.length >= 3 ? questionHeadings / headingTexts.length : null;
 
   const groups = [
     {
@@ -232,9 +284,23 @@ function analyse(html, finalUrl, meta) {
       label: 'Ready to be recommended by AI',
       blurb: 'What decides whether an assistant can name you when someone asks for a business like yours.',
       checks: [
+        { label: 'AI assistants allowed to read the site', pass: blockedAi.length === 0, weight: 5,
+          good: 'ChatGPT, Claude, Perplexity and the rest are all allowed to read this site.',
+          bad: `Your robots.txt blocks ${blockedAi.join(', ')}. While that stands, those assistants cannot see this site at all — no amount of good content changes it. This is almost always switched on by accident, by a host setting or a plugin.` },
+        { label: 'Readable without JavaScript', pass: serverRendered, weight: 4,
+          good: 'The words are in the page itself, so anything reading it gets the content.',
+          bad: clientRendered
+            ? 'The page arrives almost empty and fills in with JavaScript. Google can still read it, but most AI assistants cannot run JavaScript — to them this page is blank.'
+            : 'Only part of the content is in the page itself; the rest loads with JavaScript, which most AI assistants never run.' },
         { label: 'Business details a machine can read', pass: hasLocalBiz, weight: 4,
           good: 'Your business is labelled in a format assistants and search engines read directly.',
           bad: 'No machine-readable business details. Assistants have to guess who and where you are — so they usually name someone else.' },
+        { label: 'Facts worth quoting', pass: factsPer500 === null || factsPer500 >= 3, weight: 2,
+          good: 'There are real numbers on the page — prices, timings, specifics an assistant can repeat.',
+          bad: 'Almost no concrete numbers on the page. Assistants quote facts, never adjectives, so there is nothing here for one to pass on.' },
+        { label: 'Headings written as questions', pass: questionRatio === null || questionRatio >= 0.25, weight: 2,
+          good: 'Your headings match the questions people actually ask.',
+          bad: 'Your headings are labels rather than questions. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for.' },
         { label: 'Opening hours published', pass: hasOpeningHours, weight: 2,
           good: 'Hours are published in a readable format.',
           bad: 'Hours are not published in a format a machine can quote.' },
@@ -273,6 +339,8 @@ function analyse(html, finalUrl, meta) {
   // A site can fail in ways no amount of passing elsewhere makes up for.
   // Each cap is a ceiling, not a deduction.
   const caps = [];
+  if (blockedAi.length) caps.push([25, 'it blocks AI assistants from reading it']);
+  if (clientRendered) caps.push([35, 'the page is empty until JavaScript runs, and assistants do not run it']);
   if (!viewport) caps.push([40, 'it is not built for phone screens']);
   if (!https) caps.push([45, 'it is not served securely']);
   if (!telLink && !phoneInText) caps.push([50, 'there is no phone number on it']);
@@ -341,13 +409,15 @@ module.exports = async function handler(req, res) {
 
     const { text: html, bytes } = await readCapped(pageRes);
 
-    const [sitemap, robots, llms] = await Promise.all([
+    const [sitemap, robotsBody, llms] = await Promise.all([
       exists(finalUrl, '/sitemap.xml'),
-      exists(finalUrl, '/robots.txt'),
+      fetchRobots(finalUrl),
       exists(finalUrl, '/llms.txt')
     ]);
 
-    const result = analyse(html, finalUrl, { bytes, ms, sitemap, robots, llms });
+    const result = analyse(html, finalUrl, {
+      bytes, ms, sitemap, llms, robotsBody, robots: robotsBody != null
+    });
 
     // Only findings go back to the browser — never the fetched markup.
     res.status(200).json({
