@@ -19,9 +19,12 @@
 .sc-out:empty{margin-top:0}
 
 /* Minimize / close controls — sticky so they follow the page scroll while
-   the result is on screen, unstick once you scroll past it. */
-.sc-tools{position:sticky;top:12px;z-index:5;display:flex;justify-content:flex-end;gap:6px;margin:0 0 -32px 0;pointer-events:none}
-.sc-tool{pointer-events:auto;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+   the result is on screen, unstick once you scroll past it. The site header
+   is 73px tall and sits at z-index 100, so these park just below it and stay
+   under it in the stack: if they ever meet, the header covers them cleanly
+   instead of the two overlapping half-way. */
+.sc-tools{position:sticky;top:85px;z-index:99;display:flex;justify-content:flex-end;gap:6px;margin:0 0 -32px 0;pointer-events:none}
+.sc-tool{pointer-events:auto;box-shadow:0 4px 12px rgba(0,0,0,.45)}
 .sc-tool{width:32px;height:32px;padding:0;border:1px solid var(--edge,#232A35);background:#0A0C10;color:#C3CAD4;border-radius:8px;font-size:20px;line-height:1;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,border-color .15s}
 .sc-tool:hover{background:var(--gold,#D9A441);color:#0A0C10;border-color:var(--gold,#D9A441)}
 .sc-tool:focus-visible{outline:3px solid var(--gold,#D9A441);outline-offset:2px}
