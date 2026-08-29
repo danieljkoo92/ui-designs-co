@@ -88,6 +88,27 @@ async function e2e() {
   }
 
   assert.ok(typeof res.body.score === 'number' && res.body.score >= 0 && res.body.score <= 100);
+
+  // Three scores, each in range, each derived from checks tagged with it.
+  const s = res.body.scores;
+  assert.ok(s, 'the response must carry the three scores');
+  for (const dim of ['seo', 'aeo', 'geo']) {
+    assert.ok(typeof s[dim] === 'number' && s[dim] >= 0 && s[dim] <= 100,
+      `${dim} must be a number in 0..100, got ${s[dim]}`);
+  }
+  const tagged = res.body.groups.flatMap((g) => g.checks).filter((c) => c.dim);
+  assert.ok(tagged.length >= 20, `expected most checks tagged with a dimension, got ${tagged.length}`);
+  assert.ok(tagged.every((c) => ['seo', 'aeo', 'geo'].includes(c.dim)), 'dim must be one of the three');
+
+  // Conversion checks belong to none of the three — folding "is there a form"
+  // into a machine-visibility score is what makes one blended number useless.
+  const calls = res.body.groups.find((g) => g.key === 'calls');
+  assert.ok(calls.checks.every((c) => !c.dim), 'conversion checks must not carry a dimension');
+
+  // The home page is the top of the trail; it cannot have a breadcrumb above it.
+  const crumb = res.body.groups.find((g) => g.key === 'ai').checks
+    .find((c) => c.label === 'Breadcrumb trail machines can read');
+  assert.equal(crumb.pass, true, 'a root URL must not fail the breadcrumb check');
   assert.ok(ai.checks.every((c) => typeof c.detail === 'string' && c.detail.length > 0),
     'every check needs a plain-English detail line');
   assert.ok(!JSON.stringify(res.body).includes('<html'), 'fetched markup must never be returned');
@@ -105,6 +126,32 @@ async function e2e() {
 // driven from this file — the SSRF guard correctly refuses to fetch a local
 // fixture server, and no third-party site can be relied on to keep exhibiting
 // the behaviour. Verified by reading exists().
+
+// A real business with a number in its footer must never be told it has none —
+// that mistake caps the whole score at 50.
+async function phoneFormats() {
+  const res = fakeRes();
+  await handler(
+    { method: 'POST', headers: { 'x-forwarded-for': '203.0.113.88' }, body: { url: 'https://karaokexmas.com' } },
+    res
+  );
+  assert.equal(res.code, 200, `expected 200, got ${res.code}`);
+  const calls = res.body.groups.find((g) => g.key === 'calls');
+  const phone = calls.checks.find((c) => c.label === 'Phone number visible');
+  assert.equal(phone.pass, true,
+    'the page shows "( 718)224-2434" and "718 - 224 - 2434"; both must be recognised');
+  assert.ok(!res.body.caps.includes('there is no phone number on it'),
+    'a site with a visible number must not be capped for having none');
+
+  // Same page marks itself up as Restaurant — a LocalBusiness subtype. It must
+  // not be told it has no machine-readable business details.
+  const biz = res.body.groups.find((g) => g.key === 'ai').checks
+    .find((c) => c.label === 'Business details a machine can read');
+  assert.equal(biz.pass, true, 'Restaurant is a LocalBusiness subtype and must count');
+  assert.ok(!res.body.caps.includes('it has no machine-readable business details'),
+    'a correctly marked-up venue must not be capped for missing schema it has');
+  passed++;
+}
 
 async function rateLimit() {
   const res = fakeRes();
@@ -127,6 +174,8 @@ async function ssrf() {
 (async () => {
   await ssrf().catch((e) => { console.error(`FAIL  ssrf guard\n      ${e.message}`); process.exitCode = 1; });
   await e2e().catch((e) => { console.error(`FAIL  handler e2e\n      ${e.message}`); process.exitCode = 1; });
+  await phoneFormats().catch((e) => { console.error(`FAIL  phone formats
+      ${e.message}`); process.exitCode = 1; });
   await rateLimit().catch((e) => { console.error(`FAIL  rate limit\n      ${e.message}`); process.exitCode = 1; });
   console.log(process.exitCode ? `\n${passed} passed, failures above.` : `\nall ${passed} checks passed.`);
 })();

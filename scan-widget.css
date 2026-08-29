@@ -74,3 +74,15 @@
 @media(prefers-reduced-motion:reduce){
   .sc-ring .fg,.sc-bar i{transition:none}
 }
+
+/* Three scores. They fail differently, so they are shown separately. */
+.sc-trio{display:grid;gap:14px;margin-top:20px;padding-top:20px;border-top:1px solid var(--edge,#232A35)}
+@media(min-width:640px){.sc-trio{grid-template-columns:repeat(3,1fr);gap:20px}}
+.sc-dim{display:flex;flex-direction:column;gap:6px}
+.sc-dim-label{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8C97A6}
+.sc-dim b{font-family:"Playfair Display",Georgia,serif;font-size:34px;font-weight:800;line-height:1}
+.sc-dim b.good{color:#D9A441}
+.sc-dim b.mid{color:#E0B968}
+.sc-dim b.bad{color:#E88B8B}
+.sc-dim .sc-bar{margin:0}
+.sc-dim-note{font-size:12.5px;color:#8C97A6;line-height:1.45}

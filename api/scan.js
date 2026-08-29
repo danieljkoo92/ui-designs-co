@@ -208,10 +208,42 @@ function analyse(html, finalUrl, meta) {
   // sent as the Last-Modified response header. Answer engines heavily prefer
   // content they can date.
   const hasFreshDate = /"date(Published|Modified)"/i.test(ld) || !!meta.lastModified;
-  const hasLocalBiz = /"@type"\s*:\s*"?[^"]*(LocalBusiness|Plumber|Electrician|HVACBusiness|HomeAndConstructionBusiness|GeneralContractor|Roofing|MovingCompany|AutoRepair|PestControl|ProfessionalService|Store)/i.test(ld);
+  // LocalBusiness has around 200 subtypes and any of them counts. The old list
+  // held eleven trades, so a restaurant, dentist or salon marking itself up
+  // correctly was told it had no machine-readable business details — and capped
+  // at 65 for it. Match the base type, the trades we see most, and the naming
+  // conventions schema.org uses for the rest.
+  const LOCAL_TYPES = [
+    'LocalBusiness', 'Organization',
+    // home and trade services
+    'Plumber', 'Electrician', 'HVACBusiness', 'HomeAndConstructionBusiness',
+    'GeneralContractor', 'RoofingContractor', 'Locksmith', 'MovingCompany',
+    'HousePainter', 'Cleaning', 'PestControl', 'Landscap',
+    // food and hospitality
+    'Restaurant', 'FoodEstablishment', 'BarOrPub', 'NightClub', 'CafeOrCoffeeShop',
+    'Bakery', 'Caterer', 'Winery', 'Brewery', 'Hotel', 'Lodging',
+    // health, beauty, personal
+    'Dentist', 'Physician', 'MedicalBusiness', 'HealthAndBeautyBusiness',
+    'HairSalon', 'BeautySalon', 'NailSalon', 'DaySpa', 'TattooParlor',
+    'VeterinaryCare', 'ChildCare', 'Optician',
+    // professional and retail
+    'ProfessionalService', 'LegalService', 'Attorney', 'Notary', 'AccountingService',
+    'InsuranceAgency', 'RealEstateAgent', 'FinancialService', 'TravelAgency',
+    'AutoRepair', 'AutoBodyShop', 'AutoDealer', 'AutoWash', 'GasStation',
+    'Store', 'Shop', 'DrivingSchool', 'EducationalOrganization',
+    'EntertainmentBusiness', 'SportsActivityLocation', 'ExerciseGym',
+    'SelfStorage', 'EmploymentAgency', 'Emergency'
+  ];
+  const hasLocalBiz = new RegExp(
+    '"@type"\\s*:\\s*"?[^"]*(' + LOCAL_TYPES.join('|') + ')', 'i'
+  ).test(ld);
   const hasFaqSchema = /"@type"\s*:\s*"?FAQPage/i.test(ld);
   const hasOpeningHours = /openingHours/i.test(ld);
-  const hasBreadcrumb = /"@type"\s*:\s*"?BreadcrumbList/i.test(ld);
+  // The site root is the top of the trail and has nothing to breadcrumb to.
+  // Without this the check fails on every homepage, which is most of what
+  // people paste in.
+  const isRoot = finalUrl.pathname === '/' || finalUrl.pathname === '';
+  const hasBreadcrumb = isRoot || /"@type"\s*:\s*"?BreadcrumbList/i.test(ld);
 
   // meta robots noindex — the "please don't rank me" flag, usually left on
   // from a staging site by accident. Also honor X-Robots-Tag if the server sent one.
@@ -230,7 +262,24 @@ function analyse(html, finalUrl, meta) {
 
   // getting called
   const telLink = /href=["']tel:/i.test(html);
-  const phoneInText = /(\(\d{3}\)\s*\d{3}[-.\s]?\d{4}|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b)/.test(text);
+  // Real sites write phone numbers every way imaginable: "( 718)224-2434",
+  // "718 - 224 - 2434", "718.224.2434", "+1 (718) 224 2434". A strict pattern
+  // reports a business with a number in its footer as having none, and that
+  // wrongly caps the whole score at 50. Allow spaces anywhere a separator can
+  // go, then reject anything sitting inside a longer run of digits so dates,
+  // order numbers and IDs do not read as phone numbers.
+  const phoneInText = (() => {
+    const re = /(?:\+?1[\s.\-]*)?\(?\s*(\d{3})\s*\)?[\s.\-]*(\d{3})[\s.\-]*(\d{4})/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const before = text[m.index - 1] || '';
+      const after = text[m.index + m[0].length] || '';
+      if (/\d/.test(before) || /\d/.test(after)) continue;   // part of a longer number
+      if (m[1] === '000' || m[1] === '111') continue;        // placeholder padding
+      return true;
+    }
+    return false;
+  })();
   const hasForm = /<form[\s>]/i.test(html);
   const addressish = /\b\d{1,5}\s+[A-Za-z][A-Za-z.\s]{2,30}\b(street|st\.?|ave|avenue|road|rd\.?|blvd|boulevard|lane|ln\.?|drive|dr\.?|way|place|pl\.?)\b/i.test(text)
                      || /\b\d{5}(-\d{4})?\b/.test(text);
@@ -420,7 +469,9 @@ function analyse(html, finalUrl, meta) {
             ? 'The page arrives almost empty and fills in with JavaScript. Google can still read it, but most AI assistants cannot run JavaScript — to them this page is blank.'
             : 'Only part of the content is in the page itself; the rest loads with JavaScript, which most AI assistants never run.' },
         { label: 'Breadcrumb trail machines can read', pass: hasBreadcrumb, weight: 1,
-          good: 'BreadcrumbList schema on the page — search engines and AI tools know where this page sits in your site.',
+          good: isRoot
+            ? 'This is your home page, so there is no trail above it to describe. Nothing needed here.'
+            : 'BreadcrumbList schema on the page — search engines and AI tools know where this page sits in your site.',
           bad: 'No BreadcrumbList schema. It is what puts the "Home › Services › Drain Cleaning" trail under your listing in Google, and it helps AI assistants understand your site structure.' },
         { label: 'Business details a machine can read', pass: hasLocalBiz, weight: 4,
           good: 'Your business is labelled in a format assistants and search engines read directly.',
@@ -475,22 +526,61 @@ function analyse(html, finalUrl, meta) {
   const GROUP_WEIGHT = { found: 0.25, phone: 0.20, calls: 0.25, ai: 0.30 };
   let score = Math.round(groups.reduce((sum, g) => sum + g.score * GROUP_WEIGHT[g.key], 0));
 
+  // Three separate scores, because these fail differently and are fixed
+  // differently. A site routinely scores 100 on SEO and 40 on GEO, and one
+  // blended number hides exactly that.
+  //
+  //   SEO  can a crawler find and rank it
+  //   AEO  is it the answer — can a span be lifted out and shown
+  //   GEO  is it cited inside a generated answer
+  //
+  // "Turning visitors into calls" belongs to none of them. It measures whether
+  // a human converts, which is worth reporting on its own rather than being
+  // folded into a machine-visibility score.
+  const AEO_LABELS = new Set([
+    'Headings written as questions',
+    'Questions answered on the page',
+    'FAQ answers actually on the page'
+  ]);
+  const dimOf = (groupKey, label) =>
+    groupKey === 'found' || groupKey === 'phone' ? 'seo'
+      : groupKey === 'calls' ? null
+      : AEO_LABELS.has(label) ? 'aeo' : 'geo';
+
+  const tally = { seo: [0, 0], aeo: [0, 0], geo: [0, 0] };
+  groups.forEach((g) => g.checks.forEach((c) => {
+    const dim = dimOf(g.key, c.label);
+    if (!dim) return;
+    c.dim = dim;
+    tally[dim][1] += c.weight;
+    if (c.pass) tally[dim][0] += c.weight;
+  }));
+  const scores = {};
+  for (const k of Object.keys(tally)) {
+    scores[k] = tally[k][1] ? Math.round((tally[k][0] / tally[k][1]) * 100) : 100;
+  }
+
   // A site can fail in ways no amount of passing elsewhere makes up for.
-  // Each cap is a ceiling, not a deduction.
+  // Each cap is a ceiling, not a deduction. The third element says which of the
+  // three scores it ceilings — a blocked citation crawler is a GEO problem and
+  // has nothing to do with whether Google can rank the page.
   const caps = [];
-  if (blockedAi.length) caps.push([25, "it blocks the AI crawlers that decide whether you can be recommended"]);
-  if (clientRendered) caps.push([35, 'the page is empty until JavaScript runs, and assistants do not run it']);
-  if (!viewport) caps.push([40, 'it is not built for phone screens']);
-  if (!https) caps.push([45, 'it is not served securely']);
-  if (!telLink && !phoneInText) caps.push([50, 'there is no phone number on it']);
-  if (!title) caps.push([55, 'it has no page title']);
-  if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details']);
-  if (placeholderHits.length) caps.push([45, 'unreplaced template placeholders like {{city}} are visible on the page']);
-  if (noindex) caps.push([0, 'the page has a "noindex" instruction telling Google to keep it out of search results']);
-  caps.forEach((c) => { score = Math.min(score, c[0]); });
+  if (blockedAi.length) caps.push([25, "it blocks the AI crawlers that decide whether you can be recommended", 'geo']);
+  if (clientRendered) caps.push([35, 'the page is empty until JavaScript runs, and assistants do not run it', 'geo']);
+  if (!viewport) caps.push([40, 'it is not built for phone screens', 'seo']);
+  if (!https) caps.push([45, 'it is not served securely', 'seo']);
+  if (!telLink && !phoneInText) caps.push([50, 'there is no phone number on it', null]);
+  if (!title) caps.push([55, 'it has no page title', 'seo']);
+  if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details', 'geo']);
+  if (placeholderHits.length) caps.push([45, 'unreplaced template placeholders like {{city}} are visible on the page', 'aeo']);
+  if (noindex) caps.push([0, 'the page has a "noindex" instruction telling Google to keep it out of search results', 'seo']);
+  caps.forEach((c) => {
+    score = Math.min(score, c[0]);
+    if (c[2]) scores[c[2]] = Math.min(scores[c[2]], c[0]);
+  });
 
   const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
-  return { score, groups, failed, caps: caps.map((c) => c[1]) };
+  return { score, scores, groups, failed, caps: caps.map((c) => c[1]) };
 }
 
 module.exports = async function handler(req, res) {
@@ -568,6 +658,7 @@ module.exports = async function handler(req, res) {
     res.status(200).json({
       url: finalUrl.origin + finalUrl.pathname,
       score: result.score,
+      scores: result.scores,
       failed: result.failed,
       caps: result.caps,
       groups: result.groups

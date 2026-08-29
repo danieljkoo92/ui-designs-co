@@ -69,6 +69,35 @@
     head.appendChild(verdictBox);
     out.appendChild(head);
 
+    // Three scores, because they fail differently. A site scoring 100 on
+    // Google and 40 on being cited by an assistant is the normal case, and the
+    // single number above hides exactly that.
+    if (data.scores) {
+      var DIMS = [
+        ['seo', 'Found on Google', 'Whether a search engine can crawl and rank the page.'],
+        ['aeo', 'Used as the answer', 'Whether an answer can be lifted straight off the page.'],
+        ['geo', 'Cited by AI', 'Whether an assistant can read it and name you.']
+      ];
+      var trio = el('div', 'sc-trio');
+      DIMS.forEach(function (d) {
+        var n = data.scores[d[0]];
+        if (typeof n !== 'number') return;
+        var cell = el('div', 'sc-dim');
+        cell.appendChild(el('span', 'sc-dim-label', d[1]));
+        var val = el('b', null, String(n));
+        val.className = n >= 80 ? 'good' : n >= 50 ? 'mid' : 'bad';
+        cell.appendChild(val);
+        var bar = el('div', 'sc-bar');
+        var fill = el('i');
+        fill.style.width = n + '%';
+        bar.appendChild(fill);
+        cell.appendChild(bar);
+        cell.appendChild(el('span', 'sc-dim-note', d[2]));
+        trio.appendChild(cell);
+      });
+      if (trio.childNodes.length) out.appendChild(trio);
+    }
+
     var groups = el('div', 'sc-groups');
     data.groups.forEach(function (g) {
       var box = el('div');
