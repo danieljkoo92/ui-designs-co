@@ -4,7 +4,7 @@
 // assistants. No AI calls — every check below is deterministic.
 
 const dns = require('dns').promises;
-const { AI_AGENTS, blockedAgents } = require('./_robots');
+const { CITATION_AGENTS, USER_FETCH_AGENTS, TRAINING_AGENTS, blockedAgents } = require('./_robots');
 
 const FETCH_TIMEOUT_MS = 8000;
 const SIDE_TIMEOUT_MS = 3500;
@@ -277,9 +277,17 @@ function analyse(html, finalUrl, meta) {
 
   // --- the two things that decide whether an AI assistant can see the site ---
 
-  // 1. Can the AI crawlers fetch it at all. Usually blocked by accident: a
-  //    wildcard Disallow, a host's "block AI scrapers" toggle, a plugin default.
-  const blockedAi = blockedAgents(meta.robotsBody, finalUrl.pathname, AI_AGENTS);
+  // 1. Can the crawlers that decide citations fetch it at all. Usually blocked
+  //    by accident: a wildcard Disallow, a host's "block AI scrapers" toggle, a
+  //    plugin default.
+  //
+  //    Only the search crawlers are scored. Blocking GPTBot or Google-Extended
+  //    opts out of model training and has no effect on being cited, so flagging
+  //    it as a fault — which most checkers do — would be telling the visitor
+  //    something untrue about their own site.
+  const blockedAi = blockedAgents(meta.robotsBody, finalUrl.pathname, CITATION_AGENTS);
+  const blockedUserFetch = blockedAgents(meta.robotsBody, finalUrl.pathname, USER_FETCH_AGENTS);
+  const blockedTraining = blockedAgents(meta.robotsBody, finalUrl.pathname, TRAINING_AGENTS);
 
   // 2. Does the content exist before JavaScript runs. Google renders; most
   //    answer engines do not, so a client-rendered page can rank well and still
@@ -399,8 +407,13 @@ function analyse(html, finalUrl, meta) {
       blurb: 'What decides whether an assistant can name you when someone asks for a business like yours.',
       checks: [
         { label: 'AI assistants allowed to read the site', pass: blockedAi.length === 0, weight: 5,
-          good: 'ChatGPT, Claude, Perplexity and the rest are all allowed to read this site.',
-          bad: `Your robots.txt blocks ${blockedAi.join(', ')}. While that stands, those assistants cannot see this site at all — no amount of good content changes it. This is almost always switched on by accident, by a host setting or a plugin.` },
+          good: blockedTraining.length
+            ? `The assistants that can recommend you — ChatGPT, Claude and Perplexity — are all allowed in. You do block ${blockedTraining.join(', ')}, but those only collect text for training models. That has no effect on whether you get recommended, so it costs you nothing.`
+            : 'ChatGPT, Claude, Perplexity and the rest are all allowed to read this site.',
+          bad: `Your robots.txt blocks ${blockedAi.join(', ')}. Those are the crawlers that decide whether an assistant can name you — while that stands, you cannot be recommended at all, and no amount of good content changes it. This is almost always switched on by accident, by a host setting or a plugin, usually while trying to block AI training (which is a different set of crawlers).` },
+        { label: 'Assistants allowed to open your page for a customer', pass: blockedUserFetch.length === 0, weight: 2,
+          good: 'When someone asks an assistant about you, it can open your page and read it.',
+          bad: `Your robots.txt blocks ${blockedUserFetch.join(', ')}. These only fetch a page when a real person has already asked about your business — blocking them turns away someone who was already looking for you.` },
         { label: 'Readable without JavaScript', pass: serverRendered, weight: 4,
           good: 'The words are in the page itself, so anything reading it gets the content.',
           bad: clientRendered
@@ -465,7 +478,7 @@ function analyse(html, finalUrl, meta) {
   // A site can fail in ways no amount of passing elsewhere makes up for.
   // Each cap is a ceiling, not a deduction.
   const caps = [];
-  if (blockedAi.length) caps.push([25, 'it blocks AI assistants from reading it']);
+  if (blockedAi.length) caps.push([25, "it blocks the AI crawlers that decide whether you can be recommended"]);
   if (clientRendered) caps.push([35, 'the page is empty until JavaScript runs, and assistants do not run it']);
   if (!viewport) caps.push([40, 'it is not built for phone screens']);
   if (!https) caps.push([45, 'it is not served securely']);

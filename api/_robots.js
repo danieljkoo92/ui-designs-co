@@ -6,8 +6,25 @@
 // and still block it via a wildcard group, or name it in a comment and not
 // block it at all.
 
-const AI_AGENTS = ['GPTBot', 'ClaudeBot', 'PerplexityBot', 'OAI-SearchBot', 'Google-Extended', 'CCBot'];
+// These are three different jobs and blocking them costs three different
+// things. Every "is my site blocking AI?" checker lumps them into one list and
+// is wrong for most of it:
+//
+//   citation  — indexes you for AI answers. Blocked = you cannot be cited.
+//   userFetch — fires only when a person asks an assistant about your page.
+//   training  — builds model corpora. Blocking costs nothing in citations, and
+//               plenty of businesses block it deliberately.
+//
+// The distinction is not academic: blocking GPTBot has no effect on whether
+// ChatGPT cites you, because ChatGPT search uses OAI-SearchBot. Google-Extended
+// is likewise training-only — AI Overviews are served by Googlebot.
+const CITATION_AGENTS = ['OAI-SearchBot', 'Claude-SearchBot', 'PerplexityBot'];
+const USER_FETCH_AGENTS = ['ChatGPT-User', 'Claude-User', 'Perplexity-User'];
+const TRAINING_AGENTS = ['GPTBot', 'ClaudeBot', 'CCBot', 'Google-Extended'];
 const SEARCH_AGENTS = ['Googlebot', 'Bingbot'];
+
+// Kept for callers that just want "everything we know about".
+const AI_AGENTS = [...CITATION_AGENTS, ...USER_FETCH_AGENTS, ...TRAINING_AGENTS];
 
 function parseRobots(raw) {
   const groups = [];
@@ -83,4 +100,7 @@ function blockedAgents(raw, path, agents) {
   return (agents || AI_AGENTS).filter((a) => robotsVerdict(raw, a, path) === 'disallow');
 }
 
-module.exports = { AI_AGENTS, SEARCH_AGENTS, parseRobots, robotsVerdict, blockedAgents };
+module.exports = {
+  AI_AGENTS, SEARCH_AGENTS, CITATION_AGENTS, USER_FETCH_AGENTS, TRAINING_AGENTS,
+  parseRobots, robotsVerdict, blockedAgents
+};
