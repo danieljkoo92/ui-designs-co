@@ -368,8 +368,8 @@ footer .legal-links a{color:var(--steel);font-weight:400;text-decoration:underli
 footer .legal-links a:hover{color:var(--gold)}
 footer .fine{margin-top:18px;font-size:13px}
 
-.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,12,16,.92);backdrop-filter:blur(6px);border-top:1px solid var(--edge)}
-.sticky-cta .btn{display:flex;width:100%}
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:110;display:flex;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,12,16,.92);backdrop-filter:blur(6px);border-top:1px solid var(--edge)}
+.sticky-cta .btn{display:flex;flex:1 1 0;justify-content:center}
 @media(min-width:720px){.sticky-cta{display:none}}
 
 @media(max-width:767px){
@@ -718,6 +718,7 @@ footer .fine{margin-top:18px;font-size:13px}
 </footer>
 
 <div class="sticky-cta">
+  <a class="btn btn-ghost" href="tel:+19172458685">Call</a>
   <a class="btn" href="sms:9172458685">Text for a free preview</a>
 </div>
 
