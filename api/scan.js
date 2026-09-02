@@ -204,10 +204,22 @@ function analyse(html, finalUrl, meta) {
   const ld = [...html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)]
     .map((m) => m[1]).join(' ');
 
-  // Content freshness: an explicit publish/modify date, either in JSON-LD or
-  // sent as the Last-Modified response header. Answer engines heavily prefer
-  // content they can date.
-  const hasFreshDate = /"date(Published|Modified)"/i.test(ld) || !!meta.lastModified;
+  // Content freshness. A date that merely exists is not the signal — a recent
+  // one is. In the 2026 competitive-GEO trials a current timestamp moved
+  // citation odds about as hard as topical relevance did, so a page stamped
+  // 2019 is treated as stale rather than dated. Parse everything we can find
+  // and judge by the newest.
+  const FRESH_MAX_DAYS = 550; // ~18 months
+  const dateStrings = [...ld.matchAll(/"date(?:Published|Modified)"\s*:\s*"([^"]{4,40})"/gi)]
+    .map((m) => m[1]);
+  if (meta.lastModified) dateStrings.push(meta.lastModified);
+  const dateTimes = dateStrings.map((s) => new Date(s).getTime()).filter((t) => !Number.isNaN(t));
+  const newestDate = dateTimes.length ? Math.max(...dateTimes) : null;
+  const freshAgeDays = newestDate === null ? null : Math.floor((Date.now() - newestDate) / 86400000);
+  const hasDateAtAll = dateStrings.length > 0;
+  // A date in a format we cannot parse still counts as present. Better to let
+  // an odd format through than to tell someone their real date does not exist.
+  const hasFreshDate = hasDateAtAll && (freshAgeDays === null || freshAgeDays <= FRESH_MAX_DAYS);
   // LocalBusiness has around 200 subtypes and any of them counts. The old list
   // held eleven trades, so a restaurant, dentist or salon marking itself up
   // correctly was told it had no machine-readable business details — and capped
@@ -307,7 +319,7 @@ function analyse(html, finalUrl, meta) {
     const aShown = f.a.length >= 30 && bodyLc.includes(f.a.toLowerCase().slice(0, 40));
     return qShown && aShown;
   }).length;
-  const faqHubGap = faqEntries.length >= 4 && (faqRendered / faqEntries.length) < 0.6;
+  const faqHubGap = faqEntries.length >= 4 && (faqRendered / faqEntries.length) < 0.85;
 
   // Unreplaced template placeholders in the visible text — the classic
   // city-template bug: {{city}}, [LOCATION], %CITY_NAME%, ${area}. Requires
@@ -367,12 +379,12 @@ function analyse(html, finalUrl, meta) {
       label: 'Getting found on Google',
       blurb: 'The basics a search engine reads before it decides where to put you.',
       checks: [
-        { label: 'Page title', pass: !!title && title.trim().length >= 30, weight: 3,
+        { label: 'Page title', pass: !!title && title.trim().length >= 40, weight: 3,
           good: `"${title ? title.trim().slice(0, 70) : ''}"`,
-          bad: title ? `"${title.trim().slice(0, 40)}" — too short to say what you do and where you do it.` : 'This page has no title tag at all.' },
-        { label: 'Description for search results', pass: !!desc && desc.trim().length >= 70, weight: 2,
-          good: 'Present, and long enough to be useful.',
-          bad: desc ? 'Too short — Google will ignore it and invent its own snippet.' : 'Missing, so Google writes your search listing for you.' },
+          bad: title ? `"${title.trim().slice(0, 40)}" — ${title.trim().length} characters. Google gives you about 60; under 40 you are leaving the space empty and cannot fit both what you do and where you do it.` : 'This page has no title tag at all.' },
+        { label: 'Description for search results', pass: !!desc && desc.trim().length >= 120, weight: 2,
+          good: 'Present, and long enough to earn the click.',
+          bad: desc ? `Only ${desc.trim().length} characters. Google shows about 155 — under 120 you are handing back space a competitor is using to sell against you, and short descriptions get overwritten with a snippet Google picks itself.` : 'Missing, so Google writes your search listing for you.' },
         { label: 'One clear main heading', pass: h1s.length === 1, weight: 2,
           good: 'Exactly one main heading.',
           bad: h1s.length === 0 ? 'No main heading on the page.' : `${h1s.length} competing main headings.` },
@@ -386,9 +398,9 @@ function analyse(html, finalUrl, meta) {
         { label: 'Twitter card', pass: twitterCard, weight: 1,
           good: 'Twitter and X render your link as a rich preview.',
           bad: 'No twitter:card tag — X, Twitter and Slack all fall back to a plain-text link.' },
-        { label: 'Image descriptions', pass: imgs.length === 0 || imgsNoAlt / imgs.length < 0.3, weight: 1,
-          good: 'Most images are described.',
-          bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors.` },
+        { label: 'Image descriptions', pass: imgs.length === 0 || imgsNoAlt / imgs.length <= 0.1, weight: 1,
+          good: imgs.length ? `${imgs.length - imgsNoAlt} of ${imgs.length} images are described.` : 'No images to describe.',
+          bad: `${imgsNoAlt} of ${imgs.length} images have no description — invisible to Google and to blind visitors. Nearly all of them should have one, not most.` },
         { label: 'Not set to "do not index"', pass: !noindex, weight: 5,
           good: 'Search engines are allowed to list this page.',
           bad: 'This page has a "noindex" instruction on it — you are actively telling Google to keep it out of results. Usually left on by mistake from a staging site or a plugin default. Nothing else on the checklist matters until this is off.' },
@@ -398,9 +410,9 @@ function analyse(html, finalUrl, meta) {
         { label: 'Language declared', pass: hasLang, weight: 1,
           good: 'The page tells screen readers and Google what language it is in.',
           bad: 'No lang attribute on the html tag. Add lang="en" — a one-line fix that helps accessibility tools and search engines.' },
-        { label: 'Enough content to rank', pass: words >= 300, weight: 2,
-          good: `${words} words on the page — plenty for search engines to work with.`,
-          bad: `Only ${words} words on the page. Search engines struggle to rank very thin pages — a service page needs roughly 300+ words describing what you do, where, and how.` }
+        { label: 'Enough content to rank', pass: words >= 500, weight: 2,
+          good: `${words} words on the page — enough for search engines to work with.`,
+          bad: `Only ${words} words on the page. A page that wins a competitive local search answers the questions around the service too, not just names it — that is roughly 500 words minimum, and the pages beating you are usually well past it.` }
       ]
     },
     {
@@ -414,21 +426,21 @@ function analyse(html, finalUrl, meta) {
         { label: 'Secure (https)', pass: https, weight: 3,
           good: 'Served securely.',
           bad: 'Not secure — browsers show visitors a "Not secure" warning next to your name.' },
-        { label: 'Page weight', pass: weightKb < 400, weight: 2,
+        { label: 'Page weight', pass: weightKb < 250, weight: 2,
           good: `${weightKb} KB of HTML.`,
-          bad: `${weightKb} KB of HTML before a single image loads — heavy on a phone signal.` },
+          bad: `${weightKb} KB of HTML before a single image loads. On a phone on a weak signal that is seconds of blank screen — a well-built page of this kind sits under 250 KB.` },
         { label: 'Fonts load without blocking text', pass: fontDisplaySwap, weight: 1,
           good: 'Custom fonts use font-display: swap — text shows immediately with a fallback while the font loads.',
           bad: 'Custom fonts are loaded without font-display: swap. Visitors stare at a blank space where your text should be until the font arrives. Add &display=swap to the Google Fonts URL, or `font-display: swap` to your @font-face rules.' },
-        { label: 'Not too many scripts blocking the page', pass: blockingScripts < 3, weight: 1,
-          good: `Under 3 render-blocking scripts (${blockingScripts}).`,
-          bad: `${blockingScripts} render-blocking scripts on this page. Each one delays the first paint on phones. Add "defer" or "async" to the script tags that don't need to run before the page shows.` },
+        { label: 'Not too many scripts blocking the page', pass: blockingScripts < 2, weight: 1,
+          good: blockingScripts === 0 ? 'Nothing blocks the page from painting.' : 'One render-blocking script, which is within reason.',
+          bad: `${blockingScripts} render-blocking scripts on this page. Each one delays the first paint on phones. Add "defer" or "async" to the script tags that don't need to run before the page shows — almost none of them do.` },
         { label: 'Security headers set', pass: !!meta.csp || !!meta.referrerPolicy, weight: 1,
           good: 'Security response headers are set — a signal Google reads as a well-maintained site.',
           bad: 'No Content-Security-Policy or Referrer-Policy header. These are cheap wins — Vercel can set them in vercel.json or a middleware. Search engines treat their presence as a maintenance signal.' },
-        { label: 'Response time', pass: ms < 900, weight: 2,
+        { label: 'Response time', pass: ms < 600, weight: 2,
           good: `Answered in ${ms} ms.`,
-          bad: `Took ${ms} ms just to answer, before anything renders. 53% of mobile visitors leave by three seconds.` }
+          bad: `Took ${ms} ms just to answer, before a single pixel renders. Google calls anything over 800 ms a problem and 53% of mobile visitors leave by three seconds — a page on decent hosting answers in under 600.` }
       ]
     },
     {
@@ -476,15 +488,19 @@ function analyse(html, finalUrl, meta) {
         { label: 'Business details a machine can read', pass: hasLocalBiz, weight: 4,
           good: 'Your business is labelled in a format assistants and search engines read directly.',
           bad: 'No machine-readable business details. Assistants have to guess who and where you are — so they usually name someone else.' },
-        { label: 'Facts worth quoting', pass: factsPer500 === null || factsPer500 >= 3, weight: 2,
-          good: 'There are real numbers on the page — prices, timings, specifics an assistant can repeat.',
-          bad: 'Almost no concrete numbers on the page. Assistants quote facts, never adjectives, so there is nothing here for one to pass on.' },
-        { label: 'Headings written as questions', pass: questionRatio === null || questionRatio >= 0.25, weight: 2,
+        { label: 'Facts worth quoting', pass: factsPer500 === null || factsPer500 >= 6, weight: 2,
+          good: `${factsPer500 === null ? 'Real' : factsPer500.toFixed(1) + ' per 500 words —'} numbers an assistant can repeat: prices, timings, specifics.`,
+          bad: `${factsPer500 === null ? 'Almost no' : 'Only ' + factsPer500.toFixed(1) + ' per 500 words of'} concrete numbers on the page. Three per 500 words is the floor below which nothing ever gets quoted; six is where a page starts actually winning citations. Assistants quote facts and never quote adjectives.` },
+        { label: 'Headings written as questions', pass: questionRatio === null || questionRatio >= 0.4, weight: 2,
           good: 'Your headings match the questions people actually ask.',
-          bad: 'Your headings are labels rather than questions. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for.' },
-        { label: 'Content freshness signal', pass: hasFreshDate, weight: 2,
-          good: 'The page carries a publish or modified date — an assistant knows how fresh the answer is.',
-          bad: 'No datePublished or dateModified in your schema, and no Last-Modified header from the server. AI assistants prefer sources they can date, and will pass over undated pages when a rival has the same fact with a fresh date on it.' },
+          bad: `Only ${questionRatio === null ? 'a few' : Math.round(questionRatio * 100) + '%'} of your headings are questions. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for. Aim for at least 40% of them.` },
+        { label: 'Content freshness signal', pass: hasFreshDate, weight: 4,
+          good: freshAgeDays !== null && freshAgeDays >= 0
+            ? `Last dated ${freshAgeDays === 0 ? 'today' : freshAgeDays === 1 ? 'yesterday' : freshAgeDays + ' days ago'} — recent enough that an assistant will trust it as current.`
+            : 'The page carries a publish or modified date an assistant can read.',
+          bad: hasDateAtAll
+            ? `The newest date on this page is ${freshAgeDays} days old — over eighteen months. Assistants weigh recency almost as heavily as they weigh relevance, so a stale page loses to a rival carrying the same fact with a current date. Update the date when the facts actually change; moving it on a schedule without changing anything is itself a negative signal.`
+            : 'No datePublished or dateModified in your schema, and no Last-Modified header from the server. AI assistants prefer sources they can date, and will pass over undated pages when a rival has the same fact with a fresh date on it.' },
         { label: 'Opening hours published', pass: hasOpeningHours, weight: 2,
           good: 'Hours are published in a readable format.',
           bad: 'Hours are not published in a format a machine can quote.' },
@@ -524,7 +540,25 @@ function analyse(html, finalUrl, meta) {
   // Weighted by what actually costs a local business work, rather than a flat
   // average — otherwise easy wins like https quietly carry a failing site.
   const GROUP_WEIGHT = { found: 0.25, phone: 0.20, calls: 0.25, ai: 0.30 };
-  let score = Math.round(groups.reduce((sum, g) => sum + g.score * GROUP_WEIGHT[g.key], 0));
+  const weightedAvg = groups.reduce((sum, g) => sum + g.score * GROUP_WEIGHT[g.key], 0);
+
+  // Even weighted, an average lets three strong areas carry one weak one: a
+  // site that does everything right except AI-readiness still lands in the
+  // high 80s, and a number that high should not be reachable while a whole
+  // category is failing. Blending the worst group back in ties the score to
+  // the weakest link, so 90+ means good at all four rather than excellent at
+  // three and absent on the fourth.
+  const minGroup = Math.min(...groups.map((g) => g.score));
+  let score = weightedAvg * 0.7 + minGroup * 0.3;
+
+  // The ratio above is still generous at the top: a site missing one small
+  // thing lands at 98, which reads as "flawless" when it is not. Charge a flat
+  // 1.5 per failing check on top, so the 90s are reserved for sites that
+  // genuinely have almost nothing wrong. Every point deducted here maps to a
+  // named failure the visitor can read below — nothing is taken off for
+  // something we are not showing them.
+  const failedCount = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
+  score = Math.max(0, Math.round(score - failedCount * 1.5));
 
   // Three separate scores, because these fail differently and are fixed
   // differently. A site routinely scores 100 on SEO and 40 on GEO, and one
