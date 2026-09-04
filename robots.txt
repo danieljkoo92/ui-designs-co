@@ -18,6 +18,7 @@ Allow: /accessibility.html
 # sample credentials and sample contact details. Never index them,
 # and don't index the gallery that collects them either.
 Disallow: /work.html
+Disallow: /demo-product.html
 Disallow: /demo-pest.html
 Disallow: /demo-pest-pro.html
 Disallow: /demo-hvac.html

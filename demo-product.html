@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banana — The Original Grab-and-Go | Signature Product Showcase</title>
+<meta name="description" content="A scroll-driven product showcase. The product materialises, turns, reveals its specs and settles into a buy button — one page, one product, built to be swapped for any other. Placeholder product: a banana.">
+<link rel="canonical" href="https://ui-designs-co.vercel.app/demo-product.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+.demo-badge{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;background:rgba(10,12,16,.9);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:7px 13px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(6px)}.demo-badge:hover{border-color:#fff}@media(max-width:719px){.demo-badge{bottom:auto;top:calc(8px + env(safe-area-inset-top));left:8px;font-size:10px;padding:6px 10px}}
+:focus-visible{outline:3px solid #D9A441;outline-offset:2px;border-radius:3px}
+.skip-nav{position:absolute;left:-9999px;top:0;z-index:999;background:#D9A441;color:#0A0C10;padding:12px 18px;font-weight:700;text-decoration:none}
+.skip-nav:focus{left:8px;top:8px}
+:root{
+  --void:#0A0C10; --panel:#12161D; --edge:#232A35; --steel:#8C97A6;
+  --white:#F2F5F9; --gold:#D9A441; --gold-dark:#B8862C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--void);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 28px;background:var(--gold);color:#0A0C10;text-decoration:none;font-weight:700;font-size:16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
+.btn:hover{background:var(--gold-dark);transform:translateY(-2px)}
+.btn-ghost{background:transparent;border:1px solid var(--steel);color:var(--white)}
+.btn-ghost:hover{background:var(--panel)}
+
+/* ---------- the film: one pinned stage, five acts driven by scroll ---------- */
+.film{position:relative;height:100svh;background:radial-gradient(ellipse 70% 60% at 50% 45%,#141a22 0%,var(--void) 65%);overflow:hidden}
+.stage{position:absolute;inset:0;perspective:1400px;perspective-origin:50% 45%}
+.stage>*{transform-style:preserve-3d}
+
+/* ambient light: a slow gold bloom behind the product */
+.bloom{position:absolute;left:50%;top:48%;width:min(70vw,720px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.22) 0%,rgba(217,164,65,.06) 38%,transparent 62%);filter:blur(30px);opacity:0;pointer-events:none}
+
+/* the product: video when it exists, the still otherwise */
+.product{position:absolute;left:50%;top:48%;width:min(62vw,560px);aspect-ratio:900/699;transform-style:preserve-3d;will-change:transform,filter,opacity;opacity:0}
+.product img,.product video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;backface-visibility:hidden}
+.product video{display:none;object-fit:cover;border-radius:18px}
+/* specular sweep: a light band that only lands on the product's own pixels */
+.product .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.34) 50%,transparent 62%);background-size:260% 100%;background-position:120% 0;mix-blend-mode:screen;-webkit-mask:var(--still) center/contain no-repeat;mask:var(--still) center/contain no-repeat;pointer-events:none}
+/* ground shadow that stretches as the product turns */
+.shadow{position:absolute;left:50%;top:calc(48% + min(31vw,280px) + 34px);width:min(50vw,440px);height:38px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.75) 0%,rgba(0,0,0,.35) 45%,transparent 72%);filter:blur(10px);opacity:0}
+
+/* the name: per-character 3D targets */
+.name{position:absolute;left:50%;top:14%;transform:translateX(-50%);text-align:center;transform-style:preserve-3d;white-space:nowrap;pointer-events:none}
+.name h1{font-size:clamp(3.2rem,9vw,7.5rem);font-weight:800;letter-spacing:-.02em;transform-style:preserve-3d}
+.name .tag{margin-top:8px;font-size:clamp(14px,1.6vw,18px);color:var(--steel);letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:0}
+.ch{display:inline-block;transform-origin:50% 50%;backface-visibility:hidden;will-change:transform,opacity,filter}
+
+/* spec cards: glass panels that fly in around the product */
+.spec{position:absolute;left:50%;top:48%;width:min(42vw,220px);padding:16px 18px;border-radius:14px;background:rgba(18,22,29,.58);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);opacity:0;transform-style:preserve-3d;pointer-events:none}
+.spec .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.spec .v{margin-top:4px;font-size:clamp(18px,2.2vw,26px);font-weight:800;font-family:"Playfair Display",Georgia,serif;color:var(--white)}
+
+/* callouts: lines that draw from the product to a feature */
+.callouts{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0}
+.callouts path{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round}
+.callouts text{fill:var(--white);font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
+
+/* buy: the landing */
+.buy{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);text-align:center;opacity:0;transform-style:preserve-3d;width:min(92vw,560px)}
+.buy .price{font-family:"Playfair Display",Georgia,serif;font-size:clamp(2.2rem,6vw,4rem);font-weight:800;transform-style:preserve-3d}
+.buy .price small{font-size:.38em;color:var(--steel);font-family:inherit;font-weight:700;margin-left:6px}
+.buy .cta{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+.cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);color:var(--steel);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.cue::after{content:"";display:block;width:1px;height:34px;margin:8px auto 0;background:linear-gradient(var(--gold),transparent)}
+
+/* sticky buy pill: appears once the film has landed */
+.sticky-buy{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:110;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:99px;background:rgba(18,22,29,.86);border:1px solid var(--edge);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.5);transform:translateY(140%);transition:transform .35s cubic-bezier(.22,.9,.3,1)}
+.sticky-buy.on{transform:none}
+.sticky-buy .p{font-weight:800;font-family:"Playfair Display",Georgia,serif;font-size:18px}
+.sticky-buy .btn{min-height:40px;padding:9px 18px;font-size:14px}
+
+/* ---------- below the film: answers, not just a show ---------- */
+.detail{padding:96px 0 70px;border-top:1px solid var(--edge);background:var(--void)}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px}
+.sec-title{font-size:clamp(28px,4.4vw,46px);font-weight:800;margin-bottom:14px}
+.sub-copy{color:#C3CAD4;max-width:620px;font-size:17px}
+.grid3{display:grid;gap:22px;margin-top:40px}
+@media(min-width:760px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:24px}
+.card h3{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:18px;font-weight:700;margin-bottom:10px}
+.card p{color:#C3CAD4;font-size:15px}
+.card ul{margin:12px 0 0 18px;color:#C3CAD4;font-size:14.5px}
+.faq{margin-top:56px;border-top:1px solid var(--edge)}
+.q{border-bottom:1px solid var(--edge)}
+.q summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;position:relative;font-size:18px;font-weight:700;color:var(--white)}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:"+";position:absolute;right:6px;top:18px;font-size:26px;font-weight:400;color:var(--gold);line-height:1;transition:transform .2s}
+.q[open] summary::after{transform:rotate(45deg)}
+.q .a{padding:0 0 22px;color:#C3CAD4;font-size:15.8px;max-width:680px}
+.reveal{opacity:0;transform:translateY(24px)}
+footer{padding:36px 0;border-top:1px solid var(--edge);color:var(--steel);font-size:13.5px;text-align:center}
+footer a{color:var(--steel)}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .sticky-buy{transition:none}
+}
+</style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://ui-designs-co.vercel.app/"},
+{"@type":"ListItem","position":2,"name":"Product Showcase","item":"https://ui-designs-co.vercel.app/demo-product.html"}]}
+</script>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<main id="main">
+<!-- ============================================================
+     THE FILM. Scroll is time. One pinned stage, one 0→1 value,
+     five acts derived from it. Everything on this stage is driven
+     by PRODUCT (bottom of the page): swap that block and the two
+     image files, and this page becomes any other product's.
+     ============================================================ -->
+<section class="film" id="film" aria-label="Product showcase">
+  <div class="stage">
+    <div class="bloom" id="bloom"></div>
+    <div class="shadow" id="shadow"></div>
+
+    <div class="name" id="name">
+      <h1 id="pName">Banana</h1>
+      <p class="tag" id="pTag">The original grab-and-go.</p>
+    </div>
+
+    <div class="product" id="product">
+      <video id="turnVid" muted playsinline preload="auto" aria-hidden="true"></video>
+      <img id="productStill" src="img/product.png" alt="A single ripe banana">
+      <div class="shine" aria-hidden="true"></div>
+    </div>
+
+    <!-- spec cards are built from PRODUCT.specs -->
+    <div id="specs"></div>
+
+    <svg class="callouts" id="callouts" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path id="c1" d="M560 250 L700 170 L820 170"/>
+      <text x="826" y="174">peel · compostable</text>
+      <path id="c2" d="M430 360 L300 440 L180 440"/>
+      <text x="80" y="444">118 g · no packaging</text>
+    </svg>
+
+    <div class="buy" id="buy">
+      <div class="price" id="pPrice">$0.29<small>each</small></div>
+      <div class="cta">
+        <a class="btn" href="#detail" id="pCta">Add to cart</a>
+        <a class="btn btn-ghost" href="#detail">See the details</a>
+      </div>
+    </div>
+
+    <div class="cue" id="cue">Scroll</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BELOW THE FILM. A page that is only a show has nothing an
+     assistant can quote. Real questions as headings, real numbers.
+     ============================================================ -->
+<section class="detail" id="detail">
+  <div class="wrap">
+    <p class="kicker reveal">The product</p>
+    <h2 class="sec-title reveal">What you are actually buying</h2>
+    <p class="sub-copy reveal">Placeholder copy for a placeholder product. Every claim below is a stand-in — swap the product, swap the facts. The shape of the page is the point.</p>
+
+    <div class="grid3">
+      <div class="card reveal">
+        <h3>What is it made of?</h3>
+        <p>One banana. Roughly 118 g, about 105 calories, and 3 g of fibre. The peel is the packaging, and the packaging is compostable.</p>
+      </div>
+      <div class="card reveal">
+        <h3>How long does it keep?</h3>
+        <p>About 7 days from green to spotted at room temperature. Day 4 is the sweet spot. Refrigerating the fruit slows it by roughly 2 days once it has ripened.</p>
+        <ul>
+          <li>Days 1–2: firm, starchy</li>
+          <li>Days 3–5: sweet, ideal</li>
+          <li>Days 6–7: soft, bake it</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3>Why does it cost $0.29?</h3>
+        <p>Because it is a banana. This is a demo of the page, not the fruit. A real product gets its real price, its real specs and its real photograph in this exact layout.</p>
+      </div>
+    </div>
+
+    <div class="faq reveal">
+      <details class="q"><summary>Can this page show my product instead of a banana?</summary>
+        <p class="a">Yes — that is what it is for. One image with the background removed, the name, the price and 3 or 4 specs. The turn, the light, the cards and the callouts rebuild themselves around whatever you give it.</p></details>
+      <details class="q"><summary>Does the product actually rotate?</summary>
+        <p class="a">With a turntable video, yes — scrolling scrubs the rotation frame by frame, the same way the auto body demo repairs the car. Without one, a single photo is lit, turned and shadowed as you scroll so it still reads as an object, not a flat picture.</p></details>
+      <details class="q"><summary>How long does a Signature build like this take?</summary>
+        <p class="a">10 to 14 days once the product photo and the facts are in hand. The $1,000 standard build is 5 to 7 days and does not include the scroll film.</p></details>
+      <details class="q"><summary>Is any of this real?</summary>
+        <p class="a">The page is real and you are scrolling it. The product, the price and the claims are placeholders — nobody is selling you a banana.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Signature product showcase · Portfolio demo by <a href="index.html">UI Designs Co</a>. The product, price and every claim on this page are placeholders, not a real listing.</div>
+</footer>
+
+<div class="sticky-buy" id="stickyBuy" aria-hidden="true">
+  <span class="p" id="stickyPrice">$0.29</span>
+  <a class="btn" href="#detail">Add to cart</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+/* ============================================================
+   PRODUCT — the one block to change.
+   Swap these values and the two files they point at; nothing else
+   in this page names the banana. `video` may not exist yet: the
+   page runs on the still until it does, then lights the scrub up
+   with no other edit.
+   ============================================================ */
+const PRODUCT = {
+  name:    'Banana',
+  tagline: 'The original grab-and-go.',
+  price:   '$0.29',
+  unit:    'each',
+  cta:     'Add to cart',
+  specs: [
+    { k: 'Origin',   v: 'Ecuador'     },
+    { k: 'Ripeness', v: 'Day 4 of 7'  },
+    { k: 'Weight',   v: '118 g'       },
+    { k: 'Peel',     v: 'Compostable' }
+  ],
+  still: 'img/product.png',
+  video: 'img/product-turn.mp4'
+};
+
+gsap.registerPlugin(ScrollTrigger);
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+let triggers = [];
+
+/* --- fill the page from PRODUCT --- */
+document.getElementById('pName').textContent = PRODUCT.name;
+document.getElementById('pTag').textContent = PRODUCT.tagline;
+document.getElementById('pPrice').innerHTML = PRODUCT.price + '<small>' + PRODUCT.unit + '</small>';
+document.getElementById('pCta').textContent = PRODUCT.cta;
+document.getElementById('stickyPrice').textContent = PRODUCT.price;
+const still = document.getElementById('productStill');
+still.src = PRODUCT.still;
+still.alt = PRODUCT.name;
+document.getElementById('product').style.setProperty('--still', 'url(' + PRODUCT.still + ')');
+const specsHost = document.getElementById('specs');
+const specEls = PRODUCT.specs.map(s => {
+  const d = document.createElement('div');
+  d.className = 'spec';
+  const k = document.createElement('div'); k.className = 'k'; k.textContent = s.k;
+  const v = document.createElement('div'); v.className = 'v'; v.textContent = s.v;
+  d.appendChild(k); d.appendChild(v);
+  specsHost.appendChild(d);
+  return d;
+});
+
+/* --- per-character text machinery (from hero.js) --- */
+function wrapChars(el){
+  const walk = (node) => {
+    [...node.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        c.textContent.split('').forEach(ch => {
+          const sp = document.createElement('span');
+          sp.className = 'ch';
+          sp.textContent = ch === ' ' ? ' ' : ch;
+          frag.appendChild(sp);
+        });
+        node.replaceChild(frag, c);
+      } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+    });
+  };
+  walk(el);
+}
+const chr = {};
+function register(id, el){
+  wrapChars(el);
+  const spans = [...el.querySelectorAll('.ch')];
+  chr[id] = { root: el, chars: spans, origs: spans.map(sp => sp.textContent) };
+}
+register('name', document.getElementById('pName'));
+register('price', document.getElementById('pPrice'));
+specEls.forEach((d, i) => register('spec' + i, d.querySelector('.v')));
+
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const GLYPHS = '0123456789!@#$%&*<>[]{}/\\|=+-ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function decodeIn(id){
+  const rec = chr[id]; if (!rec) return;
+  gsap.killTweensOf(rec.chars);
+  gsap.set(rec.chars, { x:0, y:0, z:0, rotationX:0, rotationY:0, scale:1, filter:'none', opacity:1 });
+  rec.chars.forEach((sp, i) => {
+    const orig = rec.origs[i];
+    if (orig === ' ' || /\s/.test(orig)) { sp.textContent = orig; sp.style.color = ''; return; }
+    let ticks = 6 + Math.floor(Math.random() * 10);
+    sp.style.color = 'var(--gold)'; sp.style.textShadow = '0 0 14px var(--gold)';
+    const step = () => {
+      if (ticks <= 0) { sp.textContent = orig; sp.style.color = ''; sp.style.textShadow = ''; return; }
+      sp.textContent = pick(GLYPHS); ticks--; setTimeout(step, 42);
+    };
+    setTimeout(step, 40 + i * 22);
+  });
+}
+function shatterOut(id, done){
+  const rec = chr[id]; if (!rec) { done && done(); return; }
+  gsap.killTweensOf(rec.chars);
+  gsap.to(rec.chars, {
+    duration:.55, x:()=>rand(-380,380), y:()=>rand(-220,220), z:()=>rand(-600,400),
+    rotationX:()=>rand(-540,540), rotationY:()=>rand(-540,540), scale:()=>rand(.15,.5),
+    filter:'blur(10px) brightness(1.4)', color:()=>(Math.random()>.6?'#D9A441':''), opacity:0,
+    ease:'power3.in', stagger:{each:.008, from:'random'}, onComplete: done
+  });
+}
+function assembleIn(id){
+  const rec = chr[id]; if (!rec) return;
+  gsap.killTweensOf(rec.chars);
+  rec.chars.forEach((sp,i)=>{ sp.textContent = rec.origs[i]; sp.style.color=''; sp.style.textShadow=''; });
+  gsap.set(rec.chars, { x:()=>rand(-260,260), y:()=>rand(-180,180), z:()=>rand(-800,-300),
+    rotationX:()=>rand(-180,180), rotationY:()=>rand(-180,180), scale:()=>rand(.4,.9), filter:'blur(8px)', opacity:0 });
+  gsap.to(rec.chars, { duration:.85, x:0,y:0,z:0, rotationX:0, rotationY:0, scale:1, filter:'blur(0px)', opacity:1,
+    ease:'back.out(1.6)', stagger:{each:.022, from:'random'} });
+}
+
+/* --- spec cards: park behind the product, fan out on a circle (from hero.js flyCloud) --- */
+function parkSpecs(){
+  specEls.forEach(d => gsap.set(d, { xPercent:-50, yPercent:-50, x:0, y:0, z:-600, opacity:0, rotateY:0 }));
+}
+function flySpecs(){
+  specEls.forEach((d, i) => {
+    const a = (i / specEls.length) * Math.PI * 2 - Math.PI / 2 + .35;
+    gsap.to(d, {
+      x: Math.cos(a) * Math.min(innerWidth * .36, 400),
+      y: Math.sin(a) * Math.min(innerHeight * .30, 230),
+      z: (i % 2 ? 120 : -140), rotateY: (i % 2 ? -14 : 12),
+      opacity: 1, duration: .8, ease: 'power3.out', delay: i * .06,
+      onStart: () => decodeIn('spec' + i)
+    });
+  });
+}
+function shatterSpecs(){
+  specEls.forEach((d, i) => {
+    shatterOut('spec' + i);
+    gsap.to(d, { opacity: 0, z: -500, duration: .5, ease: 'power3.in', delay: i * .03 });
+  });
+}
+
+/* --- callout lines draw in by stroke-dashoffset --- */
+const paths = [...document.querySelectorAll('.callouts path')];
+paths.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
+function drawCallouts(t){
+  paths.forEach(p => { p.style.strokeDashoffset = p.dataset.len * (1 - t); });
+  document.getElementById('callouts').style.opacity = Math.min(1, t * 3);
+}
+
+/* --- the video slot. demo-auto's mechanism: hidden until it can play,
+       and an error keeps it hidden forever so a missing file is silent. --- */
+const vid = document.getElementById('turnVid');
+let vidReady = false;
+vid.addEventListener('canplaythrough', () => {
+  if (mq.matches) return;
+  vidReady = true; vid.pause(); vid.style.display = 'block'; still.style.opacity = 0;
+}, { once: true });
+vid.addEventListener('error', () => { vid.style.display = 'none'; vidReady = false; still.style.opacity = 1; });
+vid.src = PRODUCT.video;
+vid.load();
+
+/* --- the film: one p, five bands, one-shots fired on threshold crossings --- */
+const els = {
+  product: document.getElementById('product'), bloom: document.getElementById('bloom'),
+  shadow: document.getElementById('shadow'), tag: document.getElementById('pTag'),
+  buy: document.getElementById('buy'), cue: document.getElementById('cue'),
+  shine: document.querySelector('.product .shine'), sticky: document.getElementById('stickyBuy'),
+  callouts: document.getElementById('callouts')
+};
+const clamp01 = v => Math.max(0, Math.min(1, v));
+const band = (p, a, b) => clamp01((p - a) / (b - a));
+const fired = {};
+function once(key, cond, fn, undo){
+  if (cond && !fired[key]) { fired[key] = true; fn(); }
+  else if (!cond && fired[key]) { fired[key] = false; undo && undo(); }
+}
+
+function buildMotion(){
+  triggers.forEach(t => t.kill()); triggers = [];
+  Object.keys(fired).forEach(k => fired[k] = false);
+  const film = document.getElementById('film');
+
+  if (mq.matches) {
+    /* static stack: everything visible, nothing moves, film unpinned */
+    film.style.height = 'auto'; film.style.minHeight = '100svh';
+    gsap.set([els.product, els.bloom, els.shadow, els.tag, els.buy], { opacity: 1, clearProps: 'transform,filter' });
+    gsap.set(els.product, { xPercent: -50, yPercent: -50 });
+    Object.values(chr).forEach(r => gsap.set(r.chars, { opacity: 1, clearProps: 'transform,filter' }));
+    specEls.forEach((d, i) => gsap.set(d, { opacity: 1, xPercent: -50, yPercent: -50, x: (i - 1.5) * 240, y: 240, z: 0 }));
+    drawCallouts(1);
+    els.cue.style.display = 'none';
+    els.sticky.classList.add('on');
+    vid.style.display = 'none';
+    return;
+  }
+
+  film.style.height = ''; film.style.minHeight = '';
+  parkSpecs();
+  gsap.set(els.product, { xPercent: -50, yPercent: -50, scale: 1.6, opacity: 0, filter: 'blur(30px)' });
+  gsap.set(els.buy, { opacity: 0 });
+  Object.values(chr).forEach(r => gsap.set(r.chars, { opacity: 0 }));
+
+  const s = { p: 0 };
+  triggers.push(ScrollTrigger.create({
+    trigger: '#film', start: 'top top', end: '+=420%', pin: true, scrub: 1,
+    animation: gsap.to(s, {
+      p: 1, ease: 'none',
+      onUpdate: () => {
+        const p = s.p;
+
+        /* 0.00–0.15 COLD OPEN: materialise */
+        const o = band(p, 0, .15);
+        els.bloom.style.opacity = o;
+        els.shadow.style.opacity = o * .9;
+        els.cue.style.opacity = clamp01(1 - p / .05);
+        once('name', p > .04, () => decodeIn('name'), () => gsap.set(chr.name.chars, { opacity: 0 }));
+        once('tag', p > .10, () => gsap.to(els.tag, { opacity: 1, duration: .6 }), () => gsap.set(els.tag, { opacity: 0 }));
+
+        /* 0.15–0.50 TURNTABLE */
+        const t = band(p, .15, .50);
+        /* 0.75–0.90 DETAIL push-in shares the scale channel with the cold open */
+        const d = band(p, .75, .90);
+        const scale = (1.6 - .6 * o) * (1 + .35 * d);
+
+        if (vidReady && vid.duration) {
+          vid.currentTime = Math.min(vid.duration - .05, t * vid.duration);
+          gsap.set(els.product, { scale, opacity: o, filter: 'blur(' + (30 * (1 - o)) + 'px)' });
+        } else {
+          /* a flat photo turned 360° goes edge-on; a sway + moving light + a
+             stretching shadow sells the turn without lying about the geometry */
+          const sway = Math.sin(t * Math.PI * 2) * 22;
+          gsap.set(els.product, {
+            scale, opacity: o, filter: 'blur(' + (30 * (1 - o)) + 'px)',
+            rotationY: sway, skewY: sway * -.08, scaleX: 1 - Math.abs(sway) / 22 * .06
+          });
+          els.shine.style.backgroundPosition = (120 - t * 240) + '% 0';
+          els.shadow.style.transform = 'translateX(' + (-50 + sway * .9) + '%) scaleX(' + (1 + Math.abs(sway) / 22 * .35) + ')';
+        }
+
+        /* 0.50–0.75 SPECS */
+        once('specs', p > .50 && p < .90, flySpecs, () => { if (p <= .50) parkSpecs(); });
+
+        /* 0.75–0.90 DETAIL: draw the callouts */
+        drawCallouts(d);
+
+        /* 0.90–1.00 BUY: cards shatter, price assembles, pill appears */
+        once('buy', p > .90, () => {
+          shatterSpecs();
+          gsap.to(els.product, { y: -30, duration: .8, ease: 'power3.out' });
+          gsap.to(els.buy, { opacity: 1, duration: .4 });
+          assembleIn('price');
+          els.sticky.classList.add('on');
+          els.callouts.style.opacity = 0;
+        }, () => {
+          gsap.to(els.buy, { opacity: 0, duration: .3 });
+          gsap.set(chr.price.chars, { opacity: 0 });
+          els.sticky.classList.remove('on');
+          gsap.to(els.product, { y: 0, duration: .5 });
+          if (p > .50) flySpecs();
+        });
+      }
+    })
+  }));
+
+  gsap.utils.toArray('.reveal').forEach(el => {
+    triggers.push(ScrollTrigger.create({
+      trigger: el, start: 'top 85%',
+      animation: gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
+    }));
+  });
+}
+mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
+addEventListener('resize', () => { if (!mq.matches) parkSpecs(); ScrollTrigger.refresh(); });
+buildMotion();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+</script>
+<a class="demo-badge" href="index.html" title="This is a portfolio demo. The product, price and claims on this page are placeholders.">Demo — placeholder product</a>
+</body>
+</html>
