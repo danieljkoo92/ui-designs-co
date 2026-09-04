@@ -345,6 +345,21 @@ function analyse(html, finalUrl, meta) {
   }).length;
   const faqHubGap = faqEntries.length >= 4 && (faqRendered / faqEntries.length) < 0.85;
 
+  // Does the page actually carry question-and-answer content?
+  //
+  // The old test was the word "faq" appearing anywhere in the text, which a nav
+  // link reading "FAQ" satisfies on a page with no Q&A on it at all. What counts
+  // is a question-shaped heading (or <summary>) with body text under it, since
+  // that is the thing an answer engine can lift a quote out of.
+  const questionAnchors = headingTextsLc.filter((t) =>
+    /\?\s*$/.test(t) || /^(how|what|why|when|where|who|can|do|does|is|are|should|will)\b/.test(t)).length;
+  const hasRealQA = hasFaqSchema || questionAnchors >= 2;
+
+  // A page with no FAQ schema AND no Q&A on it is not "nothing to check" — it is
+  // missing the thing this whole group measures. Passing it scored the absence
+  // of answers the same as a perfectly rendered FAQ.
+  const faqAnswersOk = hasFaqSchema ? !faqHubGap : hasRealQA;
+
   // Unreplaced template placeholders in the visible text — the classic
   // city-template bug: {{city}}, [LOCATION], %CITY_NAME%, ${area}. Requires
   // 3+ chars inside so plain prose like [1] or {x} does not false-positive.
@@ -528,12 +543,16 @@ function analyse(html, finalUrl, meta) {
         { label: 'Opening hours published', pass: hasOpeningHours, weight: 2,
           good: 'Hours are published in a readable format.',
           bad: 'Hours are not published in a format a machine can quote.' },
-        { label: 'Questions answered on the page', pass: hasFaqSchema || faqWording, weight: 2,
-          good: 'You answer common questions.',
-          bad: 'No question-and-answer content — nothing for an assistant to quote as an answer.' },
-        { label: 'FAQ answers actually on the page', pass: !faqHubGap, weight: 3,
-          good: faqEntries.length ? `All ${faqEntries.length} FAQ answers your schema promises are in the page.` : 'Nothing to check — there is no FAQ schema on this page.',
-          bad: `Your FAQ schema promises ${faqEntries.length} answers but only ${faqRendered} are actually in the page — the rest are labels with no answer text a machine can read. That is a common pattern on FAQ hubs that load the answers with JavaScript. AI assistants see the labels and nothing to quote.` },
+        { label: 'Questions answered on the page', pass: hasRealQA, weight: 2,
+          good: hasFaqSchema ? 'You answer common questions, and they are marked up for machines.' : `${questionAnchors} of your headings are questions with answers under them.`,
+          bad: faqWording
+            ? 'The word "FAQ" appears on the page, but only as a link — there is no question-and-answer content here for an assistant to quote. A link to an FAQ page is not an answer on this page.'
+            : 'No question-and-answer content — nothing for an assistant to quote as an answer. Write the questions customers actually ask as headings, with the answer directly underneath.' },
+        { label: 'FAQ answers actually on the page', pass: faqAnswersOk, weight: 3,
+          good: faqEntries.length ? `All ${faqEntries.length} FAQ answers your schema promises are in the page.` : 'Your question headings have real answers underneath them.',
+          bad: hasFaqSchema
+            ? `Your FAQ schema promises ${faqEntries.length} answers but only ${faqRendered} are actually in the page — the rest are labels with no answer text a machine can read. That is a common pattern on FAQ hubs that load the answers with JavaScript. AI assistants see the labels and nothing to quote.`
+            : 'There are no answers on this page for an assistant to lift. This is the single biggest thing standing between you and being named by ChatGPT or Google\'s AI answers: write the questions your customers actually ask as headings, answer each one in the two sentences underneath, and mark them up as an FAQ.' },
         { label: 'No template placeholders leaking through', pass: placeholderHits.length === 0, weight: 3,
           good: 'No unreplaced template variables in the page text.',
           bad: `Unreplaced template placeholder(s) on the page: ${placeholderUniq.slice(0, 3).join(', ')}${placeholderUniq.length > 3 ? ` +${placeholderUniq.length - 3} more` : ''}. This usually means a city or service template ran the substitution for other pages and skipped this one. Retrieval quotes the placeholder as if it were real content.` },
