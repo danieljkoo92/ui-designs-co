@@ -5,7 +5,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banana — The Original Grab-and-Go | Signature Product Showcase</title>
-<meta name="description" content="A scroll-driven product showcase. The product materialises, turns, reveals its specs and settles into a buy button — one page, one product, built to be swapped for any other. Placeholder product: a banana.">
+<meta name="description" content="A scroll-driven product showcase. The product spins, glass spec cards orbit it, the name glitches in, and it settles into a buy button — one page, one product, built to be swapped for any other. Placeholder product: a banana.">
 <link rel="canonical" href="https://ui-designs-co.vercel.app/demo-product.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,46 +24,73 @@ html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--void);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.1}
 .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 28px;background:var(--gold);color:#0A0C10;text-decoration:none;font-weight:700;font-size:16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .25s}
 .btn:hover{background:var(--gold-dark);transform:translateY(-2px)}
 .btn-ghost{background:transparent;border:1px solid var(--steel);color:var(--white)}
 .btn-ghost:hover{background:var(--panel)}
 
-/* ---------- the film: one pinned stage, five acts driven by scroll ---------- */
-.film{position:relative;height:100svh;background:radial-gradient(ellipse 70% 60% at 50% 45%,#141a22 0%,var(--void) 65%);overflow:hidden}
-.stage{position:absolute;inset:0;perspective:1400px;perspective-origin:50% 45%}
+/* ---------- the film: one pinned stage, the product always spinning ---------- */
+.film{position:relative;height:100svh;background:radial-gradient(ellipse 70% 60% at 50% 45%,#161c26 0%,var(--void) 65%);overflow:hidden}
+.film::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/100% 56px,
+  linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/56px 100%;
+  mask:radial-gradient(ellipse 60% 55% at 50% 50%,#000 30%,transparent 75%);pointer-events:none}
+.stage{position:absolute;inset:0;perspective:1300px;perspective-origin:50% 46%}
 .stage>*{transform-style:preserve-3d}
 
-/* ambient light: a slow gold bloom behind the product */
-.bloom{position:absolute;left:50%;top:48%;width:min(70vw,720px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.22) 0%,rgba(217,164,65,.06) 38%,transparent 62%);filter:blur(30px);opacity:0;pointer-events:none}
+.bloom{position:absolute;left:50%;top:48%;width:min(72vw,760px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.26) 0%,rgba(217,164,65,.07) 38%,transparent 62%);filter:blur(34px);pointer-events:none}
 
-/* the product: video when it exists, the still otherwise */
-.product{position:absolute;left:50%;top:48%;width:min(62vw,560px);aspect-ratio:900/699;transform-style:preserve-3d;will-change:transform,filter,opacity;opacity:0}
-.product img,.product video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;backface-visibility:hidden}
-.product video{display:none;object-fit:cover;border-radius:18px}
-/* specular sweep: a light band that only lands on the product's own pixels */
-.product .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.34) 50%,transparent 62%);background-size:260% 100%;background-position:120% 0;mix-blend-mode:screen;-webkit-mask:var(--still) center/contain no-repeat;mask:var(--still) center/contain no-repeat;pointer-events:none}
-/* ground shadow that stretches as the product turns */
-.shadow{position:absolute;left:50%;top:calc(48% + min(31vw,280px) + 34px);width:min(50vw,440px);height:38px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.75) 0%,rgba(0,0,0,.35) 45%,transparent 72%);filter:blur(10px);opacity:0}
+/* the product: two faces so a full 360° never goes edge-on and vanishes */
+.product{position:absolute;left:50%;top:48%;width:min(60vw,540px);aspect-ratio:900/699;transform-style:preserve-3d;will-change:transform}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform-style:preserve-3d}
+.face.back{transform:rotateY(180deg)}
+.face img,.face video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.face video{display:none;object-fit:cover;border-radius:18px}
+.shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.38) 50%,transparent 62%);background-size:260% 100%;mix-blend-mode:screen;-webkit-mask:var(--still) center/contain no-repeat;mask:var(--still) center/contain no-repeat;pointer-events:none}
+.shadow{position:absolute;left:50%;top:calc(48% + min(30vw,270px) + 30px);width:min(48vw,420px);height:40px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.8) 0%,rgba(0,0,0,.38) 45%,transparent 72%);filter:blur(10px)}
 
-/* the name: per-character 3D targets */
-.name{position:absolute;left:50%;top:14%;transform:translateX(-50%);text-align:center;transform-style:preserve-3d;white-space:nowrap;pointer-events:none}
-.name h1{font-size:clamp(3.2rem,9vw,7.5rem);font-weight:800;letter-spacing:-.02em;transform-style:preserve-3d}
-.name .tag{margin-top:8px;font-size:clamp(14px,1.6vw,18px);color:var(--steel);letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:0}
+/* the name: per-character glitch targets */
+.name{position:absolute;left:50%;top:11%;transform:translateX(-50%);text-align:center;transform-style:preserve-3d;white-space:nowrap;pointer-events:none;z-index:3}
+.name h1{font-size:clamp(3rem,8.5vw,7rem);font-weight:800;letter-spacing:-.02em;transform-style:preserve-3d}
+.name .tag{margin-top:6px;font-size:clamp(13px,1.5vw,17px);color:var(--steel);letter-spacing:.16em;text-transform:uppercase;font-weight:600;opacity:0}
 .ch{display:inline-block;transform-origin:50% 50%;backface-visibility:hidden;will-change:transform,opacity,filter}
 
-/* spec cards: glass panels that fly in around the product */
-.spec{position:absolute;left:50%;top:48%;width:min(42vw,220px);padding:16px 18px;border-radius:14px;background:rgba(18,22,29,.58);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);opacity:0;transform-style:preserve-3d;pointer-events:none}
-.spec .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
-.spec .v{margin-top:4px;font-size:clamp(18px,2.2vw,26px);font-weight:800;font-family:"Playfair Display",Georgia,serif;color:var(--white)}
+/* the ring: glass cards orbiting the product. ring rotates, each orbit pivots,
+   each card is pushed out along that pivot and counter-rotated to face you */
+.ring{position:absolute;left:50%;top:48%;width:0;height:0;transform-style:preserve-3d;opacity:0;pointer-events:none}
+.orbit{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.spec{position:absolute;left:-100px;top:-46px;width:200px;padding:14px 16px;border-radius:14px;background:rgba(18,22,29,.55);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 22px 56px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);transform-style:preserve-3d;transition:border-color .25s,box-shadow .25s}
+.spec .k{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.spec .v{margin-top:3px;font-size:22px;font-weight:800;font-family:"Playfair Display",Georgia,serif;color:var(--white);white-space:nowrap}
+.spec.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 40px rgba(217,164,65,.35),0 22px 56px rgba(0,0,0,.6)}
 
-/* callouts: lines that draw from the product to a feature */
+/* the rail: the reel's "what are you looking for" filter nav */
+.rail{position:absolute;left:5vw;top:50%;transform:translateY(-50%);z-index:4;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;transition:opacity .35s}
+.rail.off{opacity:0;pointer-events:none}
+.rail-q{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel);margin-bottom:14px}
+.rail ul{list-style:none}
+.rail li{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#C3CAD4;padding:7px 0;cursor:pointer;display:flex;align-items:center;gap:10px;transition:color .2s,transform .2s}
+.rail li::before{content:"->";color:var(--steel);transition:color .2s,transform .2s}
+.rail li:hover{color:var(--white);transform:translateX(4px)}
+.rail li.on{color:var(--gold)}
+.rail li.on::before{color:var(--gold);transform:translateX(3px)}
+@media(max-width:760px){
+  .rail{left:0;right:0;top:auto;bottom:72px;transform:none;display:flex;justify-content:center;padding:0 12px}
+  .rail-q{display:none}
+  .rail ul{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .rail li{font-size:11px;padding:6px 10px;border:1px solid var(--edge);border-radius:99px;background:rgba(18,22,29,.7);backdrop-filter:blur(8px)}
+  .rail li::before{display:none}
+  .rail li.on{border-color:var(--gold)}
+  .spec{width:150px;left:-75px;top:-40px;padding:11px 13px}
+  .spec .v{font-size:17px}
+}
+
 .callouts{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0}
 .callouts path{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round}
 .callouts text{fill:var(--white);font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}
 
-/* buy: the landing */
-.buy{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);text-align:center;opacity:0;transform-style:preserve-3d;width:min(92vw,560px)}
+.buy{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);text-align:center;opacity:0;transform-style:preserve-3d;width:min(92vw,560px);z-index:3}
 .buy .price{font-family:"Playfair Display",Georgia,serif;font-size:clamp(2.2rem,6vw,4rem);font-weight:800;transform-style:preserve-3d}
 .buy .price small{font-size:.38em;color:var(--steel);font-family:inherit;font-weight:700;margin-left:6px}
 .buy .cta{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
@@ -71,7 +98,6 @@ h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.1}
 .cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);color:var(--steel);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
 .cue::after{content:"";display:block;width:1px;height:34px;margin:8px auto 0;background:linear-gradient(var(--gold),transparent)}
 
-/* sticky buy pill: appears once the film has landed */
 .sticky-buy{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:110;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:99px;background:rgba(18,22,29,.86);border:1px solid var(--edge);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.5);transform:translateY(140%);transition:transform .35s cubic-bezier(.22,.9,.3,1)}
 .sticky-buy.on{transform:none}
 .sticky-buy .p{font-weight:800;font-family:"Playfair Display",Georgia,serif;font-size:18px}
@@ -102,7 +128,7 @@ footer a{color:var(--steel)}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .reveal{opacity:1;transform:none}
-  .sticky-buy{transition:none}
+  .sticky-buy,.rail,.spec{transition:none}
 }
 </style>
 
@@ -117,15 +143,21 @@ footer a{color:var(--steel)}
 
 <main id="main">
 <!-- ============================================================
-     THE FILM. Scroll is time. One pinned stage, one 0→1 value,
-     five acts derived from it. Everything on this stage is driven
-     by PRODUCT (bottom of the page): swap that block and the two
-     image files, and this page becomes any other product's.
+     THE FILM. The product is spinning from the first frame and never
+     stops; scroll adds turns on top of the idle drift, orbits the
+     glass cards, draws the callouts and lands the buy. Everything
+     here is driven by PRODUCT (bottom of the page): swap that block
+     and the two image files and this page is any other product's.
      ============================================================ -->
 <section class="film" id="film" aria-label="Product showcase">
   <div class="stage">
     <div class="bloom" id="bloom"></div>
     <div class="shadow" id="shadow"></div>
+
+    <nav class="rail" id="rail" aria-label="Filter">
+      <p class="rail-q">What are you looking for?</p>
+      <ul id="railList"></ul>
+    </nav>
 
     <div class="name" id="name">
       <h1 id="pName">Banana</h1>
@@ -133,13 +165,17 @@ footer a{color:var(--steel)}
     </div>
 
     <div class="product" id="product">
-      <video id="turnVid" muted playsinline preload="auto" aria-hidden="true"></video>
-      <img id="productStill" src="img/product.png" alt="A single ripe banana">
-      <div class="shine" aria-hidden="true"></div>
+      <div class="face front">
+        <video id="turnVid" muted playsinline preload="auto" aria-hidden="true"></video>
+        <img class="still" id="productStill" src="img/product.png" alt="A single ripe banana">
+        <div class="shine" id="shine" aria-hidden="true"></div>
+      </div>
+      <div class="face back" aria-hidden="true">
+        <img class="still" id="productBack" src="img/product.png" alt="">
+      </div>
     </div>
 
-    <!-- spec cards are built from PRODUCT.specs -->
-    <div id="specs"></div>
+    <div class="ring" id="ring"></div>
 
     <svg class="callouts" id="callouts" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <path id="c1" d="M560 250 L700 170 L820 170"/>
@@ -192,9 +228,9 @@ footer a{color:var(--steel)}
 
     <div class="faq reveal">
       <details class="q"><summary>Can this page show my product instead of a banana?</summary>
-        <p class="a">Yes — that is what it is for. One image with the background removed, the name, the price and 3 or 4 specs. The turn, the light, the cards and the callouts rebuild themselves around whatever you give it.</p></details>
+        <p class="a">Yes — that is what it is for. One image with the background removed, the name, the price and 3 or 4 specs. The spin, the light, the orbiting cards and the callouts rebuild themselves around whatever you give it.</p></details>
       <details class="q"><summary>Does the product actually rotate?</summary>
-        <p class="a">With a turntable video, yes — scrolling scrubs the rotation frame by frame, the same way the auto body demo repairs the car. Without one, a single photo is lit, turned and shadowed as you scroll so it still reads as an object, not a flat picture.</p></details>
+        <p class="a">Yes. It turns continuously on its own and scrolling adds turns on top. With a turntable video it is the real object frame by frame; without one the photograph itself spins, front and back, so it never goes flat.</p></details>
       <details class="q"><summary>How long does a Signature build like this take?</summary>
         <p class="a">10 to 14 days once the product photo and the facts are in hand. The $1,000 standard build is 5 to 7 days and does not include the scroll film.</p></details>
       <details class="q"><summary>Is any of this real?</summary>
@@ -250,21 +286,39 @@ document.getElementById('pPrice').innerHTML = PRODUCT.price + '<small>' + PRODUC
 document.getElementById('pCta').textContent = PRODUCT.cta;
 document.getElementById('stickyPrice').textContent = PRODUCT.price;
 const still = document.getElementById('productStill');
-still.src = PRODUCT.still;
-still.alt = PRODUCT.name;
+still.src = PRODUCT.still; still.alt = PRODUCT.name;
+document.getElementById('productBack').src = PRODUCT.still;
 document.getElementById('product').style.setProperty('--still', 'url(' + PRODUCT.still + ')');
-const specsHost = document.getElementById('specs');
-const specEls = PRODUCT.specs.map(s => {
-  const d = document.createElement('div');
-  d.className = 'spec';
+
+/* ring: orbit pivot -> card pushed out along it. nested transforms give
+   rotate-then-translate, which one GSAP set cannot express. */
+const ring = document.getElementById('ring');
+const specEls = [], orbits = [];
+PRODUCT.specs.forEach((s, i) => {
+  const o = document.createElement('div'); o.className = 'orbit';
+  const d = document.createElement('div'); d.className = 'spec';
   const k = document.createElement('div'); k.className = 'k'; k.textContent = s.k;
   const v = document.createElement('div'); v.className = 'v'; v.textContent = s.v;
-  d.appendChild(k); d.appendChild(v);
-  specsHost.appendChild(d);
-  return d;
+  d.appendChild(k); d.appendChild(v); o.appendChild(d); ring.appendChild(o);
+  specEls.push(d); orbits.push(o);
 });
+/* rail: one entry per spec, the reel's "-> WEBSITES" idiom */
+const railList = document.getElementById('railList');
+const railItems = PRODUCT.specs.map((s, i) => {
+  const li = document.createElement('li'); li.textContent = s.k; li.tabIndex = 0;
+  li.addEventListener('click', () => setActive(i));
+  li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(i); } });
+  railList.appendChild(li); return li;
+});
+let active = -1;
+function setActive(i){
+  active = i;
+  railItems.forEach((li, j) => li.classList.toggle('on', j === i));
+  specEls.forEach((d, j) => d.classList.toggle('on', j === i));
+  if (!mq.matches) decodeIn('spec' + i);
+}
 
-/* --- per-character text machinery (from hero.js) --- */
+/* --- per-character glitch machinery (from hero.js), slowed so it reads --- */
 function wrapChars(el){
   const walk = (node) => {
     [...node.childNodes].forEach(c => {
@@ -273,7 +327,7 @@ function wrapChars(el){
         c.textContent.split('').forEach(ch => {
           const sp = document.createElement('span');
           sp.className = 'ch';
-          sp.textContent = ch === ' ' ? ' ' : ch;
+          sp.textContent = ch === ' ' ? ' ' : ch;
           frag.appendChild(sp);
         });
         node.replaceChild(frag, c);
@@ -302,14 +356,14 @@ function decodeIn(id){
   gsap.set(rec.chars, { x:0, y:0, z:0, rotationX:0, rotationY:0, scale:1, filter:'none', opacity:1 });
   rec.chars.forEach((sp, i) => {
     const orig = rec.origs[i];
-    if (orig === ' ' || /\s/.test(orig)) { sp.textContent = orig; sp.style.color = ''; return; }
-    let ticks = 6 + Math.floor(Math.random() * 10);
-    sp.style.color = 'var(--gold)'; sp.style.textShadow = '0 0 14px var(--gold)';
+    if (orig === ' ' || /\s/.test(orig)) { sp.textContent = orig; sp.style.color = ''; return; }
+    let ticks = 8 + Math.floor(Math.random() * 10);
+    sp.style.color = 'var(--gold)'; sp.style.textShadow = '0 0 16px var(--gold)';
     const step = () => {
       if (ticks <= 0) { sp.textContent = orig; sp.style.color = ''; sp.style.textShadow = ''; return; }
-      sp.textContent = pick(GLYPHS); ticks--; setTimeout(step, 42);
+      sp.textContent = pick(GLYPHS); ticks--; setTimeout(step, 75);
     };
-    setTimeout(step, 40 + i * 22);
+    setTimeout(step, 60 + i * 45);
   });
 }
 function shatterOut(id, done){
@@ -332,29 +386,6 @@ function assembleIn(id){
     ease:'back.out(1.6)', stagger:{each:.022, from:'random'} });
 }
 
-/* --- spec cards: park behind the product, fan out on a circle (from hero.js flyCloud) --- */
-function parkSpecs(){
-  specEls.forEach(d => gsap.set(d, { xPercent:-50, yPercent:-50, x:0, y:0, z:-600, opacity:0, rotateY:0 }));
-}
-function flySpecs(){
-  specEls.forEach((d, i) => {
-    const a = (i / specEls.length) * Math.PI * 2 - Math.PI / 2 + .35;
-    gsap.to(d, {
-      x: Math.cos(a) * Math.min(innerWidth * .36, 400),
-      y: Math.sin(a) * Math.min(innerHeight * .30, 230),
-      z: (i % 2 ? 120 : -140), rotateY: (i % 2 ? -14 : 12),
-      opacity: 1, duration: .8, ease: 'power3.out', delay: i * .06,
-      onStart: () => decodeIn('spec' + i)
-    });
-  });
-}
-function shatterSpecs(){
-  specEls.forEach((d, i) => {
-    shatterOut('spec' + i);
-    gsap.to(d, { opacity: 0, z: -500, duration: .5, ease: 'power3.in', delay: i * .03 });
-  });
-}
-
 /* --- callout lines draw in by stroke-dashoffset --- */
 const paths = [...document.querySelectorAll('.callouts path')];
 paths.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
@@ -369,20 +400,50 @@ const vid = document.getElementById('turnVid');
 let vidReady = false;
 vid.addEventListener('canplaythrough', () => {
   if (mq.matches) return;
-  vidReady = true; vid.pause(); vid.style.display = 'block'; still.style.opacity = 0;
+  vidReady = true; vid.pause(); vid.style.display = 'block';
+  still.style.opacity = 0; document.getElementById('productBack').style.opacity = 0;
 }, { once: true });
 vid.addEventListener('error', () => { vid.style.display = 'none'; vidReady = false; still.style.opacity = 1; });
 vid.src = PRODUCT.video;
 vid.load();
 
-/* --- the film: one p, five bands, one-shots fired on threshold crossings --- */
+/* --- the spin: idle drift that never stops, plus turns added by scroll --- */
 const els = {
   product: document.getElementById('product'), bloom: document.getElementById('bloom'),
-  shadow: document.getElementById('shadow'), tag: document.getElementById('pTag'),
-  buy: document.getElementById('buy'), cue: document.getElementById('cue'),
-  shine: document.querySelector('.product .shine'), sticky: document.getElementById('stickyBuy'),
-  callouts: document.getElementById('callouts')
+  shadow: document.getElementById('shadow'), shine: document.getElementById('shine'),
+  tag: document.getElementById('pTag'), buy: document.getElementById('buy'),
+  cue: document.getElementById('cue'), sticky: document.getElementById('stickyBuy'),
+  callouts: document.getElementById('callouts'), rail: document.getElementById('rail')
 };
+const spin = { base: 0, idle: 0, scale: 1, y: 0 };
+let idleTween = null;
+let R = 300;
+function layoutRing(){
+  /* floor at 150 so the ring is a ring even at a zero/tiny viewport measurement;
+     without it R collapses to 0 and every card stacks on the product */
+  R = Math.round(Math.max(150, Math.min(innerWidth * .38, 340)));
+  orbits.forEach((o, i) => gsap.set(o, { rotationY: i * (360 / orbits.length) }));
+  specEls.forEach(d => gsap.set(d, { z: R }));
+}
+function frame(){
+  const rotY = spin.base + spin.idle;
+  if (vidReady && vid.duration) {
+    /* real turntable: the video is the turn, the object stays square to camera */
+    gsap.set(els.product, { xPercent: -50, yPercent: -50, rotationY: 0, scale: spin.scale, y: spin.y });
+  } else {
+    gsap.set(els.product, { xPercent: -50, yPercent: -50, rotationY: rotY, scale: spin.scale, y: spin.y });
+    els.shine.style.backgroundPosition = (120 - ((rotY % 360) / 360) * 240) + '% 0';
+  }
+  /* ring orbits the other way at half speed; every card counter-rotates to face you */
+  const ringRot = -rotY * .5;
+  gsap.set(ring, { rotationY: ringRot });
+  const step = 360 / orbits.length;
+  specEls.forEach((d, i) => gsap.set(d, { rotationY: -(ringRot + i * step) }));
+  /* shadow narrows when the product is edge-on */
+  const edge = Math.abs(Math.cos(rotY * Math.PI / 180));
+  els.shadow.style.transform = 'translateX(-50%) scaleX(' + (.55 + .45 * edge) + ')';
+}
+
 const clamp01 = v => Math.max(0, Math.min(1, v));
 const band = (p, a, b) => clamp01((p - a) / (b - a));
 const fired = {};
@@ -394,15 +455,20 @@ function once(key, cond, fn, undo){
 function buildMotion(){
   triggers.forEach(t => t.kill()); triggers = [];
   Object.keys(fired).forEach(k => fired[k] = false);
+  gsap.ticker.remove(frame);
+  if (idleTween) { idleTween.kill(); idleTween = null; }
   const film = document.getElementById('film');
+  layoutRing();
 
   if (mq.matches) {
-    /* static stack: everything visible, nothing moves, film unpinned */
+    /* static: product square, cards in a flat row, everything visible, film unpinned */
     film.style.height = 'auto'; film.style.minHeight = '100svh';
-    gsap.set([els.product, els.bloom, els.shadow, els.tag, els.buy], { opacity: 1, clearProps: 'transform,filter' });
-    gsap.set(els.product, { xPercent: -50, yPercent: -50 });
+    gsap.set(els.product, { xPercent: -50, yPercent: -50, rotationY: 0, scale: 1, y: 0 });
+    gsap.set(ring, { rotationY: 0, opacity: 1 });
+    orbits.forEach((o, i) => gsap.set(o, { rotationY: 0, x: (i - (orbits.length - 1) / 2) * 220, y: Math.min(innerHeight * .30, 230) }));
+    specEls.forEach(d => gsap.set(d, { z: 0, rotationY: 0 }));
     Object.values(chr).forEach(r => gsap.set(r.chars, { opacity: 1, clearProps: 'transform,filter' }));
-    specEls.forEach((d, i) => gsap.set(d, { opacity: 1, xPercent: -50, yPercent: -50, x: (i - 1.5) * 240, y: 240, z: 0 }));
+    gsap.set(els.tag, { opacity: 1 }); gsap.set(els.buy, { opacity: 1 });
     drawCallouts(1);
     els.cue.style.display = 'none';
     els.sticky.classList.add('on');
@@ -411,68 +477,57 @@ function buildMotion(){
   }
 
   film.style.height = ''; film.style.minHeight = '';
-  parkSpecs();
-  gsap.set(els.product, { xPercent: -50, yPercent: -50, scale: 1.6, opacity: 0, filter: 'blur(30px)' });
+  spin.base = 0; spin.scale = 1; spin.y = 0;
+  gsap.set(ring, { opacity: 0 });
   gsap.set(els.buy, { opacity: 0 });
-  Object.values(chr).forEach(r => gsap.set(r.chars, { opacity: 0 }));
+  gsap.set(chr.price.chars, { opacity: 0 });
+  specEls.forEach(d => gsap.set(d, { rotationY: 0 }));
+  /* never still: a full turn every 30s on its own */
+  idleTween = gsap.to(spin, { idle: '+=360', duration: 30, ease: 'none', repeat: -1 });
+  gsap.ticker.add(frame);
+  /* the name glitches in on arrival, not on scroll — the page opens ON the product */
+  setTimeout(() => decodeIn('name'), 250);
+  gsap.to(els.tag, { opacity: 1, duration: .8, delay: 1.1 });
 
   const s = { p: 0 };
   triggers.push(ScrollTrigger.create({
-    trigger: '#film', start: 'top top', end: '+=420%', pin: true, scrub: 1,
+    trigger: '#film', start: 'top top', end: '+=380%', pin: true, scrub: 1,
     animation: gsap.to(s, {
       p: 1, ease: 'none',
       onUpdate: () => {
         const p = s.p;
-
-        /* 0.00–0.15 COLD OPEN: materialise */
-        const o = band(p, 0, .15);
-        els.bloom.style.opacity = o;
-        els.shadow.style.opacity = o * .9;
+        /* scroll adds one and a half turns on top of the idle drift */
+        spin.base = p * 540;
+        /* with a real turntable the video IS the turn: scrub it across the
+           whole pre-buy range so scrolling is turning, same as the car repair */
+        if (vidReady && vid.duration) vid.currentTime = Math.min(vid.duration - .05, band(p, 0, .85) * vid.duration);
         els.cue.style.opacity = clamp01(1 - p / .05);
-        once('name', p > .04, () => decodeIn('name'), () => gsap.set(chr.name.chars, { opacity: 0 }));
-        once('tag', p > .10, () => gsap.to(els.tag, { opacity: 1, duration: .6 }), () => gsap.set(els.tag, { opacity: 0 }));
 
-        /* 0.15–0.50 TURNTABLE */
-        const t = band(p, .15, .50);
-        /* 0.75–0.90 DETAIL push-in shares the scale channel with the cold open */
-        const d = band(p, .75, .90);
-        const scale = (1.6 - .6 * o) * (1 + .35 * d);
+        /* 0.06–0.18 the ring arrives and its cards glitch in one after another */
+        gsap.set(ring, { opacity: band(p, .06, .18) });
+        once('specs', p > .10, () => specEls.forEach((d, i) => setTimeout(() => decodeIn('spec' + i), i * 140)));
 
-        if (vidReady && vid.duration) {
-          vid.currentTime = Math.min(vid.duration - .05, t * vid.duration);
-          gsap.set(els.product, { scale, opacity: o, filter: 'blur(' + (30 * (1 - o)) + 'px)' });
-        } else {
-          /* a flat photo turned 360° goes edge-on; a sway + moving light + a
-             stretching shadow sells the turn without lying about the geometry */
-          const sway = Math.sin(t * Math.PI * 2) * 22;
-          gsap.set(els.product, {
-            scale, opacity: o, filter: 'blur(' + (30 * (1 - o)) + 'px)',
-            rotationY: sway, skewY: sway * -.08, scaleX: 1 - Math.abs(sway) / 22 * .06
-          });
-          els.shine.style.backgroundPosition = (120 - t * 240) + '% 0';
-          els.shadow.style.transform = 'translateX(' + (-50 + sway * .9) + '%) scaleX(' + (1 + Math.abs(sway) / 22 * .35) + ')';
-        }
-
-        /* 0.50–0.75 SPECS */
-        once('specs', p > .50 && p < .90, flySpecs, () => { if (p <= .50) parkSpecs(); });
-
-        /* 0.75–0.90 DETAIL: draw the callouts */
+        /* 0.55–0.75 push in and draw the callouts */
+        const d = band(p, .55, .75);
+        spin.scale = 1 + .3 * d;
         drawCallouts(d);
 
-        /* 0.90–1.00 BUY: cards shatter, price assembles, pill appears */
-        once('buy', p > .90, () => {
-          shatterSpecs();
-          gsap.to(els.product, { y: -30, duration: .8, ease: 'power3.out' });
+        /* 0.85–1.00 land: the ring lifts away, the price assembles, the pill appears */
+        once('buy', p > .85, () => {
+          gsap.to(ring, { opacity: 0, duration: .5 });
+          spin.y = -30;
           gsap.to(els.buy, { opacity: 1, duration: .4 });
           assembleIn('price');
           els.sticky.classList.add('on');
+          els.rail.classList.add('off');
           els.callouts.style.opacity = 0;
         }, () => {
+          gsap.to(ring, { opacity: 1, duration: .4 });
+          spin.y = 0;
           gsap.to(els.buy, { opacity: 0, duration: .3 });
           gsap.set(chr.price.chars, { opacity: 0 });
           els.sticky.classList.remove('on');
-          gsap.to(els.product, { y: 0, duration: .5 });
-          if (p > .50) flySpecs();
+          els.rail.classList.remove('off');
         });
       }
     })
@@ -486,8 +541,9 @@ function buildMotion(){
   });
 }
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
-addEventListener('resize', () => { if (!mq.matches) parkSpecs(); ScrollTrigger.refresh(); });
+addEventListener('resize', () => { layoutRing(); ScrollTrigger.refresh(); });
 buildMotion();
+setActive(0);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
 <a class="demo-badge" href="index.html" title="This is a portfolio demo. The product, price and claims on this page are placeholders.">Demo — placeholder product</a>
