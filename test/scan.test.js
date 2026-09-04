@@ -153,6 +153,24 @@ async function phoneFormats() {
   passed++;
 }
 
+// A <details>/<summary> accordion is the ordinary way to build an FAQ, and its
+// answers sit in the server HTML like any other text. Matching questions only
+// against <h1>-<h6> reported all six of this site's answers as missing.
+async function accordionFaqIsRendered() {
+  const res = fakeRes();
+  await handler(
+    { method: 'POST', headers: { 'x-forwarded-for': '203.0.113.91' },
+      body: { url: 'https://wahlahlahlahstudios-standard.vercel.app/' } },
+    res
+  );
+  assert.equal(res.code, 200, `expected 200, got ${res.code}`);
+  const faq = res.body.groups.find((g) => g.key === 'ai').checks
+    .find((c) => c.label === 'FAQ answers actually on the page');
+  assert.equal(faq.pass, true,
+    'the six answers are in the server HTML inside <details>; an accordion is not a rendering gap');
+  passed++;
+}
+
 async function rateLimit() {
   const res = fakeRes();
   for (let i = 0; i < 12; i++) {
@@ -176,6 +194,7 @@ async function ssrf() {
   await e2e().catch((e) => { console.error(`FAIL  handler e2e\n      ${e.message}`); process.exitCode = 1; });
   await phoneFormats().catch((e) => { console.error(`FAIL  phone formats
       ${e.message}`); process.exitCode = 1; });
+  await accordionFaqIsRendered().catch((e) => { console.error(`FAIL  accordion FAQ\n      ${e.message}`); process.exitCode = 1; });
   await rateLimit().catch((e) => { console.error(`FAIL  rate limit\n      ${e.message}`); process.exitCode = 1; });
   console.log(process.exitCode ? `\n${passed} passed, failures above.` : `\nall ${passed} checks passed.`);
 })();

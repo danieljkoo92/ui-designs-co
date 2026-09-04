@@ -171,13 +171,32 @@ function extractFaqEntities(jsonld) {
   return out;
 }
 
+// Rendered text and JSON-LD disagree about punctuation: a framework writes
+// "What&#x27;s the minimum age?" into the markup while the schema carries a real
+// apostrophe. Comparing the two without decoding first makes identical strings
+// look different, so any question with an apostrophe in it reads as missing.
+function decodeEntities(s) {
+  return s
+    .replace(/&(?:#x27|#39|apos|#8217|rsquo|#8216|lsquo);/gi, "'")
+    .replace(/&(?:quot|#34|#8220|ldquo|#8221|rdquo);/gi, '"')
+    .replace(/&(?:nbsp|#160);/gi, ' ')
+    .replace(/&(?:#8211|ndash);/gi, '-')
+    .replace(/&(?:#8212|mdash);/gi, '—')
+    .replace(/&(?:lt|#60);/gi, '<')
+    .replace(/&(?:gt|#62);/gi, '>')
+    // last, so it cannot re-create an entity the earlier passes just resolved
+    .replace(/&(?:amp|#38);/gi, '&');
+}
+
 function analyse(html, finalUrl, meta) {
   // Search the whole document, not a leading slice — big sites push <title>
   // and their meta tags past 200KB of inline script before the head closes.
   const head = html;
-  const text = html.replace(/<script[\s\S]*?<\/script>/gi, ' ')
-                   .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-                   .replace(/<[^>]+>/g, ' ');
+  const text = decodeEntities(
+    html.replace(/<script[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<[^>]+>/g, ' ')
+  );
 
   const title = (head.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1];
   const desc = (head.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
@@ -307,10 +326,15 @@ function analyse(html, finalUrl, meta) {
   }
   const faqEntries = extractFaqEntities(jsonldParsed);
 
-  // Q&A is fully rendered only when BOTH the question is a visible heading
-  // AND the answer text is in the body. Same rule as the citable skill.
-  const headingTextsLc = [...html.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
-    .map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase())
+  // Q&A is fully rendered only when BOTH the question is visibly anchored AND
+  // the answer text is in the body.
+  //
+  // <summary> counts as an anchor alongside a heading. A <details> accordion is
+  // the most common way an FAQ is built, and its answers sit in the server HTML
+  // like any other text — matching only on <h1>-<h6> reported every one of them
+  // as missing, which told the owner content was absent when it was right there.
+  const headingTextsLc = [...html.matchAll(/<(?:h[1-6]|summary)\b[^>]*>([\s\S]*?)<\/(?:h[1-6]|summary)>/gi)]
+    .map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim().toLowerCase())
     .filter(Boolean);
   const bodyLc = text.toLowerCase();
   const faqRendered = faqEntries.filter((f) => {
