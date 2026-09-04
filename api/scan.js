@@ -421,12 +421,23 @@ function analyse(html, finalUrl, meta) {
   const factsPer500 = words >= 200 ? (factTokens / words) * 500 : null;
 
   // Headings shaped like the questions people type are what gets extracted.
-  const headingTexts = [...html.matchAll(/<h[2-3]\b[^>]*>([\s\S]*?)<\/h[2-3]>/gi)]
-    .map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
+  //
+  // <summary> counts alongside <h2>/<h3>: an FAQ built as a <details> accordion
+  // puts its questions there, and the same six questions were being credited on
+  // a site that rendered them as headings and ignored on one that rendered them
+  // as an accordion.
+  const headingTexts = [...html.matchAll(/<(?:h[2-3]|summary)\b[^>]*>([\s\S]*?)<\/(?:h[2-3]|summary)>/gi)]
+    .map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim())
     .filter(Boolean);
   const questionHeadings = headingTexts.filter((t) =>
     /\?$/.test(t) || /^(how|what|why|when|where|who|can|do|does|is|are|should|will)\b/i.test(t)).length;
   const questionRatio = headingTexts.length >= 3 ? questionHeadings / headingTexts.length : null;
+  // A bare ratio punishes a site for having sections. 40% of 28 headings demands
+  // twelve questions while 40% of five demands two, and headings that name a
+  // person or a place can never be questions however well the page is written.
+  // Six real question anchors is a page with six extraction targets, which is
+  // what the check is actually trying to find.
+  const questionsOk = questionRatio === null || questionRatio >= 0.4 || questionHeadings >= 6;
 
   const groups = [
     {
@@ -546,9 +557,9 @@ function analyse(html, finalUrl, meta) {
         { label: 'Facts worth quoting', pass: factsPer500 === null || factsPer500 >= 6, weight: 2,
           good: `${factsPer500 === null ? 'Real' : factsPer500.toFixed(1) + ' per 500 words —'} numbers an assistant can repeat: prices, timings, specifics.`,
           bad: `${factsPer500 === null ? 'Almost no' : 'Only ' + factsPer500.toFixed(1) + ' per 500 words of'} concrete numbers on the page. Three per 500 words is the floor below which nothing ever gets quoted; six is where a page starts actually winning citations. Assistants quote facts and never quote adjectives.` },
-        { label: 'Headings written as questions', pass: questionRatio === null || questionRatio >= 0.4, weight: 2,
-          good: 'Your headings match the questions people actually ask.',
-          bad: `Only ${questionRatio === null ? 'a few' : Math.round(questionRatio * 100) + '%'} of your headings are questions. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for. Aim for at least 40% of them.` },
+        { label: 'Headings written as questions', pass: questionsOk, weight: 2,
+          good: `${questionHeadings} of your headings are questions people actually type — each one is somewhere an assistant can lift an answer from.`,
+          bad: `Only ${questionHeadings} of your ${headingTexts.length} headings are questions${questionRatio === null ? '' : ` (${Math.round(questionRatio * 100)}%)`}. "Services" answers nothing; "How much does it cost?" is what someone types and what an assistant looks for. Get to 6 question headings, or 40% of them.` },
         { label: 'Content freshness signal', pass: hasFreshDate, weight: 4,
           good: freshAgeDays !== null && freshAgeDays >= 0
             ? `Last dated ${freshAgeDays === 0 ? 'today' : freshAgeDays === 1 ? 'yesterday' : freshAgeDays + ' days ago'} — recent enough that an assistant will trust it as current.`
