@@ -360,6 +360,19 @@ function analyse(html, finalUrl, meta) {
   // of answers the same as a perfectly rendered FAQ.
   const faqAnswersOk = hasFaqSchema ? !faqHubGap : hasRealQA;
 
+  // Real lists and tables are the other half of being the answer: a "how do I"
+  // gets lifted as an ordered list, a comparison as a table, and both have to be
+  // genuine <ul>/<ol>/<table> markup — a div grid styled to look like a table
+  // extracts as nothing. Nav, header and footer are stripped first so a menu
+  // does not pass as content.
+  const contentHtml = html
+    .replace(/<nav[\s\S]*?<\/nav>/gi, ' ')
+    .replace(/<header[\s\S]*?<\/header>/gi, ' ')
+    .replace(/<footer[\s\S]*?<\/footer>/gi, ' ');
+  const contentLists = (contentHtml.match(/<(?:ul|ol)\b/gi) || []).length;
+  const contentTables = (contentHtml.match(/<table\b/gi) || []).length;
+  const contentListItems = (contentHtml.match(/<li\b/gi) || []).length;
+
   // Unreplaced template placeholders in the visible text — the classic
   // city-template bug: {{city}}, [LOCATION], %CITY_NAME%, ${area}. Requires
   // 3+ chars inside so plain prose like [1] or {x} does not false-positive.
@@ -396,6 +409,9 @@ function analyse(html, finalUrl, meta) {
   const frameworkRoot = /__NEXT_DATA__|id=["']root["']|id=["']__nuxt["']|ng-version|data-reactroot|id=["']app["']/i.test(html);
   const serverRendered = words >= 400 || !frameworkRoot;
   const clientRendered = frameworkRoot && words < 150;
+
+  // Only asked of a page long enough to have owed the reader a list.
+  const structuredAnswers = words < 400 || contentTables > 0 || contentListItems >= 3;
 
   // What an assistant can actually quote: numbers, prices, timeframes.
   // Adjectives are unquotable — nothing cites "premium quality service".
@@ -553,6 +569,11 @@ function analyse(html, finalUrl, meta) {
           bad: hasFaqSchema
             ? `Your FAQ schema promises ${faqEntries.length} answers but only ${faqRendered} are actually in the page — the rest are labels with no answer text a machine can read. That is a common pattern on FAQ hubs that load the answers with JavaScript. AI assistants see the labels and nothing to quote.`
             : 'There are no answers on this page for an assistant to lift. This is the single biggest thing standing between you and being named by ChatGPT or Google\'s AI answers: write the questions your customers actually ask as headings, answer each one in the two sentences underneath, and mark them up as an FAQ.' },
+        { label: 'Answers laid out as lists or tables', pass: structuredAnswers, weight: 2,
+          good: contentTables > 0
+            ? `${contentTables} table(s) and ${contentLists} list(s) in your content — the shape an assistant lifts a comparison or a set of steps straight out of.`
+            : `${contentLists} list(s) totalling ${contentListItems} points in your content — the shape an assistant lifts a set of steps or features straight out of.`,
+          bad: 'Everything on this page is prose. "How do I" questions get answered with a numbered list and comparisons with a table, and those get lifted whole — a wall of paragraphs loses that slot to any competitor using a list. They have to be real list and table markup, not boxes styled to look like one.' },
         { label: 'No template placeholders leaking through', pass: placeholderHits.length === 0, weight: 3,
           good: 'No unreplaced template variables in the page text.',
           bad: `Unreplaced template placeholder(s) on the page: ${placeholderUniq.slice(0, 3).join(', ')}${placeholderUniq.length > 3 ? ` +${placeholderUniq.length - 3} more` : ''}. This usually means a city or service template ran the substitution for other pages and skipped this one. Retrieval quotes the placeholder as if it were real content.` },
@@ -614,10 +635,14 @@ function analyse(html, finalUrl, meta) {
   // "Turning visitors into calls" belongs to none of them. It measures whether
   // a human converts, which is worth reporting on its own rather than being
   // folded into a machine-visibility score.
+  // AEO rested on three checks, all of them question-shaped, so a page with no
+  // FAQ floored at 0 even when it carried genuinely liftable content. Lists and
+  // tables are the second axis of being the answer, and they belong here.
   const AEO_LABELS = new Set([
     'Headings written as questions',
     'Questions answered on the page',
-    'FAQ answers actually on the page'
+    'FAQ answers actually on the page',
+    'Answers laid out as lists or tables'
   ]);
   const dimOf = (groupKey, label) =>
     groupKey === 'found' || groupKey === 'phone' ? 'seo'
