@@ -385,6 +385,14 @@ footer .fine{margin-top:18px;font-size:13px}
   .newsite .n-cards{display:none}
   .ba{aspect-ratio:4/5}
 }
+.faq-home{border-top:1px solid var(--edge);margin-top:26px}
+.faq-home .q{border-bottom:1px solid var(--edge)}
+.faq-home .q summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;position:relative;font-size:18px;font-weight:700;color:var(--white)}
+.faq-home .q summary::-webkit-details-marker{display:none}
+.faq-home .q summary::after{content:"+";position:absolute;right:6px;top:18px;font-size:26px;font-weight:400;color:var(--gold);line-height:1;transition:transform .2s}
+.faq-home .q[open] summary::after{transform:rotate(45deg)}
+.faq-home .q summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.faq-home .q .a{padding:0 0 22px;color:#C3CAD4;font-size:15.8px;max-width:680px;line-height:1.65}
 </style>
 </head>
 <body>
@@ -700,6 +708,41 @@ footer .fine{margin-top:18px;font-size:13px}
     <p style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap" class="reveal"><a class="btn" href="sms:9172458685">Request Personal Website Preview (FREE)</a><a class="btn btn-ghost" href="tel:+19172458685">Call 917-245-8685</a></p>
   </div>
 </section>
+
+<!-- The six questions people actually ask before they text, answered here
+     rather than one click away on faq.html. An assistant reading this page can
+     only quote what is on it. Same copy as the FAQ page, same accordion. -->
+<section class="pad" style="border-top:1px solid var(--edge)">
+  <div class="wrap">
+    <p class="kicker reveal">Straight answers</p>
+    <h2 class="sec-title reveal">The questions everyone asks first</h2>
+    <div class="faq-home reveal">
+      <details class="q"><summary>Why is it only $1,000? What's the catch?</summary>
+        <p class="a">No catch. An agency's price covers an office, a salesperson, an account manager and their own advertising. I have none of that, so I don't charge for any of it. You're paying for design and build time and nothing else.</p></details>
+      <details class="q"><summary>How long does it take?</summary>
+        <p class="a">Preview within 48 hours of your text. Live 5–7 days after you approve it. The Signature tier takes 10–14 days. Those are targets, not guarantees, and the clock pauses whenever I'm waiting on something from you.</p></details>
+      <details class="q"><summary>What if I don't like it?</summary>
+        <p class="a">Then walk. The preview is free and there's no obligation attached to it. If you'd rather have it changed than walk, that's the $200 deposit — and after you buy the build, two full redesigns are included.</p></details>
+      <details class="q"><summary>Do I need to write the words or take photos?</summary>
+        <p class="a">No. I write the site from what's public about your business plus what you tell me. If you have good photos of your work, they help a lot and I'll ask for them — but I can build without.</p></details>
+      <details class="q"><summary>Who owns the website?</summary>
+        <p class="a">You do, once the build is paid for — the design and the code both. Before final payment it's mine, which is standard. Third-party pieces like fonts and libraries keep their own licences, which pass to you as they are.</p></details>
+      <details class="q"><summary>I already have a website. Is it worth replacing?</summary>
+        <p class="a">Sometimes no. Run it through the free site check first — if it scores well, keep it and save your money, and I'll say so. What usually makes replacement worth it: it isn't built for phones, it takes more than three seconds to load, or the phone number isn't tappable.</p></details>
+    </div>
+    <p class="muted" style="margin-top:20px;font-size:14.5px"><a href="faq.html" style="color:var(--gold)">All 21 questions answered →</a></p>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is it only $1,000? What's the catch?","acceptedAnswer":{"@type":"Answer","text":"No catch. An agency's price covers an office, a salesperson, an account manager and their own advertising. I have none of that, so I don't charge for any of it. You're paying for design and build time and nothing else."}},
+{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Preview within 48 hours of your text. Live 5–7 days after you approve it. The Signature tier takes 10–14 days. Those are targets, not guarantees, and the clock pauses whenever I'm waiting on something from you."}},
+{"@type":"Question","name":"What if I don't like it?","acceptedAnswer":{"@type":"Answer","text":"Then walk. The preview is free and there's no obligation attached to it. If you'd rather have it changed than walk, that's the $200 deposit — and after you buy the build, two full redesigns are included."}},
+{"@type":"Question","name":"Do I need to write the words or take photos?","acceptedAnswer":{"@type":"Answer","text":"No. I write the site from what's public about your business plus what you tell me. If you have good photos of your work, they help a lot and I'll ask for them — but I can build without."}},
+{"@type":"Question","name":"Who owns the website?","acceptedAnswer":{"@type":"Answer","text":"You do, once the build is paid for — the design and the code both. Before final payment it's mine, which is standard. Third-party pieces like fonts and libraries keep their own licences, which pass to you as they are."}},
+{"@type":"Question","name":"I already have a website. Is it worth replacing?","acceptedAnswer":{"@type":"Answer","text":"Sometimes no. Run it through the free site check first — if it scores well, keep it and save your money, and I'll say so. What usually makes replacement worth it: it isn't built for phones, it takes more than three seconds to load, or the phone number isn't tappable."}}]}
+</script>
 
 <footer>
   <div class="wrap">
