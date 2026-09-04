@@ -422,6 +422,34 @@ footer .fine{margin-top:18px;font-size:13px}
 .lead-msg{margin-top:18px;padding:16px 18px;border-radius:10px;font-size:15.5px;line-height:1.6;max-width:640px}
 .lead-msg.ok{background:rgba(217,164,65,.09);border:1px solid rgba(217,164,65,.4);color:#E7D3AA}
 .lead-msg.err{background:rgba(220,80,80,.08);border:1px solid rgba(220,80,80,.4);color:#F0BDBD}
+
+/* Browser frame on the Signature cards — a title bar with traffic lights and
+   the real address, so a premium build reads as a live site on a screen rather
+   than a flat picture. Standard cards stay plain, which is the point: the
+   frame is what separates the two tiers at a glance. */
+.card.premium .thumb{
+  padding-top:28px;
+  box-sizing:border-box;
+  background:#161b23;
+  position:relative;
+}
+.card.premium .thumb::before{
+  content:attr(data-url);
+  position:absolute;top:0;left:0;right:0;height:28px;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10.5px;letter-spacing:.02em;color:#7d8794;
+  background-color:#161b23;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  background-image:
+    radial-gradient(circle 3.5px at 13px 14px,#ff5f57 97%,transparent 100%),
+    radial-gradient(circle 3.5px at 27px 14px,#febc2e 97%,transparent 100%),
+    radial-gradient(circle 3.5px at 41px 14px,#28c840 97%,transparent 100%);
+  background-repeat:no-repeat;
+}
+.card.premium .thumb img{border-radius:0 0 2px 2px}
+/* the badge would otherwise sit on top of the title bar */
+.card.premium .prem-badge{top:38px}
 </style>
 </head>
 <body>
@@ -673,7 +701,7 @@ footer .fine{margin-top:18px;font-size:13px}
       <!-- A real client build, not a demo — leads the grid for that reason. -->
       <a class="card premium reveal" href="https://wahlahlahlahstudios.vercel.app/" target="_blank" rel="noopener">
         <span class="prem-badge">Premium</span>
-        <div class="thumb"><img src="img/shots/tattoo.jpg" alt="wahlahlahlahstudios tattoo studio website" loading="lazy"></div>
+        <div class="thumb" data-url="wahlahlahlahstudios.com"><img src="img/shots/tattoo.jpg" alt="wahlahlahlahstudios tattoo studio website" loading="lazy"></div>
         <div class="card-body">
           <h3>Tattoo studio — Signature</h3>
           <p>A live client site. Scroll-driven film opening, three studio rooms, artist portfolios. The $3,500 class of build.</p>
@@ -682,7 +710,7 @@ footer .fine{margin-top:18px;font-size:13px}
       </a>
       <a class="card premium reveal" href="demo-auto.html" target="_blank" rel="noopener">
         <span class="prem-badge">Premium</span>
-        <div class="thumb"><img src="img/shots/auto.jpg" alt="Ironside Collision demo site" loading="lazy"></div>
+        <div class="thumb" data-url="ironsidecollision.com"><img src="img/shots/auto.jpg" alt="Ironside Collision demo site" loading="lazy"></div>
         <div class="card-body">
           <h3>Auto body — Signature</h3>
           <p>AI film, scroll-driven repair, cinematic dark design. The $3,500 class of build.</p>

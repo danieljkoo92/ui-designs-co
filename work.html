@@ -37,6 +37,32 @@
 .closer{text-align:center;padding:78px 0;border-top:1px solid var(--edge)}
 .closer h2{font-size:clamp(26px,4vw,42px);font-weight:800;margin-bottom:14px}
 .closer p{color:#C3CAD4;max-width:560px;margin:0 auto 26px}
+
+/* Browser frame on the Signature cards — a title bar with traffic lights and
+   the address, so a premium build reads as a live site on a screen rather than
+   a flat picture. Standard cards stay plain on purpose: the frame is what
+   separates the two tiers at a glance. */
+.w-card[data-tier="premium"] .w-shot{
+  padding-top:30px;
+  box-sizing:border-box;
+  background:#161b23;
+}
+.w-card[data-tier="premium"] .w-shot::before{
+  content:attr(data-url);
+  position:absolute;top:0;left:0;right:0;height:30px;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11px;letter-spacing:.02em;color:#7d8794;
+  background-color:#161b23;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  background-image:
+    radial-gradient(circle 3.5px at 14px 15px,#ff5f57 97%,transparent 100%),
+    radial-gradient(circle 3.5px at 29px 15px,#febc2e 97%,transparent 100%),
+    radial-gradient(circle 3.5px at 44px 15px,#28c840 97%,transparent 100%);
+  background-repeat:no-repeat;
+}
+/* the tier badge would otherwise sit on top of the title bar */
+.w-card[data-tier="premium"] .w-tier{top:42px}
 </style>
 
 <script type="application/ld+json">
@@ -86,7 +112,7 @@
 
       <!-- A real client build, not a demo — the only live site on this page. -->
       <article class="w-card reveal" data-tier="premium">
-        <a class="w-shot" href="https://wahlahlahlahstudios.vercel.app/" target="_blank" rel="noopener">
+        <a class="w-shot" data-url="wahlahlahlahstudios.com" href="https://wahlahlahlahstudios.vercel.app/" target="_blank" rel="noopener">
           <img src="img/shots/tattoo.jpg" alt="wahlahlahlahstudios tattoo studio website" loading="lazy">
           <span class="w-tier premium">Signature</span>
         </a>
@@ -102,7 +128,7 @@
       </article>
 
       <article class="w-card reveal" data-tier="premium">
-        <a class="w-shot" href="demo-auto.html" target="_blank" rel="noopener">
+        <a class="w-shot" data-url="ironsidecollision.com" href="demo-auto.html" target="_blank" rel="noopener">
           <img src="img/shots/auto.jpg" alt="Ironside Collision auto body website" loading="lazy">
           <span class="w-tier premium">Signature</span>
         </a>
@@ -118,7 +144,7 @@
       </article>
 
       <article class="w-card reveal" data-tier="premium">
-        <a class="w-shot" href="demo-pest-pro.html" target="_blank" rel="noopener">
+        <a class="w-shot" data-url="pestfreeexterminating.com" href="demo-pest-pro.html" target="_blank" rel="noopener">
           <img src="img/pest-clean.jpg" alt="PestFree Exterminating pest control website" loading="lazy">
           <span class="w-tier premium">Signature</span>
         </a>
