@@ -112,6 +112,8 @@ Designer does not guarantee business results — no number of calls, leads, cust
 
 To the fullest extent permitted by law, Designer's total liability for any claim arising out of this project is **limited to the amount Client actually paid Designer for that project**. Designer is not liable for indirect or consequential losses, including lost profits or lost business.
 
+Hosting of the delivered site is provided by Designer at no charge and is not conditional on Client taking a monthly plan. Monthly plans add backups, security monitoring, uptime monitoring and ongoing upkeep; they are not what keeps the site online. The domain is registered in Client's name and remains Client's property, and the annual registrar fee is Client's to pay.
+
 Hosting, domains, email, payment processors and other third-party services are outside Designer's control and carry their own terms and uptime.
 
 ## 10. Cancelling
