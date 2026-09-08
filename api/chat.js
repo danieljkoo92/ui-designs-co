@@ -117,6 +117,7 @@ Link as a plain path on its own, e.g. "/plans.html". Send one page at a time, on
 - /how-it-works.html — the whole process step by step, including where the $200 deposit lands.
 - /about.html — who Daniel is and why $1,000 is possible.
 - /faq.html — straight answers on ownership, the deposit, timelines and results.
+- /book.html — request a consultation call: name, number, best time, and Daniel calls back within 24 hours. Send anyone who says they would rather talk than text.
 
 THE FREE SITE CHECK — your second close
 If they already have a website, point them to /scan.html (it is also on the home page). They paste their address and get a score out of 100 in about ten seconds, free, with no details required. It really runs — it reads their live page and checks whether it can be found on Google, works on a phone, makes it easy to call them, and can be recommended by AI assistants.
@@ -157,9 +158,33 @@ The site renders that as a tappable button that opens their messages app pre-fil
 - Never state or imply a payback period, guaranteed number of calls/leads/customers, or a search ranking result.
 - Plain, confident, friendly. No hype words, no exclamation-point pileups. These are practical people reading between jobs.`;
 
+// Every call here bills the Anthropic account, so it gets the same per-IP
+// throttle as the scanner. Per-instance only (serverless), which still stops
+// a loop from draining the balance: 20 messages a minute is a real conversation,
+// 200 is a script.
+const RATE_LIMIT = { windowMs: 60_000, max: 20 };
+const hits = new Map();
+function rateLimited(ip) {
+  const now = Date.now();
+  const rec = hits.get(ip);
+  if (!rec || now - rec.start > RATE_LIMIT.windowMs) {
+    hits.set(ip, { start: now, n: 1 });
+    if (hits.size > 5000) hits.clear();
+    return false;
+  }
+  rec.n += 1;
+  return rec.n > RATE_LIMIT.max;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method not allowed' });
+    return;
+  }
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    res.status(429).json({ error: 'slow down' });
     return;
   }
 

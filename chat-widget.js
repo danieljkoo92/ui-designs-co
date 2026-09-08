@@ -131,7 +131,7 @@
   /* The model answers with paths like "/scan.html"; make those tappable.
      Built from DOM nodes against a fixed page list — the reply is model
      output, so it never touches innerHTML. */
-  var PAGE_PATH = /\/(work|plans|why|scan|how-it-works|about|faq)\.html/g;
+  var PAGE_PATH = /\/(work|plans|why|scan|how-it-works|about|faq|book)\.html/g;
   function linkifyPages(node) {
     var text = node.textContent, m, last = 0, hit = false;
     var frag = document.createDocumentFragment();

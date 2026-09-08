@@ -894,7 +894,9 @@ footer .fine{margin-top:18px;font-size:13px}
       .then(function (r) {
         if (!r.ok || r.body.error) { msg('err', r.body.error || 'That did not go through. Text me at 917-245-8685 instead.'); return; }
         form.style.display = 'none';
-        msg('ok', 'Got it, ' + data.name.trim().split(' ')[0] + '. I will call you on ' + data.phone + ' within 24 hours. If you would rather not wait, text 917-245-8685.');
+        msg('ok', r.body.emailed
+          ? 'Got it, ' + data.name.trim().split(' ')[0] + '. I will call you on ' + data.phone + ' within 24 hours. If you would rather not wait, text 917-245-8685.'
+          : 'Got it, ' + data.name.trim().split(' ')[0] + ' — but the email to me did not go through just now. To make sure it reaches me, text your name and number to 917-245-8685 and I will call you back.');
       })
       .catch(function () { msg('err', 'Could not reach the server just now. Text me at 917-245-8685 and I will pick it up from there.'); })
       .finally(function () { btn.disabled = false; btn.textContent = 'Request my free preview'; });

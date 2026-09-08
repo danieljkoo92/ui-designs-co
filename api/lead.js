@@ -46,7 +46,6 @@ async function sendEmail(lead) {
     body: JSON.stringify({
       from: process.env.LEAD_FROM || 'UI Designs Co <onboarding@resend.dev>',
       to: [process.env.LEAD_TO || 'uidesignsco@gmail.com'],
-      reply_to: lead.email || undefined,
       subject: `Consultation request — ${lead.name}${lead.business ? ` (${lead.business})` : ''}`,
       text: `${text}\n\nCall back within 24 hours.`
     })
@@ -98,10 +97,12 @@ module.exports = async function handler(req, res) {
     const mail = await sendEmail(lead);
     // Logged either way — a delivery failure must not lose the lead.
     console.log('LEAD', JSON.stringify({ ...lead, emailed: mail.sent, reason: mail.reason }));
-    res.status(200).json({ ok: true });
+    // The client only promises the 24-hour callback when the email actually
+    // went. A lead that lives only in a log line is not a booked call.
+    res.status(200).json({ ok: true, emailed: mail.sent });
   } catch (e) {
     console.log('LEAD (send failed)', JSON.stringify(lead), e && e.message);
-    // The lead is in the log, so the visitor is genuinely booked.
-    res.status(200).json({ ok: true });
+    // The lead is in the log but nothing reached Daniel's inbox — say so.
+    res.status(200).json({ ok: true, emailed: false });
   }
 };
