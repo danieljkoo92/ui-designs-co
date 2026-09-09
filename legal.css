@@ -41,3 +41,6 @@ footer{border-top:1px solid var(--edge);padding:36px 0 60px;color:var(--steel);f
 footer a{color:var(--steel);text-decoration:underline}
 footer a:hover{color:var(--gold)}
 footer .f-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+
+/* dim helper, same as site.css so the two stylesheets agree */
+.muted{color:var(--steel)}

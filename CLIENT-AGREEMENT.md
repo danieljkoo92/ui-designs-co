@@ -22,7 +22,7 @@
 Designer will design and build a website for Client:
 
 - [ ] **Standard build — $1,000** — custom design, mobile-first, built-in local SEO setup, tap-to-call and tap-to-text, quote form, 2 full redesigns included after purchase.
-- [ ] **Signature build — $3,500** — everything above, plus scroll-driven storytelling, custom motion design, and cinematic or 3D showcase work built to Client's design direction.
+- [ ] **Signature build — $3,500** — everything above, plus scroll-driven storytelling, custom motion design, and cinematic or 3D showcase work built to Client's design direction. $1,000 deposit due before work begins, credited in full toward the price.
 
 Pages / sections agreed: ________________________________________________
 
