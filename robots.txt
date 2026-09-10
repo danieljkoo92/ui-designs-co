@@ -30,6 +30,9 @@ Disallow: /api/
 # Internal template, not for search engines
 Disallow: /CLIENT-AGREEMENT.md
 
+# Build script, not a page
+Disallow: /tools/
+
 # Link-preview crawlers. The demo pages above are hidden from search because
 # they are fictional businesses, but Daniel sends those links to prospects
 # directly -- and these bots honour robots.txt, so without an explicit group
