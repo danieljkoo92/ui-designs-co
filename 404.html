@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/icons/icon-16.png">
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#0A0C10">
+<title>Page Not Found — UI Designs Co</title>
+<meta name="description" content="That page does not exist. Links to the main pages of UI Designs Co, plus a phone number if you would rather just ask.">
+<!-- A 404 must never enter the index, and it has no canonical of its own:
+     Vercel serves this same file for every missing path. -->
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<!-- Root-absolute, not relative: this page is served for /a/b/c too, where a
+     relative href would resolve against the wrong directory. -->
+<link rel="stylesheet" href="/site.css">
+<style>
+.nf-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.nf-links a{display:inline-flex;align-items:center;min-height:44px;padding:11px 18px;background:var(--panel);border:1px solid var(--edge);border-radius:8px;color:#C3CAD4;text-decoration:none;font-size:15px;transition:border-color .15s,color .15s}
+.nf-links a:hover{border-color:var(--gold);color:var(--white)}
+</style>
+</head>
+<body>
+<a class="skip-nav" href="#main">Skip to main content</a>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="/">UI <em>Designs</em></a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu">&#9776;</button>
+    <nav class="nav" id="nav">
+      <a href="/work.html">Work</a>
+      <a href="/plans.html">Plans</a>
+      <a href="/why.html">Why a Website</a>
+      <a href="/how-it-works.html">How It Works</a>
+      <a href="/about.html">About</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/book.html">Book a Call</a>
+    </nav>
+    <a class="btn hdr-cta" href="sms:9172458685">Text Daniel</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">404</p>
+    <h1>That page <em>isn't here.</em></h1>
+    <p>Either the address has a typo in it, or a page moved and I didn't leave a forwarding note. Everything below still works.</p>
+    <div class="cta-pair" style="justify-content:flex-start;margin-top:26px">
+      <a class="btn" href="/">Back to the homepage</a>
+      <a class="btn btn-ghost" href="tel:+19172458685">Call 917-245-8685</a>
+    </div>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:52px">
+  <div class="wrap">
+    <h2 class="sec-title">Where you were probably going</h2>
+    <div class="nf-links">
+      <a href="/work.html">See the work</a>
+      <a href="/plans.html">Plans and pricing</a>
+      <a href="/how-it-works.html">How it works</a>
+      <a href="/why.html">Why a website</a>
+      <a href="/scan.html">Free site check</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/about.html">About Daniel</a>
+      <a href="/book.html">Book a call</a>
+    </div>
+    <p class="muted" style="margin-top:30px;font-size:14.5px">Still can't find it? Text me at <a href="sms:9172458685" style="color:var(--gold)">917-245-8685</a> and I'll send you the link.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-nav">
+      <a href="/">Home</a>
+      <a href="/work.html">Work</a>
+      <a href="/plans.html">Plans</a>
+      <a href="/why.html">Why a Website</a>
+      <a href="/how-it-works.html">How It Works</a>
+      <a href="/about.html">About</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/book.html">Book a Call</a>
+    </div>
+    <p class="f-contact">
+      <a href="tel:+19172458685">Call 917-245-8685</a> &middot;
+      <a href="sms:9172458685">Text 917-245-8685</a> &middot;
+      <a href="mailto:uidesignsco@gmail.com">uidesignsco@gmail.com</a><br>
+      <span class="muted">Serving Queens, Brooklyn and the wider New York City area &mdash; and remotely anywhere.</span>
+    </p>
+    <div class="f-bottom">
+      <span>&copy; 2026 UI Designs Co &middot; Queens, NY</span>
+      <span><a href="/terms.html">Terms</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/accessibility.html">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/site.js" defer></script>
+</body>
+</html>
