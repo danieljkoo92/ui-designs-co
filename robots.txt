@@ -29,3 +29,23 @@ Disallow: /api/
 
 # Internal template, not for search engines
 Disallow: /CLIENT-AGREEMENT.md
+
+# Link-preview crawlers. The demo pages above are hidden from search because
+# they are fictional businesses, but Daniel sends those links to prospects
+# directly -- and these bots honour robots.txt, so without an explicit group
+# a shared demo link would expand to a bare grey URL with no preview card.
+# They render previews, they do not build a search index.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Slackbot-LinkExpanding
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
