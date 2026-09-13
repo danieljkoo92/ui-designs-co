@@ -118,7 +118,7 @@
       });
       // ?full on the page URL shows every check unblurred -- Daniel's own view.
       // Not a secret: the API already returns every check, the blur is only CSS.
-      var TOP = /[?&]full/.test(location.search) ? Infinity : 3;
+      var TOP = /[?&]full(=|&|$)/.test(location.search) ? Infinity : 3;
       var ul = el('ul', 'sc-checks');
       ordered.forEach(function (c, i) {
         var locked = i >= TOP;
