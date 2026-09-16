@@ -686,14 +686,38 @@ function analyse(html, finalUrl, meta) {
   if (!title) caps.push([55, 'it has no page title', 'seo']);
   if (!hasLocalBiz) caps.push([65, 'it has no machine-readable business details', 'geo']);
   if (placeholderHits.length) caps.push([45, 'unreplaced template placeholders like {{city}} are visible on the page', 'aeo']);
-  if (noindex) caps.push([0, 'the page has a "noindex" instruction telling Google to keep it out of search results', 'seo']);
-  caps.forEach((c) => {
-    score = Math.min(score, c[0]);
-    if (c[2]) scores[c[2]] = Math.min(scores[c[2]], c[0]);
-  });
+  const NOINDEX_CAP = [0, 'the page has a "noindex" instruction telling Google to keep it out of search results', 'seo'];
+  if (noindex) caps.push(NOINDEX_CAP);
+
+  const applyCaps = (list) => {
+    let s = score;
+    const sc = Object.assign({}, scores);
+    list.forEach((c) => {
+      s = Math.min(s, c[0]);
+      if (c[2]) sc[c[2]] = Math.min(sc[c[2]], c[0]);
+    });
+    return { score: Math.round(s), scores: sc };
+  };
+
+  const final = applyCaps(caps);
+
+  // A noindexed page scores 0, which is correct but useless on its own: a
+  // staging site and a genuinely broken site look identical. Report what the
+  // page would score with that one tag removed, so "hidden on purpose" is
+  // distinguishable from "bad".
+  const visible = noindex ? applyCaps(caps.filter((c) => c !== NOINDEX_CAP)) : null;
 
   const failed = groups.reduce((n, g) => n + g.checks.filter((c) => !c.pass).length, 0);
-  return { score, scores, groups, failed, caps: caps.map((c) => c[1]) };
+  return {
+    score: final.score,
+    scores: final.scores,
+    groups,
+    failed,
+    caps: caps.map((c) => c[1]),
+    hidden: noindex,
+    visibleScore: visible ? visible.score : null,
+    visibleScores: visible ? visible.scores : null
+  };
 }
 
 module.exports = async function handler(req, res) {
@@ -774,6 +798,9 @@ module.exports = async function handler(req, res) {
       scores: result.scores,
       failed: result.failed,
       caps: result.caps,
+      hidden: result.hidden,
+      visibleScore: result.visibleScore,
+      visibleScores: result.visibleScores,
       groups: result.groups
     });
   } catch (err) {

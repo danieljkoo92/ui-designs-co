@@ -69,6 +69,22 @@
     head.appendChild(verdictBox);
     out.appendChild(head);
 
+    // A noindexed page is capped at 0. On a staging site or a portfolio demo
+    // that is deliberate, and a bare 0 reads as "your site is broken" -- so say
+    // which it is, and what the page would score with the tag removed.
+    if (data.hidden) {
+      var hid = el('div', 'sc-hidden');
+      hid.appendChild(el('b', null, 'This page is hidden from search on purpose.'));
+      var msg = 'It carries a "noindex" instruction, so Google is told to keep it out of results '
+        + 'and the score is capped at 0. If that is deliberate -- a staging site, a demo, a '
+        + 'private page -- nothing here is broken.';
+      if (typeof data.visibleScore === 'number') {
+        msg += ' With the tag removed it would score ' + data.visibleScore + '/100.';
+      }
+      hid.appendChild(el('p', null, msg));
+      out.appendChild(hid);
+    }
+
     // Three scores, because they fail differently. A site scoring 100 on
     // Google and 40 on being cited by an assistant is the normal case, and the
     // single number above hides exactly that.

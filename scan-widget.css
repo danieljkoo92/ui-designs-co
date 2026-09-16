@@ -86,3 +86,9 @@
 .sc-dim b.bad{color:#E88B8B}
 .sc-dim .sc-bar{margin:0}
 .sc-dim-note{font-size:12.5px;color:#8C97A6;line-height:1.45}
+
+/* Hidden-on-purpose notice: a noindex page scores 0, which on a staging site
+   or a portfolio demo is correct but reads as breakage without this. */
+.sc-hidden{margin:16px 0 4px;padding:14px 16px;border-radius:10px;background:rgba(217,164,65,.08);border:1px solid rgba(217,164,65,.38)}
+.sc-hidden b{display:block;margin-bottom:5px;font-size:15px;color:var(--gold,#D9A441)}
+.sc-hidden p{margin:0;font-size:14px;line-height:1.55;color:#C3CAD4}
