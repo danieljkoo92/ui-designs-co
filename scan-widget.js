@@ -10,7 +10,17 @@
     return n;
   }
 
-  function verdict(score, caps) {
+  function verdict(score, caps, hidden, visibleScore) {
+    // A noindexed page is capped at 0, so every score-based verdict below
+    // would call a deliberately hidden staging site a rebuild candidate.
+    // Judge it on what it would score without the tag instead.
+    if (hidden) {
+      return typeof visibleScore === 'number'
+        ? ['Hidden from search on purpose.',
+           'This page tells Google to stay away, so the score is capped at 0. On what is actually on the page it would score ' + visibleScore + '/100.']
+        : ['Hidden from search on purpose.',
+           'This page tells Google to stay away, so the score is capped at 0.'];
+    }
     var why = caps && caps.length
       ? ' Held back most by one thing: ' + caps[0] + '.'
       : '';
@@ -23,7 +33,7 @@
 
   function render(out, data) {
     out.innerHTML = '';
-    var v = verdict(data.score, data.caps);
+    var v = verdict(data.score, data.caps, data.hidden, data.visibleScore);
 
     var head = el('div', 'sc-head');
 
@@ -76,8 +86,8 @@
       var hid = el('div', 'sc-hidden');
       hid.appendChild(el('b', null, 'This page is hidden from search on purpose.'));
       var msg = 'It carries a "noindex" instruction, so Google is told to keep it out of results '
-        + 'and the score is capped at 0. If that is deliberate -- a staging site, a demo, a '
-        + 'private page -- nothing here is broken.';
+        + 'and the score is capped at 0. If that is deliberate — a staging site, a demo, a '
+        + 'private page — nothing here is broken.';
       if (typeof data.visibleScore === 'number') {
         msg += ' With the tag removed it would score ' + data.visibleScore + '/100.';
       }
