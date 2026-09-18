@@ -178,7 +178,9 @@
   }
 
   function failSafe() {
-    addBot('Text Daniel at ' + SMS_DISPLAY + " and he'll answer directly.");
+    var msg = 'Text Daniel at ' + SMS_DISPLAY + " and he'll answer directly.";
+    addBot(msg);
+    maybeAddSmsButton(msg);   // give them the one-tap link, not just the number
   }
 
   /* ---------- send ---------- */

@@ -236,7 +236,12 @@ module.exports = async function handler(req, res) {
         // if objection handling needs more depth.
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
-        system: SYSTEM_PROMPT,
+        // The system prompt is identical on every turn, so mark it cacheable:
+        // cache reads bill at a tenth of the input rate. Haiku 4.5 only caches
+        // prefixes of 4096+ tokens and this prompt sits right at that line, so
+        // whether it takes is confirmed from usage.cache_read_input_tokens in
+        // the chat log below, not assumed.
+        system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
         messages: clean
       })
     });
@@ -273,7 +278,8 @@ module.exports = async function handler(req, res) {
         at: new Date().toISOString(),
         turns: clean.length,
         user: lastUser ? lastUser.content.slice(0, 300) : null,
-        assistant: reply.slice(0, 600)
+        assistant: reply.slice(0, 600),
+        usage: data.usage || null
       }));
     } catch (e) { /* logging must never break a reply */ }
 
