@@ -292,6 +292,11 @@ footer{padding:40px 0 120px;border-top:1px solid var(--edge);color:var(--steel);
 // before DOMContentLoaded, in order, so it is guaranteed loaded here.
 window.addEventListener('DOMContentLoaded', () => {
 gsap.registerPlugin(ScrollTrigger);
+// The hero pin starts at scroll 0. If the browser restores a mid-page scroll
+// position on reload, the pin measures from there and the whole story lands
+// off-screen -- so always start from the top.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
 const mq = matchMedia('(prefers-reduced-motion: reduce)');
 let triggers = [];
 
@@ -342,7 +347,7 @@ function buildMotion() {
   const seg = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
   const story = { p: 0 };
   triggers.push(ScrollTrigger.create({
-    trigger: '#top', start: 'top top', end: '+=260%', pin: true, scrub: 1,
+    trigger: '#top', start: 'top top', end: '+=260%', pin: true, scrub: 1, anticipatePin: 1,
     animation: gsap.to(story, {
       p: 1, ease: 'none',
       onUpdate: () => {
@@ -396,6 +401,7 @@ heroVidEl.addEventListener('canplaythrough', () => {
   if (mq.matches) return;
   heroReady = true;
   heroVidEl.pause();
+  ScrollTrigger.refresh();   // the stage may have resized once the video sized itself
 }, { once: true });
 heroVidEl.load();
 
@@ -411,6 +417,7 @@ vidEl.load();
 mq.addEventListener('change', () => { buildMotion(); ScrollTrigger.refresh(); });
 buildMotion();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+window.addEventListener('load', () => ScrollTrigger.refresh());
 });
 </script>
 <a class="demo-badge" href="index.html" title="This is a portfolio demo. The business, reviews, credentials and address on this page are fictional.">Demo — fictional business</a>
