@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/img/icons/icon-16.png">
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2B211B">
+<title>Vesper Hair Studio — Colour, Cuts &amp; Curls in Williamsburg, Brooklyn</title>
+<meta name="description" content="Balayage, precision cuts and curl cutting in a sunlit Williamsburg loft. Free 15-minute consults. Book a chair or call (718) 555-0187.">
+<link rel="canonical" href="https://ui-designs-co.vercel.app/demo-hair.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="UI Designs Co">
+<meta property="og:title" content="Vesper Hair Studio — Colour, Cuts &amp; Curls in Williamsburg, Brooklyn">
+<meta property="og:description" content="Balayage, precision cuts and curl cutting in a sunlit Williamsburg loft. Free 15-minute consults. Book a chair or call (718) 555-0187.">
+<meta property="og:url" content="https://ui-designs-co.vercel.app/demo-hair.html">
+<meta property="og:image" content="https://ui-designs-co.vercel.app/img/og/hair.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Vesper Hair Studio demo site: a sunlit loft salon with brass mirrors">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vesper Hair Studio — Colour, Cuts &amp; Curls in Williamsburg, Brooklyn">
+<meta name="twitter:description" content="Balayage, precision cuts and curl cutting in a sunlit Williamsburg loft. Free 15-minute consults. Book a chair or call (718) 555-0187.">
+<meta name="twitter:image" content="https://ui-designs-co.vercel.app/img/og/hair.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hair/hero.jpg" media="(min-width:768px)">
+<link rel="preload" as="image" href="img/hair/hero-m.jpg" media="(max-width:767px)">
+<style>
+.demo-badge{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;background:rgba(10,12,16,.9);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:7px 13px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(6px)}.demo-badge:hover{border-color:#fff}@media(max-width:719px){.demo-badge{bottom:auto;top:calc(8px + env(safe-area-inset-top));left:8px;font-size:10px;padding:6px 10px}}
+
+/* Palette pulled from the photographs: linen walls, espresso leather,
+   caramel from the balayage. Text pairs checked for WCAG AA:
+   ink/linen 13.9, muted/linen 5.8, caramel/linen 4.7, white/caramel 5.4. */
+:root{
+  --linen:#F6F0E8;
+  --sand:#EDE3D6;
+  --card:#FFFFFF;
+  --ink:#2B211B;
+  --muted:#6B5A4E;
+  --caramel:#9A5B2E;
+  --caramel-soft:#B0703F;
+  --line:#E2D6C6;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Jost",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--linen);color:var(--ink);line-height:1.65;font-size:16.5px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--caramel);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--linen);padding:10px 16px;z-index:200}
+.skip:focus{left:8px;top:8px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.05;letter-spacing:-.01em}
+.wrap{max-width:1140px;width:100%;margin:0 auto;padding:0 24px}
+.kicker{font-size:12.5px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--caramel);margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:14px 30px;border-radius:999px;background:var(--caramel);color:#fff;text-decoration:none;font:500 15.5px/1 var(--sans);letter-spacing:.04em;border:none;cursor:pointer;transition:background .2s,transform .2s}
+.btn:hover{background:var(--ink);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:var(--linen)}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;transition:background .3s,box-shadow .3s}
+header .wrap{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:var(--serif);font-size:26px;font-weight:600;letter-spacing:.14em;color:var(--linen);text-decoration:none;text-transform:uppercase}
+.logo em{font-style:italic;letter-spacing:.02em;text-transform:none;color:#E6C49A;font-size:.85em;margin-left:4px}
+header .book{color:var(--linen);text-decoration:none;font-size:14.5px;font-weight:500;letter-spacing:.06em;border:1px solid rgba(246,240,232,.55);border-radius:999px;padding:11px 20px;min-height:44px;display:inline-flex;align-items:center;transition:background .2s,color .2s}
+header .book:hover{background:var(--linen);color:var(--ink)}
+header.solid{background:rgba(246,240,232,.94);backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--line)}
+header.solid .logo,header.solid .book{color:var(--ink)}
+header.solid .logo em{color:var(--caramel)}
+header.solid .book{border-color:var(--ink)}
+header.solid .book:hover{background:var(--ink);color:var(--linen)}
+
+/* hero: the studio photo, pushed in by scroll so it reads as walking in */
+.hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:var(--ink)}
+.hero .photo{position:absolute;inset:0;background:url(img/hair/hero.jpg) center/cover no-repeat;transform-origin:58% 42%;will-change:transform}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(to right,rgba(28,20,15,.88) 0%,rgba(28,20,15,.62) 38%,rgba(28,20,15,0) 70%),linear-gradient(to bottom,rgba(28,20,15,.55),transparent 22%)}
+.hero .copy{position:absolute;left:0;right:0;bottom:12vh;z-index:2}
+.hero .kicker{color:#E6C49A}
+.hero h1{font-size:clamp(56px,9vw,120px);color:var(--linen);font-weight:500}
+.hero h1 em{font-style:italic;color:#E6C49A;display:block}
+.hero p{max-width:440px;margin:22px 0 30px;color:#E9DFD3;font-size:18px}
+.hero .row{display:flex;gap:14px;flex-wrap:wrap}
+.hero .btn-ghost{color:var(--linen);box-shadow:inset 0 0 0 1px rgba(246,240,232,.7)}
+.hero .btn-ghost:hover{background:var(--linen);color:var(--ink)}
+.hero .scroll-cue{position:absolute;right:28px;bottom:28px;z-index:2;color:#E9DFD3;font-size:12px;letter-spacing:.24em;text-transform:uppercase;writing-mode:vertical-rl}
+
+section.pad{padding:110px 0}
+.sec-head{max-width:620px;margin-bottom:54px}
+.sec-head h2{font-size:clamp(38px,5.4vw,62px)}
+.sec-head p{color:var(--muted);margin-top:14px;font-size:17px}
+
+/* transformations */
+.looks{display:grid;gap:22px}
+@media(min-width:880px){.looks{grid-template-columns:1.25fr 1fr 1fr;align-items:end}}
+.look{position:relative;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.look .frame{position:relative;overflow:hidden;border-radius:18px;background:var(--sand);box-shadow:0 18px 40px -22px rgba(43,33,27,.45)}
+.look.spin .frame{aspect-ratio:1/1}
+.look.fade .frame{aspect-ratio:4/5}
+.look video,.look img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.look.fade .after{opacity:0;transition:opacity .7s ease}
+.look.fade:hover .after,.look.fade.on .after,.look.fade:focus-visible .after{opacity:1}
+.look .spin-still{opacity:0;transition:opacity .7s ease}
+.look.still-mode .spin-still.after-still{opacity:0}
+.look.still-mode:hover .spin-still.after-still,.look.still-mode.on .spin-still.after-still,.look.still-mode:focus-visible .spin-still.after-still{opacity:1}
+.look .hint{position:absolute;left:14px;bottom:14px;z-index:2;background:rgba(246,240,232,.92);color:var(--ink);font-size:12.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:8px 13px;border-radius:999px;pointer-events:none;transition:opacity .3s}
+.look:hover .hint,.look.on .hint{opacity:0}
+.look figcaption{padding:16px 4px 0}
+.look figcaption h3{font-size:26px}
+.look figcaption p{color:var(--muted);font-size:15px;margin-top:4px}
+.hint .touch{display:none}
+@media(hover:none){.hint .mouse{display:none}.hint .touch{display:inline}}
+
+/* services */
+.services{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.menu{display:grid;gap:0 64px}
+@media(min-width:820px){.menu{grid-template-columns:1fr 1fr}}
+.item{display:grid;grid-template-columns:1fr auto;gap:4px 18px;padding:22px 0;border-bottom:1px solid var(--line)}
+.item h3{font-size:25px}
+.item .price{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--caramel);white-space:nowrap}
+.item p{grid-column:1/-1;color:var(--muted);font-size:15px}
+
+/* stylists */
+.team{display:grid;gap:22px}
+@media(min-width:820px){.team{grid-template-columns:repeat(3,1fr)}}
+.person{border-top:2px solid var(--ink);padding-top:22px}
+.person h3{font-size:30px}
+.person .role{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--caramel);margin:6px 0 12px;font-weight:500}
+.person p{color:var(--muted);font-size:15.5px}
+
+/* questions */
+.faq{background:var(--sand)}
+.qa{max-width:780px}
+.qa details{border-bottom:1px solid #D5C6B3}
+.qa summary{list-style:none;cursor:pointer;padding:24px 44px 24px 0;position:relative;font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.25}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";position:absolute;right:6px;top:18px;font-family:var(--sans);font-size:28px;font-weight:400;color:var(--caramel);transition:transform .25s}
+.qa details[open] summary::after{transform:rotate(45deg)}
+.qa details p{padding:0 0 24px;color:var(--muted);max-width:680px}
+
+/* visit + book */
+.visit-grid{display:grid;gap:48px}
+@media(min-width:880px){.visit-grid{grid-template-columns:1fr 1.1fr}}
+.visit .big{font-family:var(--serif);font-size:38px;font-weight:600;line-height:1.1;margin-bottom:12px}
+.visit p{color:var(--muted);margin-bottom:16px}
+.visit a{color:var(--caramel)}
+.hours{list-style:none;margin:22px 0;max-width:320px}
+.hours li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+.hours li span:last-child{color:var(--muted)}
+form.book{display:grid;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px}
+@media(min-width:560px){form.book .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+form.book label{display:block;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:500}
+form.book input,form.book select,form.book textarea{width:100%;min-height:50px;padding:13px 15px;background:var(--linen);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:16px var(--sans)}
+form.book textarea{min-height:96px;resize:vertical}
+form.book input:focus,form.book select:focus,form.book textarea:focus{outline:2px solid var(--caramel);outline-offset:1px}
+form.book .btn{width:100%}
+.sent{font-family:var(--serif);font-size:28px;line-height:1.3}
+
+footer{background:var(--ink);color:#CDBFAF;padding:48px 0 120px;font-size:14px}
+footer a{color:#E6C49A}
+@media(min-width:720px){footer{padding-bottom:48px}}
+
+.sticky-call{position:fixed;bottom:0;left:0;right:0;z-index:110;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(246,240,232,.96);backdrop-filter:blur(6px);border-top:1px solid var(--line);display:flex;gap:10px}
+.sticky-call .btn{flex:1}
+@media(min-width:720px){.sticky-call{display:none}}
+
+.reveal{opacity:0;transform:translateY(22px)}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none}
+  .look.fade .after,.look .spin-still{transition:none}
+}
+@media(max-width:767px){
+  header{padding:12px 0}
+  .logo{font-size:20px;white-space:nowrap}
+  header .book{white-space:nowrap;font-size:13.5px;padding:10px 16px}
+  .hero{height:auto;min-height:0;background:var(--linen)}
+  .hero .photo{position:relative;height:auto;aspect-ratio:16/10;margin-top:68px;background-image:url(img/hair/hero-m.jpg)}
+  .hero .kicker{color:var(--caramel);letter-spacing:.12em;font-size:11.5px}
+  .hero .shade{display:none}
+  .hero .copy{position:relative;bottom:auto;padding:30px 0 50px}
+  .hero h1{color:var(--ink);font-size:clamp(50px,14vw,68px)}
+  .hero h1 em{color:var(--caramel)}
+  .hero p{color:var(--muted);font-size:17px}
+  .hero .btn-ghost{color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .hero .scroll-cue{display:none}
+  section.pad{padding:76px 0}
+  .qa summary{font-size:22px}
+}
+</style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://ui-designs-co.vercel.app/"},
+{"@type":"ListItem","position":2,"name":"Vesper Hair Studio","item":"https://ui-designs-co.vercel.app/demo-hair.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HairSalon","name":"Vesper Hair Studio","description":"Demo business for a UI Designs Co portfolio page. Balayage, precision cuts and curl cutting.","telephone":"+1-718-555-0187","priceRange":"$$$",
+"address":{"@type":"PostalAddress","streetAddress":"212 N 5th St","addressLocality":"Brooklyn","addressRegion":"NY","postalCode":"11211","addressCountry":"US"},
+"openingHoursSpecification":[
+{"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Wednesday","Thursday","Friday"],"opens":"10:00","closes":"20:00"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"18:00"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"10:00","closes":"16:00"}],
+"areaServed":["Williamsburg","Greenpoint","Bushwick","Brooklyn"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much does balayage cost at Vesper?","acceptedAnswer":{"@type":"Answer","text":"Balayage starts at $260 and includes a gloss and a blowout. Very long or very thick hair, or a big change from dark to light, can take more time and product, and we confirm the full price at your free consult before anything starts."}},
+{"@type":"Question","name":"How long does a balayage appointment take?","acceptedAnswer":{"@type":"Answer","text":"Plan on three to four hours. Going several shades lighter can take a second session a few weeks later, which is kinder to your hair than forcing it in one day."}},
+{"@type":"Question","name":"Do you cut curly hair dry?","acceptedAnswer":{"@type":"Answer","text":"Yes. Amara cuts curls dry, one curl at a time, so the shape is set by how your hair actually falls. Come with your hair clean, dry and worn the way you usually wear it."}},
+{"@type":"Question","name":"Do I need a consultation before colour?","acceptedAnswer":{"@type":"Answer","text":"For any colour service we start with a free 15-minute consult. First-time colour clients also get a patch test at least 48 hours before the appointment."}},
+{"@type":"Question","name":"What is your cancellation policy?","acceptedAnswer":{"@type":"Answer","text":"Please give us 24 hours notice to cancel or move an appointment. Cancelling inside 24 hours is charged at half the booked service."}},
+{"@type":"Question","name":"How do I get to the studio?","acceptedAnswer":{"@type":"Answer","text":"We are a five-minute walk from the Bedford Av L stop. Street parking is metered until 7pm on weekdays."}}]}
+</script>
+</head>
+<body>
+<a class="skip" href="#looks">Skip to content</a>
+
+<header id="hdr">
+  <div class="wrap">
+    <a class="logo" href="#top">Vesper <em>hair studio</em></a>
+    <a class="book" href="#book">Book a chair</a>
+  </div>
+</header>
+
+<section class="hero" id="top" aria-label="Inside the studio">
+  <div class="photo" id="heroPhoto" role="img" aria-label="Inside Vesper: a sunlit brick loft with black leather chairs facing brass-rimmed round mirrors"></div>
+  <div class="shade"></div>
+  <div class="copy">
+    <div class="wrap">
+      <p class="kicker reveal">Hair studio · Williamsburg</p>
+      <h1 class="reveal">Sit down.<em>Turn around.</em></h1>
+      <p class="reveal">Balayage, precision cuts and curl cutting in a sunlit Brooklyn loft. Every first visit starts with fifteen minutes of talking about what you actually want.</p>
+      <div class="row reveal">
+        <a class="btn" href="#book">Book a chair</a>
+        <a class="btn btn-ghost" href="tel:+17185550187">(718) 555-0187</a>
+      </div>
+    </div>
+  </div>
+  <span class="scroll-cue" aria-hidden="true">Scroll in</span>
+</section>
+
+<section class="pad" id="looks">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker reveal">The results</p>
+      <h2 class="reveal">Came in like this. Left like that.</h2>
+      <p class="reveal">Three recent clients, same chair, same light, before and after.</p>
+    </div>
+    <div class="looks">
+      <figure class="look spin reveal" id="spinLook" tabindex="0" role="button" aria-pressed="false" aria-label="Balayage and blowout. Hover, tap or press Enter to turn the chair around and see the finished hair.">
+        <div class="frame">
+          <video id="spinVid" muted playsinline preload="auto" src="img/hair/spin.mp4" poster="img/hair/spin-poster.jpg" aria-hidden="true"></video>
+          <img class="spin-still after-still" src="img/hair/spin-final.jpg" alt="" aria-hidden="true" loading="lazy">
+          <span class="hint"><span class="mouse">Hover to turn her around</span><span class="touch">Tap to turn her around</span></span>
+        </div>
+        <figcaption><h3>Balayage &amp; blowout</h3><p>Grown-out and tangled to soft caramel dimension. Noor, 3½ hours.</p></figcaption>
+      </figure>
+      <figure class="look fade reveal" tabindex="0" role="button" aria-pressed="false" aria-label="The bob. Hover, tap or press Enter to see the finished cut.">
+        <div class="frame">
+          <img src="img/hair/cut-before.jpg" alt="Before: very long, straight, shapeless dark hair" loading="lazy">
+          <img class="after" src="img/hair/cut-after.jpg" alt="After: a sharp, glossy chin-length bob" loading="lazy">
+          <span class="hint"><span class="mouse">Hover for the after</span><span class="touch">Tap for the after</span></span>
+        </div>
+        <figcaption><h3>The bob</h3><p>Fourteen inches off, one clean line. Theo, 75 minutes.</p></figcaption>
+      </figure>
+      <figure class="look fade reveal" tabindex="0" role="button" aria-pressed="false" aria-label="Curl cut. Hover, tap or press Enter to see the finished curls.">
+        <div class="frame">
+          <img src="img/hair/curls-before.jpg" alt="Before: dry, undefined curls pulled back" loading="lazy">
+          <img class="after" src="img/hair/curls-after.jpg" alt="After: defined, glossy shoulder-length curls" loading="lazy">
+          <span class="hint"><span class="mouse">Hover for the after</span><span class="touch">Tap for the after</span></span>
+        </div>
+        <figcaption><h3>Curl cut</h3><p>Cut dry, curl by curl, then defined. Amara, 2 hours.</p></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="pad services" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker reveal">Services &amp; prices</p>
+      <h2 class="reveal">What it costs, before you sit down.</h2>
+      <p class="reveal">Colour prices include a gloss and a blowout. Anything that changes the price gets said out loud at your consult, not added at the till.</p>
+    </div>
+    <div class="menu">
+      <div class="item reveal"><h3>Cut &amp; style</h3><span class="price">from $95</span><p>Consult, wash, cut and a finished style.</p></div>
+      <div class="item reveal"><h3>Balayage</h3><span class="price">from $260</span><p>Hand-painted colour that grows out soft. Includes gloss and blowout.</p></div>
+      <div class="item reveal"><h3>Curl cut</h3><span class="price">from $120</span><p>Cut dry, curl by curl, then washed and defined.</p></div>
+      <div class="item reveal"><h3>Single-process colour</h3><span class="price">from $140</span><p>Root touch-up or all-over colour.</p></div>
+      <div class="item reveal"><h3>Gloss &amp; toner</h3><span class="price">$75</span><p>Shine and tone between colour appointments.</p></div>
+      <div class="item reveal"><h3>Blowout</h3><span class="price">$65</span><p>Wash and a smooth or bouncy finish that lasts the week.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad" id="team">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker reveal">The chairs</p>
+      <h2 class="reveal">Three stylists. Three specialties.</h2>
+    </div>
+    <div class="team">
+      <div class="person reveal"><h3>Noor Haddad</h3><p class="role">Owner · Colour</p><p>Fourteen years of balayage and lived-in blonde. Noor will talk you out of a colour that won't suit you, even if it costs her the booking.</p></div>
+      <div class="person reveal"><h3>Theo Park</h3><p class="role">Precision cuts</p><p>Bobs, pixies and anything with a hard line. Theo trained in London and cuts dry to finish, so what you see in the chair is what you get at home.</p></div>
+      <div class="person reveal"><h3>Amara Okafor</h3><p class="role">Curls</p><p>Type 2 to type 4 hair, cut dry and curl by curl. Amara shows you the routine to keep the shape between visits.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad faq" id="questions">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker reveal">Questions</p>
+      <h2 class="reveal">What people ask before they book.</h2>
+    </div>
+    <div class="qa">
+      <details class="reveal"><summary>How much does balayage cost at Vesper?</summary><p>Balayage starts at $260 and includes a gloss and a blowout. Very long or very thick hair, or a big change from dark to light, can take more time and product, and we confirm the full price at your free consult before anything starts.</p></details>
+      <details class="reveal"><summary>How long does a balayage appointment take?</summary><p>Plan on three to four hours. Going several shades lighter can take a second session a few weeks later, which is kinder to your hair than forcing it in one day.</p></details>
+      <details class="reveal"><summary>Do you cut curly hair dry?</summary><p>Yes. Amara cuts curls dry, one curl at a time, so the shape is set by how your hair actually falls. Come with your hair clean, dry and worn the way you usually wear it.</p></details>
+      <details class="reveal"><summary>Do I need a consultation before colour?</summary><p>For any colour service we start with a free 15-minute consult. First-time colour clients also get a patch test at least 48 hours before the appointment.</p></details>
+      <details class="reveal"><summary>What is your cancellation policy?</summary><p>Please give us 24 hours notice to cancel or move an appointment. Cancelling inside 24 hours is charged at half the booked service.</p></details>
+      <details class="reveal"><summary>How do I get to the studio?</summary><p>We are a five-minute walk from the Bedford Av L stop. Street parking is metered until 7pm on weekdays.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="pad visit" id="book">
+  <div class="wrap visit-grid">
+    <div>
+      <p class="kicker reveal">Visit</p>
+      <p class="big reveal">Vesper Hair Studio</p>
+      <p class="reveal">212 N 5th St, Williamsburg, Brooklyn, NY 11211<br>
+      <a href="https://maps.google.com/?q=N+5th+St+Williamsburg+Brooklyn">Get directions</a> · <a href="tel:+17185550187">(718) 555-0187</a></p>
+      <ul class="hours reveal">
+        <li><span>Tuesday – Friday</span><span>10am – 8pm</span></li>
+        <li><span>Saturday</span><span>9am – 6pm</span></li>
+        <li><span>Sunday</span><span>10am – 4pm</span></li>
+        <li><span>Monday</span><span>Closed</span></li>
+      </ul>
+      <p class="reveal" style="font-size:15px">We see clients from Williamsburg, Greenpoint, Bushwick and across Brooklyn. Five minutes from the Bedford Av L.</p>
+    </div>
+    <form class="book reveal" id="bookForm">
+      <div class="two">
+        <div><label for="b-name">Name</label><input id="b-name" required autocomplete="name"></div>
+        <div><label for="b-phone">Phone</label><input id="b-phone" type="tel" required autocomplete="tel"></div>
+      </div>
+      <div><label for="b-service">Service</label>
+        <select id="b-service">
+          <option>Not sure yet — free consult</option>
+          <option>Cut &amp; style</option>
+          <option>Balayage</option>
+          <option>Curl cut</option>
+          <option>Single-process colour</option>
+          <option>Gloss &amp; toner</option>
+          <option>Blowout</option>
+        </select>
+      </div>
+      <div><label for="b-note">Anything we should know?</label><textarea id="b-note" placeholder="Last coloured in March. Want to go lighter without going brassy."></textarea></div>
+      <button class="btn" type="submit">Request a time</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Vesper Hair Studio · Williamsburg, Brooklyn · <a href="tel:+17185550187">(718) 555-0187</a><br><span style="opacity:.8">Portfolio demo by <a href="index.html">UI Designs Co</a>. Vesper Hair Studio is a fictional business: the stylists, prices, address, phone number and client photos on this page are samples, not real.</span></div>
+</footer>
+
+<div class="sticky-call">
+  <a class="btn" href="tel:+17185550187">Call (718) 555-0187</a>
+  <a class="btn btn-ghost" href="#book" style="flex:0 0 auto">Book</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script>
+// GSAP is deferred so it never blocks first paint; deferred scripts finish
+// before DOMContentLoaded, so it is loaded by the time this runs.
+window.addEventListener('DOMContentLoaded', () => {
+gsap.registerPlugin(ScrollTrigger);
+// The hero pin starts at scroll 0; a restored mid-page position would make it
+// measure from the wrong place.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const touch = matchMedia('(hover: none)');
+
+/* header turns solid once the dark hero is gone */
+const hdr = document.getElementById('hdr');
+const onScroll = () => hdr.classList.toggle('solid', scrollY > innerHeight * .9 || innerWidth < 768);
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+/* booking form: a demo, so it confirms without sending */
+document.getElementById('bookForm').addEventListener('submit', e => {
+  e.preventDefault();
+  e.target.innerHTML = '<p class="sent">Got it. We’ll text you within the hour with two times that work.</p>';
+});
+
+/* transformations ------------------------------------------------------- */
+// The spin is one video: hover plays her turning around, leaving plays it
+// back. Browsers can't play video backwards, so currentTime is stepped
+// toward the target each frame. The file is all-intra, so every step is a
+// clean seek in either direction.
+const spinLook = document.getElementById('spinLook');
+const spinVid = document.getElementById('spinVid');
+let target = 0, raf = 0, last = 0;
+function step(now) {
+  const dt = last ? (now - last) / 1000 : 0; last = now;
+  const end = (spinVid.duration || 5) - .05;
+  const goal = target ? end : 0;
+  const cur = spinVid.currentTime;
+  const next = cur + Math.sign(goal - cur) * Math.min(Math.abs(goal - cur), dt * 1.15);
+  spinVid.currentTime = next;
+  if (Math.abs(goal - next) > .001) raf = requestAnimationFrame(step);
+  else { raf = 0; last = 0; }
+}
+function setSpin(on) {
+  target = on ? 1 : 0;
+  spinLook.setAttribute('aria-pressed', on ? 'true' : 'false');
+  spinLook.classList.toggle('on', on);
+  if (spinLook.classList.contains('still-mode')) return;   // reduced motion: CSS crossfade
+  if (!raf) { last = 0; raf = requestAnimationFrame(step); }
+}
+if (reduce.matches) spinLook.classList.add('still-mode');
+
+document.querySelectorAll('.look').forEach(card => {
+  const isSpin = card === spinLook;
+  const set = on => {
+    if (isSpin) setSpin(on);
+    else { card.classList.toggle('on', on); card.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+  };
+  const isOn = () => card.getAttribute('aria-pressed') === 'true';
+  card.addEventListener('mouseenter', () => { if (!touch.matches) set(true); });
+  card.addEventListener('mouseleave', () => { if (!touch.matches) set(false); });
+  card.addEventListener('click', () => { if (touch.matches) set(!isOn()); });
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); set(!isOn()); }
+  });
+});
+
+/* scroll motion --------------------------------------------------------- */
+if (reduce.matches) return;
+// Pins first, in page order: every trigger below must be measured after the
+// hero's pin spacing exists.
+if (innerWidth >= 768) {
+  // Walking in: the photo pushes toward the far chairs, the copy drifts up
+  // and away, then the page carries on.
+  ScrollTrigger.create({
+    trigger: '#top', start: 'top top', end: '+=90%', pin: true, scrub: 1, anticipatePin: 1,
+    animation: gsap.timeline()
+      .to('#heroPhoto', { scale: 1.32, ease: 'none' }, 0)
+      .to('.hero .copy', { yPercent: -18, opacity: 0, ease: 'none' }, .35)
+  });
+}
+gsap.utils.toArray('.reveal').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el, start: 'top 88%', once: true,
+    animation: gsap.fromTo(el, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .6, ease: 'power2.out' })
+  });
+});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+addEventListener('load', () => ScrollTrigger.refresh());
+});
+</script>
+<a class="demo-badge" href="index.html" title="This is a portfolio demo. The business, stylists, prices, address and photos on this page are fictional.">Demo — fictional business</a>
+</body>
+</html>
