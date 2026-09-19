@@ -57,7 +57,7 @@ them a client. Daniel was explicit: *there are no live client sites yet.*
 | Demo | URL | Showpiece |
 |---|---|---|
 | Tattoo studio | wahlahlahlahstudios.vercel.app (separate project) | Scroll film opening. Leads every grid |
-| **Vesper Hair Studio** | `demo-hair.html` (new 2026-09-18) | Hover a client → her chair **spins** from the mirror to face you, hair finished. Plus 2 before/after crossfades, scroll push-in hero, 6 FAQs with schema. **AEO 100** on the scanner |
+| **Vesper Hair Studio** | `demo-hair.html` (new 2026-09-18, optimised 2026-09-19) | Hover a client → her chair **spins** from the mirror to face you, hair finished. Plus 2 before/after crossfades, scroll push-in hero, 6 FAQs with schema. **AEO 100** on the scanner. **Lighthouse mobile 94 / 100 / 100** (perf / a11y / best practices), 468 KB page weight, LCP 2.8 s — it's the template for the perf pattern in §3 |
 | Ironside Collision | `demo-auto.html` | Hero rebuilt 2026-09-18: scroll → Mercedes comes apart → engine glows red → clears → reassembles (same clip reversed). Wreck-to-fixed repair section below it |
 | PestFree | `demo-pest-pro.html` | Pest-scatter scroll video |
 
@@ -86,6 +86,29 @@ Copy `demo-auto.html` — it has every fix below baked in.
 - Reverse playback on hover (Vesper spin): browsers can't play backwards, so
   step `currentTime` toward the target every animation frame. See `setSpin()`.
 - Phones: stage above the copy, not behind it. Reduced motion: still image, no pin.
+
+### The page-speed pattern (Vesper has it; the other 7 demos don't yet)
+
+Done on `demo-hair.html` 2026-09-19. Lighthouse mobile went 76 → 94, weight
+2,830 KB → 468 KB, first paint 3.8 s → 2.0 s, LCP 4.5 s → 2.8 s, a11y 95 → 100.
+
+- **Fonts self-hosted** in `fonts/` (variable woff2, latin subset, pulled from
+  Google's CSS with a Chrome UA) + `<link rel=preload as=font>`. The Google
+  Fonts stylesheet alone was 880 ms of render-blocking.
+- **Hero is a `<picture>`**, not a CSS background: AVIF → WebP → JPEG, three
+  widths (1000/1400/2000), `fetchpriority="high"`, width/height set. AVIF via
+  `ffmpeg -c:v libaom-av1 -still-picture 1 -crf 32`, WebP via `-c:v libwebp -quality 78`.
+- **Big video has no `src` in the HTML.** JS sets it when the card is within
+  600 px (250 px on touch) via IntersectionObserver, or on first hover. Poster
+  and stills are WebP.
+- `<main id="main">` landmark, skip link → `#main`, `section.pad{scroll-margin-top:96px}`.
+- **Phone demo badge is a full-width strip at the very top**, header sits
+  under it (`top:25px`). The old top-left pill overlapped the logo and failed
+  Lighthouse's tap-target check. **The other 7 demos still have the old badge
+  and Google Fonts** — copy this pattern when you touch them.
+- `.js .reveal{opacity:0}` (class set by a one-line inline script) so a dead
+  GSAP CDN can never leave the page blank; the script also drops `js` if GSAP
+  is missing.
 
 ### Higgsfield (AI images/video)
 
@@ -166,7 +189,9 @@ robots lets link-preview bots through so demo links unfurl · 13 favicons ·
 - 10/11 Meta lengths — `book.html` description is 165 chars (truncates in cards); 6 demo titles are 63–76.
 - 17 A11y — `plans.html` skips h2→h4; the chat widget's text input has no label.
 - 18 Forms — confirm `RESEND_API_KEY` is set in Vercel, or leads silently fail.
-- 20 Perf — `demo-pest-pro.html` still loads GSAP without `defer`.
+- 20 Perf — `demo-pest-pro.html` still loads GSAP without `defer`. Vesper is
+  done (94 mobile); the other 7 demos and the marketing pages still load
+  Google Fonts render-blocking — apply the §3 page-speed pattern.
 
 ---
 
@@ -197,6 +222,10 @@ robots lets link-preview bots through so demo links unfurl · 13 favicons ·
 node -e "require('./api/chat.js'); require('./api/scan.js'); console.log('ok')"
 node test/scan.test.js
 npx -y http-server -p 8898 -a 127.0.0.1 -c-1   # needs Range support; NOT python -m http.server
+# In the Claude desktop app: preview_start name "ui-designs-co" (entry in
+# C:\Users\winst\Documents\claudecode-main\.claude\launch.json; uses the 8.3
+# short path because the folder name has spaces).
+npx -y lighthouse https://ui-designs-co.vercel.app/demo-hair.html --output=json --output-path=lh.json --chrome-flags="--headless=new" --quiet
 node tools/gen-sitemap.mjs                      # after adding/removing pages
 ```
 
