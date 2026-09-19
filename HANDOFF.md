@@ -1,369 +1,241 @@
 # UI Designs Co — Handoff
 
-**Written:** 2026-08-28 (revised from the 2026-08-27 version)
+**Written:** 2026-09-19 (replaces the 2026-08-28 version)
 **Purpose:** paste this into a new chat so it can pick up without re-deriving anything.
-**Read this before the README or any other doc in this repo.**
+**Read this before any other doc in this repo. The repo outranks this file** —
+if they disagree, check the code and `git log`, then fix this file.
 
 ---
 
 ## 1. What this is
 
-Daniel's own business website. He sells custom websites to local trade
-businesses (contractors, auto body, pest control, movers, HVAC, tree services,
-driving schools) out of Queens, NY. He is a one-person operation with no
-coding background — explain things plainly and never hand him a wall of steps.
+Daniel's own business site. He sells custom websites to local NYC businesses
+(trades, salons, auto body, etc.) out of Queens. One-person operation, **no
+coding background** — explain plainly, never hand him a wall of steps.
 
 - **Repo:** `C:\Users\winst\Documents\INSURANCE agent results\ui-designs-co`
-- **Git remote:** https://github.com/danieljkoo92/ui-designs-co.git (branch `main`)
+- **Remote:** https://github.com/danieljkoo92/ui-designs-co.git (branch `main`)
 - **Live:** https://ui-designs-co.vercel.app
-- **Deploy:** push to `main`, Vercel auto-deploys. 1–4 minutes. No build step;
-  static files plus two serverless functions in `api/` sharing `api/_robots.js`.
+- **Deploy:** push to `main` → Vercel auto-deploys in ~20 s. No build step.
+  Static files + serverless functions in `api/` (`scan.js`, `chat.js`,
+  `lead.js`, shared `_robots.js`).
 
-### The offer being sold (memorize — it appears in ~8 files)
+### The offer (appears in ~8 files — grep before changing any number)
 
 | Thing | Price | Notes |
 |---|---|---|
-| Free preview | $0 | Working site within 48h, before any payment, no obligation |
-| **Revision deposit** | **$200** | Due before ANY revision work. **Credited toward the build.** |
-| Standard build | $1,000 one-time | Live 5–7 days. 2 full redesigns included *after purchase* |
-| Signature build | $3,500 one-time | Scroll-driven film / 3D. Live 10–14 days |
-| Starter plan | $149/mo | Optional, only after a build |
-| Grow plan | $349/mo | "Most picked" |
-| Dominate plan | $697/mo | |
+| Free preview | $0 | Working site within 48 h, no obligation |
+| Revision deposit | $200 | Before any revision work. Non-refundable once the revised preview is delivered. Credited toward the build |
+| Standard build | $1,000 one-time | Live 5–7 days, 2 full redesigns after purchase |
+| **Signature build** | **$3,500 one-time** | **$500 deposit, non-refundable, credited → $3,000 at launch.** Live 10–14 days. Scoped by text, no speculative preview |
+| Plans | $149 / $349 / $697 per month | Optional, only after a build |
 | AI phone agent | price on request | Never quote a number |
 
-If you find `$100` or "first 2 edits free" anywhere, it's stale — grep and fix.
-It currently reads correctly across the site, the chatbot prompt, `terms.html`
-and `CLIENT-AGREEMENT.md`.
+The $500 figure and "non-refundable" were set on 2026-09-19 and are live in
+`terms.html` (§3 + §10), `faq.html` (answer + schema), `how-it-works.html`,
+`api/chat.js`, `CLIENT-AGREEMENT.md`. Hosting is included forever, with or
+without a plan. The domain is registered in the client's name (~$15/yr, they pay).
 
 ---
 
-## 2. File map
+## 2. Pages & portfolio
 
-### Pages (all live, all have canonical + BreadcrumbList JSON-LD)
-
-| File | What it is | Indexed? |
+| File | What | Indexed |
 |---|---|---|
-| `index.html` | Homepage. Long scroll, cinematic video hero. Styles inline. ~50KB | yes |
-| `work.html` | Portfolio gallery, 7 demos, Signature/Standard filter tabs | **noindex** |
-| `plans.html` | The 3 plans in full, SEO/AEO/GEO explainer, comparison table, FAQ | yes |
-| `why.html` | Sourced stats, animated charts, missed-call calculator, scanner embed | yes |
-| `scan.html` | Standalone free site checker | yes |
-| `how-it-works.html` | 6-step process, shows exactly where the $200 lands | yes |
-| `about.html` | Who Daniel is, why $1,000 is possible | yes |
-| `faq.html` | 21 questions in 4 groups, `<details>` accordions | yes |
-| `terms.html`, `privacy.html`, `accessibility.html` | Legal. Use `legal.css` | yes |
-| `demo-*.html` (7) | Fictional business demos | **noindex** |
+| `index.html` | Homepage. Own inline styles + `hero.js` (GSAP film). Pricing, work grid (8 cards), FAQ + schema, lead form | yes |
+| `work.html` | Portfolio: **9 builds across 8 trades** (pest control appears twice) | noindex |
+| `plans.html`, `why.html`, `how-it-works.html`, `about.html`, `faq.html` (25 Q&As + FAQPage schema), `book.html` (consult form), `scan.html` | Marketing pages, use `site.css` | yes |
+| `terms.html`, `privacy.html`, `accessibility.html` | Legal, use `legal.css` | yes |
+| `404.html` | Custom 404, root-absolute links | noindex |
+| `demo-*.html` (8) | Fictional-business demos, "Demo — fictional business" badge | noindex + robots Disallow |
 
-`work.html` and every demo are `noindex` **and** disallowed in `robots.txt`.
-**Daniel's explicit call.** The demos use invented business names, licence
-numbers and reviews, so they must never be indexed as real companies.
+**Every demo is fictional, including the tattoo studio.** Never call any of
+them a client. Daniel was explicit: *there are no live client sites yet.*
 
-### Shared assets
+### Signature demos (the premium tier's proof)
 
-- `site.css` — the shell (tokens, header, nav, footer, buttons) for the 7 new
-  pages. **`index.html` does NOT use it** — the homepage keeps its own inline
-  `<style>`. Change a token in one and change it in the other.
-- `site.js` — mobile nav toggle + IntersectionObserver scroll reveals.
-- `scan-widget.css` / `scan-widget.js` — checker UI. Self-contained; mounts
-  into any `<div data-site-check>`. Used on `index.html`, `why.html`, `scan.html`.
-- `chat-widget.js` — chat bubble. Self-contained, styles included.
-- `llms.txt` — plain-language summary for AI tools.
-- `api/_robots.js` — shared robots.txt parser + `blockedAgents()` used by both
-  `scan.js` and its test file. Never route it as an endpoint (underscore prefix).
+| Demo | URL | Showpiece |
+|---|---|---|
+| Tattoo studio | wahlahlahlahstudios.vercel.app (separate project) | Scroll film opening. Leads every grid |
+| **Vesper Hair Studio** | `demo-hair.html` (new 2026-09-18) | Hover a client → her chair **spins** from the mirror to face you, hair finished. Plus 2 before/after crossfades, scroll push-in hero, 6 FAQs with schema. **AEO 100** on the scanner |
+| Ironside Collision | `demo-auto.html` | Hero rebuilt 2026-09-18: scroll → Mercedes comes apart → engine glows red → clears → reassembles (same clip reversed). Wreck-to-fixed repair section below it |
+| PestFree | `demo-pest-pro.html` | Pest-scatter scroll video |
 
-### Design tokens (identical in `site.css` and `index.html`'s inline style)
+Standard demos: `demo-pest`, `demo-hvac`, `demo-tree`, `demo-moving`, `demo-driving`.
 
-```
---void:#0A0C10   --panel:#12161D  --edge:#232A35
---steel:#8C97A6  --white:#F2F5F9  --gold:#D9A441  --gold-dark:#B8862C
-```
-
-Headings: Playfair Display (Google Fonts). Body: system font stack.
+**Adding a demo means touching:** `work.html` (card + counts in title/meta/og/h1),
+`index.html` (work grid + heading count + Signature bullet links),
+`api/chat.js` (demo list + count), `robots.txt` (Disallow), then
+`node tools/gen-sitemap.mjs`. Also make `img/shots/<name>.jpg` (1200×800
+screenshot of the page top) and `img/og/<name>.jpg` (1200×630).
 
 ---
 
-## 3. The hero (`index.html`, animated intro)
+## 3. The scroll-video pattern (both Signature heroes use it)
 
-Rewritten twice. The current state uses **real motion**, not CSS fades:
+Copy `demo-auto.html` — it has every fix below baked in.
 
-- Each headline is pre-split into character spans on load.
-- Exits: `shatterOut` — every character blasts off in a random 3D vector with
-  rotation, blur, and colour shift.
-- Entrances (per-act, mapped in `ENTRANCE`):
-  - `assembleIn` — chars fly in from scattered 3D positions with an overshoot
-    (used on `a1`, `a5`).
-  - `decodeIn` — matrix-scramble; chars cycle through random glyphs in glowing
-    gold before locking to their real letter (used on `a2`, `a4`).
-- Cut slides between industries (HVAC, Auto body, Roofing, Contractors) use an
-  **SVG `feDisplacementMap` turbulence filter** whose scale is animated
-  0 → 80 → 0, so the image liquefies out and settles in. The `feTurbulence`
-  seed is re-randomised each cut.
-- Cut label decodes matrix-style into the new industry name.
-- Loop-back flash (`.flash.hit`) marks the loop point.
-- Pause button (`#filmToggle`) still works — WCAG 2.2.2.
+- **Encode all-intra** so scrubbing backwards doesn't stutter:
+  `ffmpeg -i in.mp4 -an -vf scale=1280:-2 -c:v libx264 -crf 24 -g 1 -pix_fmt yuv420p -movflags +faststart out.mp4`
+  (+ a 720w `-m.mp4` for phones, + a poster JPG).
+- **Create the hero pin before the `.reveal` triggers.** Pins must be made in
+  page order or everything below measures early (Ironside was 2,340 px off).
+- `history.scrollRestoration = 'manual'` + `scrollTo(0,0)`, and
+  `ScrollTrigger.refresh()` on video `canplaythrough` and window `load`.
+- GSAP tags carry `defer`; the inline script runs inside `DOMContentLoaded`.
+- Reverse playback on hover (Vesper spin): browsers can't play backwards, so
+  step `currentTime` toward the target every animation frame. See `setSpin()`.
+- Phones: stage above the copy, not behind it. Reduced motion: still image, no pin.
 
-**Timing** (in `buildFilm()`, don't touch without a good reason): each act
-holds 3.4–4.6s, closing CTA holds longest at 4.6s. Full loop is 24.4s. Daniel
-spent time on this because his prior complaint was "too fast to read anything."
+### Higgsfield (AI images/video)
 
-**Reduced-motion** kills all filter/transform animation and falls back to
-plain 0.3s opacity fades.
-
-Rated 6/10 by Daniel — the second version was a real step up from the first
-(rated 4), but there's likely more room. Watch it live before assuming it's
-final.
+- Connected over MCP — Claude generates directly. **Balance: ~2.14 credits.**
+  A 5 s Kling 3.0 clip is 7.50 (std) / 8.75 (pro). GPT Image 2.5 is 1 credit
+  (1.5 at 2K) — the same engine as ChatGPT, good for edits.
+- **Always price with `get_cost:true` and show the shot list before spending.**
+- Start/end-frame video only works when both frames share the room, angle and
+  light. Crop both to the output aspect yourself (Kling does 16:9, 9:16, 1:1).
+- Moving text turns to gibberish — never ask a video model for readable text.
+- Owed: Vesper's hero is a photo push-in, not a video, because credits ran
+  out. A real walk-through clip is 7.50 once Daniel tops up.
 
 ---
 
 ## 4. The site checker (`api/scan.js` + `scan-widget.js`)
 
-Daniel's best sales tool. A visitor pastes their URL, the server fetches that
-page and scores it 0–100. **No AI is involved** — every check is
-deterministic. Costs nothing per scan, cannot hallucinate a finding.
+Daniel's sales tool. Paste a URL → deterministic score, no AI, no cost.
 
-### 26 checks in 4 groups
-
-- **found** (25% of score) — title (30+ chars), meta description (70+), exactly
-  one H1, `/sitemap.xml`, `/robots.txt`, Open Graph tags, image alt text
-- **phone** (20%) — viewport meta, https, HTML weight (<400KB), response (<900ms)
-- **calls** (25%) — `tel:` link, phone number in text, a `<form>`, address / service area
-- **ai** (30%) — 9 checks, including:
-  - AI-crawler access via `blockedAgents()` — real robots.txt grammar, not grep
-  - Readable without JavaScript (server vs client rendering)
-  - LocalBusiness JSON-LD (weight 4, heaviest single check)
-  - **FAQ answers actually on the page** — walks JSON-LD, extracts every
-    `FAQPage.mainEntity`, and only counts one as "rendered" if both its
-    question is a visible heading AND its answer text is in the body. Under
-    60% rendered → fires. Catches hubs that ship schema but load the answers
-    with JavaScript.
-  - **No template placeholders leaking through** — regex against visible text
-    for `{{city}}`, `[LOCATION]`, `%TOKEN%`, `${var}`. Catches the classic
-    city-template bug.
-  - Opening hours in schema, questions in headings, quotable facts, service
-    area in words, `/llms.txt`
-
-### Scoring caps — do not weaken
-
-A critical failure sets a ceiling the rest of the score cannot climb past:
-
-```
-AI crawlers blocked        -> max 25
-client-rendered content    -> max 35
-no viewport                -> max 40
-placeholder token visible  -> max 45     ← added with the citable rules
-no https                   -> max 45
-no phone number anywhere   -> max 50
-no page title              -> max 55
-no LocalBusiness JSON-LD   -> max 65
-```
-
-### Calibration — regression anchors (verified live 2026-08-28)
-
-| Site | Score |
-|---|---|
-| example.com (blank page) | 46 |
-| homedepot.com | 62 |
-| mrrooter.com | 65 |
-| rotorooter.com | 65 |
-| **ui-designs-co.vercel.app** | **88** |
-
-If a change makes a national plumbing chain score 80+, the scoring has
-drifted back to being flattering. Re-check against this table.
-
-### Security — do not weaken
-
-`api/scan.js` fetches arbitrary user-supplied URLs, so it is SSRF-hardened:
-
-- DNS-resolves the host and rejects private, loopback, link-local (169.254.x —
-  cloud metadata), CGNAT and multicast — IPv4 and IPv6 including IPv4-mapped
-- Non-http(s) schemes rejected instantly, before any DNS lookup
-- Manual redirect handling, max 3 hops, **every hop re-validated**
-- 8s timeout, 2MB response cap, ports restricted to 80/443/8080
-- Rate limit 8/min per IP (per serverless instance)
-- **Fetched HTML is never echoed to the browser** — only findings
-
-### Tests
-
-`node test/scan.test.js` — 11 checks, must all pass:
-- 8 robots-grammar unit tests
-- SSRF guard against `localhost`, `127.0.0.1`, `169.254.x`, `file:///`
-- Live end-to-end against rotorooter.com — proves every AI-group check label
-  is present in the response, and no HTML markup leaks
-- Rate-limit hits 429 after 8 requests
-
-### Related: the citable skill
-
-Same audit logic lives in `C:\Users\winst\projects\citable`. The two checks in
-the `ai` group above (`faqhub-rendering-gap` and `template-placeholders-visible`)
-are also rules in `citable/rules/technical.json`, with predicates in
-`scripts/checks.mjs` and fixture tests in `scripts/checks.test.mjs`. Run:
-`node scripts/checks.test.mjs` — 41 checks. If you add a check to the live
-scanner, mirror it into citable and vice versa.
+- **38 checks**, 4 groups, plus three sub-scores: SEO / AEO / GEO.
+- Deliberately harsh: weakest-link blend, −1.5 per failed check, hard caps
+  (noindex → 0, AI crawlers blocked → 25, client-rendered → 35, no viewport → 40,
+  no https / placeholders → 45, no phone → 50, no title → 55, no LocalBusiness → 65).
+  **Daniel's rule: thresholds are set on merit. Never tune them to hit an example number he mentions.**
+- **Customers see the top 3 checks per group; the rest are blurred.**
+  **Daniel's own full view: `scan.html?full`.** It's a client-side blur, so it's
+  not secure; a server-side gate is a possible upgrade.
+- **Hidden-on-purpose:** a noindexed page returns `hidden:true` plus
+  `visibleScore`, and the widget says so instead of "needs rebuilding".
+- Security (don't weaken): SSRF-hardened (DNS + every redirect hop
+  re-validated), 8 s timeout, 2 MB cap, 8/min rate limit, HTML never echoed.
+- `node test/scan.test.js` → **13 checks, all pass.**
+- Own site: **100/100** (SEO/AEO/GEO all 100) as of 2026-09-19.
+- Known limit: sites behind Cloudflare bot protection (e.g. newmetro.club)
+  403 the scanner's datacenter IP. The site isn't broken — its firewall
+  rejects bots. Idea not built: say that instead of a generic error.
 
 ---
 
 ## 5. The chatbot (`api/chat.js` + `chat-widget.js`)
 
-**Live status: `POST /api/chat` returns `{"error":"billing"}`.**
+**Live and answering as of 2026-09-19.** It had been returning
+`{"error":"billing"}` (the Anthropic account was out of credit); Daniel topped up.
 
-The upstream errors are now differentiated (a commit landed since HANDOFF v1):
+- Model `claude-haiku-4-5-20251001`. The system prompt is sent as a cacheable
+  block. Chat logs in Vercel include `usage`, so you can confirm cache hits
+  from `cache_read_input_tokens`.
+- Rate limited 20/min per IP. Errors are categorised (`config`, `auth`, `rate`,
+  `billing`, `upstream`). On any failure the widget shows "Text Daniel" plus a
+  one-tap SMS button.
+- The prompt carries the offer, a page map, a MONEY AND PAPERWORK block (the
+  published refund/domain/hosting/contract answers), a WHAT YOU DO NOT KNOW
+  list (ADA/legal, migration, multilingual, logos, SEO outcomes → text Daniel),
+  "don't be pushy" rules (ask for the phone number once), and the Signature
+  pitch. **It must say every demo is fictional.**
+- It's a template literal: after any edit, run `node -e "require('./api/chat.js')"`.
 
-- `config` — `ANTHROPIC_API_KEY` env var missing on Vercel
-- `auth` — 401/403 from Anthropic (bad or revoked key)
-- `rate` — 429
-- `billing` — 402 or a message containing "credit / billing / balance / quota"
-- `upstream` — any other Anthropic failure
-
-**`billing` is the current state** — the Anthropic account balance is spent.
-This is Daniel's fix, not ours: open the Anthropic Console billing page and
-top up. Once he does, no code change is needed — the bot will start replying
-on the next request.
-
-### The widget degrades gracefully
-
-`failSafe()` catches every error type and shows *"Text Daniel at 917-245-8685
-and he'll answer directly."* Visitors get a usable fallback rather than a
-broken box. The bot is dead weight until the balance is topped up, but
-nothing on the page looks broken.
-
-### The system prompt
-
-Long and prescriptive. Contains: the offer, a page map of all 7 pages so the
-bot can link people, the site checker as a "second close" for visitors who
-already have a site, the approved statistics list, four objection scripts,
-hard rules against inventing quotes, guarantees, payback periods or rankings.
-
-Model is `claude-haiku-4-5-20251001` — chosen over Sonnet because replies are
-2–4 sentences off a tight prompt and it's far cheaper per conversation.
-
-**Widget linkifies model output.** Any `/scan.html`-style path in a reply gets
-turned into a tappable anchor via a fixed page whitelist. Model output never
-touches `innerHTML`. The bot's close emits `[SMS_BUTTON]...[/SMS_BUTTON]`,
-which the widget replaces with a pre-filled tappable SMS link.
-
-When editing the prompt: it's a template literal, so backticks and `${` must
-be escaped. Always `node -e "require('./api/chat.js')"` after editing.
+`api/lead.js` emails leads via Resend and returns `emailed:true/false`; forms
+only promise a callback when the email actually sent.
 
 ---
 
-## 6. How to work in this repo
+## 6. Launch-readiness audit (Daniel's 20 items, started 2026-09-09)
 
-### Verification loop
+**Done:** 1 privacy · 2 terms · 3 CTA above the fold (was already fine; the fix
+was the mobile Call pill covering the footer legal links — a CSS cascade-order
+bug) · 4 FAQ · 5 robots · 6 sitemap (now generated by
+`tools/gen-sitemap.mjs` from robots + canonicals + git dates) · 7 custom 404 ·
+8 alt text · 12 OG/Twitter tags + real 1200×630 images on every page, and
+robots lets link-preview bots through so demo links unfurl · 13 favicons ·
+14 canonicals · 16 mobile 375 px · 19 links.
+
+**Still open:**
+- **9 Analytics** — nothing installed. Recommended Vercel Web Analytics
+  (cookieless, no banner, one tag). **Needs Daniel's yes.** `privacy.html`
+  currently says there's no analytics, so update that sentence when adding it.
+- 15 Cookie banner — not needed unless analytics with cookies goes in.
+- 10/11 Meta lengths — `book.html` description is 165 chars (truncates in cards); 6 demo titles are 63–76.
+- 17 A11y — `plans.html` skips h2→h4; the chat widget's text input has no label.
+- 18 Forms — confirm `RESEND_API_KEY` is set in Vercel, or leads silently fail.
+- 20 Perf — `demo-pest-pro.html` still loads GSAP without `defer`.
+
+---
+
+## 7. Open decisions / waiting on Daniel
+
+1. **Custom domain.** Recommended `uidesignsco.com` ($11.25/yr via Vercel,
+   available 2026-09-12). Not known to be bought. **Do it before Google Search
+   Console.** Moving means updating canonicals, og:url, the sitemap and robots,
+   and adding a redirect.
+2. **Google Search Console** — submit the sitemap, but after the domain is settled.
+3. **Analytics** (above).
+4. **Attorney review** of `CLIENT-AGREEMENT.md` (still a draft) — include the
+   non-refundable $500 Signature deposit clause.
+5. **Checkmate app themes** — separate repo (`C:\Users\winst\Documents\check-mate`).
+   Daniel asked for 5 themes, each with its own font: **Sleek, Casual,
+   Efficient, Minimal, + a girly one (he wants it named)**, from his 4 mockup
+   screenshots. Not started: the session moved on. The existing code has
+   `ThemeChoice` (midnight/ocean/paper/blossom/sunset) in `app/lib/theme/palettes.dart`
+   and a separate `AppFont` enum in `app_fonts.dart`. The plan is to rename the
+   themes and bind one font per theme. **That repo has a large uncommitted tree
+   — read `git status` first.**
+
+---
+
+## 8. How to work here
 
 ```bash
-# 1. syntax-check the serverless functions after ANY edit
 node -e "require('./api/chat.js'); require('./api/scan.js'); console.log('ok')"
-
-# 2. serve locally — python -m http.server DOES NOT WORK
-python <scratchpad>/rangeserve.py 8770 "<repo path>"
-
-# 3. real tests
 node test/scan.test.js
+npx -y http-server -p 8898 -a 127.0.0.1 -c-1   # needs Range support; NOT python -m http.server
+node tools/gen-sitemap.mjs                      # after adding/removing pages
 ```
 
-**`python -m http.server` has no HTTP Range support**, so Chrome refuses to
-seek the scroll-driven demo videos and the pest/auto demos look broken.
-Always use the range-capable server. If you need `/api/*` locally too, write
-a small Node server that `require`s the handler directly — there is no
-`vercel dev` configured.
+Deploy check: push, then poll `curl … | grep -q "<new text>"`. Also poll the
+new **images**, not just the HTML — Vercel spreads files over a few seconds and
+a too-early load shows 404s.
 
-Then Playwright at **1400×900 and 390×844**. Both matter — Daniel checks on
-his phone.
+### Traps that cost real time
 
-### Deploy + verify
-
-```bash
-git add -A && git commit -m "..." && git push
-# then poll until the change actually appears:
-curl -s https://ui-designs-co.vercel.app/<page> | grep -q "<something new>"
-```
-
-### Gotchas
-
-- **CRLF warnings on every commit are normal** on this Windows checkout.
-- Three style systems: `site.css` (7 new pages), inline `<style>` (`index.html`),
-  `legal.css` (3 legal pages). Keep tokens in sync by hand.
-- Nav markup is duplicated across all 8 pages — no templating. A nav change
-  means editing 8 files. Use a scripted `python` pass.
-- **Playwright here is shared with another process** — pages navigate and get
-  text typed into them mid-run. If a screenshot looks wrong, re-navigate
-  before concluding the page is broken.
-- **Some skills edit files in parallel.** The `citable:seo-*` slash commands
-  can modify HTML files (adding canonicals, breadcrumb JSON-LD, sitemap
-  links). If files show unexpected diffs, they're probably intentional SEO
-  additions — read before reverting.
+- **Python strings eat backslashes.** `\b` written through a non-raw Python
+  string becomes a backspace character. It broke the `?full` regex once. Use
+  raw strings or avoid `\b`.
+- **CSS order beats intent.** A mobile `padding-bottom` placed before the base
+  `padding:44px 0` shorthand was silently dead. Test the served stylesheet,
+  not a rule injected at runtime.
+- **The Playwright MCP drives Daniel's real Chrome.** His tabs are open in it —
+  never close them. Background tabs throttle to ~1 frame/sec, so animations
+  look jerky there. Test logic with timings, not smoothness. The in-app
+  Browser pane pauses animation entirely while hidden.
+- An old `http-server` may still hold port 8898 (TaskStop doesn't always kill
+  the node child). It serves the same folder, so that's harmless.
+- Three style systems: `site.css`, `index.html` inline, `legal.css`. The nav
+  is duplicated across pages, so edit them with a script.
+- CRLF warnings on commit are normal.
 
 ---
 
-## 7. Where things stand
+## 9. How Daniel wants to be worked with
 
-### Done and live
-- $200 deposit rolled out across every touchpoint
-- 7 new pages + real top nav + footer nav
-- Working site checker with 26 deterministic checks, SSRF-hardened
-- Two audit findings turned into automated rules in both the citable skill
-  and the live scanner: `faqhub-rendering-gap`, `template-placeholders-visible`
-- Real hero motion — per-character 3D shatter, matrix decode, SVG turbulence
-- Every page has canonical + BreadcrumbList JSON-LD
-- Tap-to-call alongside tap-to-text everywhere
-- Own site scores **88/100** on the checker (no caps)
-
-### Open / next
-1. **Anthropic billing top-up** — Daniel's action. Widget returns `billing`
-   error now, so we know it's not a key or a model ID problem.
-2. **Hero transitions** — rated 6/10. Room for another pass if the current
-   motion still doesn't land. Watch it live first.
-3. **Neighbourhood pages** for local SEO (Astoria, Ridgewood, Flushing,
-   Jamaica). Daniel said "not yet" — wants them done properly, not as thin
-   duplicates.
-4. **New trade demos** (plumbing, electrical, landscaping) — deferred.
-5. `work.html` is `noindex`, so the portfolio brings zero search traffic.
-   Daniel chose this knowingly. Revisit only if he raises it.
-6. Checker scores Daniel's own site 80 in the "calls" group because his
-   homepage has no `<form>` — intentional, funnel is SMS-first.
-
-### Ratings history (never infer a rating he didn't give)
-- Pest demo photo icons — 7.5
-- Six new pages + nav + deposit rollout — 8
-- Harsher scanner scoring + llms.txt — 7
-- HANDOFF v1 — 7
-- Hero pacing + auto image + first transitions — no rating recorded
-- Real hero motion (v2) — 6
-- Rotorooter audit findings automated — awaiting rating at time of writing
-
----
-
-## 8. How Daniel wants to be worked with
-
-Pulled from his global instructions. Not optional.
-
-- **ADHD.** The bottleneck is starting and doing, never ideas.
-- **Brief and blunt.** Lead with the answer or the ONE next action. No preamble.
-- **Decide, don't offer menus.** Pick a sensible default and go.
-- **One action at a time for HIS steps.** Never dump a checklist — one tiny
-  physical step, wait, then the next. Only for his steps; your own work
-  should be delivered finished.
-- **When building: build the whole thing, don't narrate.** He reviews and
-  says what to fix.
-- **RSD.** Criticism lands hard. Be warm, specific, solution-focused. Pair
-  every problem with the next fix. Never blame.
-- **Eat the grind.** Admin, setup, drafting, holding the plan — your job.
-- **Don't volunteer concerns or caveats about his choices.** Execute.
-  Exceptions: a safety issue, a plain factual correction, or a genuine
-  blocker — state it in one line, then keep building.
-- **Send files, don't describe them.** He cannot see files left on disk.
-  Use SendUserFile for every deliverable.
-- After a skill-routed deliverable: `record_outcome`, then ask for a 1–10
-  rating on its own bolded line, then `record_rating`. Never infer.
-
-### Honesty rules baked into this site — keep them
-
-The site makes **no guarantees** about rankings, lead volume or revenue. Every
-statistic on `why.html` is sourced. The demos are disclosed as fictional. The
-FTC prohibits fake reviews; New York requires real licence numbers in
-advertising — that liability lands on the client, not on Daniel.
-
-**Do not add a guarantee, a payback period, or an invented testimonial to any
-page, even if asked to make the copy stronger.** Offer a truthful alternative
-instead.
+- **ADHD:** lead with the answer or ONE next action. Short, blunt, scannable.
+- **Decide, don't offer menus.** For his steps: one tiny physical step, then
+  wait. Your own work gets delivered finished.
+- **RSD:** warm, specific, solution-first. No blame.
+- **Visual check before showing him anything.** Send files with SendUserFile —
+  he can't see files left on disk.
+- No drawn/SVG placeholder images; photographic only. Run the ui-ux-pro-max
+  pass before building a site. Run stop-slop on copy.
+- Honesty rules: no guarantees, payback periods or invented testimonials. Demos
+  are disclosed as fictional. Never claim a live client.
+- After a skill-routed deliverable: `record_outcome` → a bolded
+  **Rate this 1-10 (halves ok):** line → `record_rating` with his exact number
+  only. **He gave no ratings this session.** Don't infer any.
