@@ -26,13 +26,18 @@
 <meta name="twitter:title" content="Vesper Hair Studio — Colour, Cuts &amp; Curls in Williamsburg, Brooklyn">
 <meta name="twitter:description" content="Balayage, precision cuts and curl cutting in a sunlit Williamsburg loft. Free 15-minute consults. Book a chair or call (718) 555-0187.">
 <meta name="twitter:image" content="https://ui-designs-co.vercel.app/img/og/hair.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="img/hair/hero.jpg" media="(min-width:768px)">
-<link rel="preload" as="image" href="img/hair/hero-m.jpg" media="(max-width:767px)">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/jost.woff2" crossorigin>
+<script>document.documentElement.classList.add('js')</script>
 <style>
-.demo-badge{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;background:rgba(10,12,16,.9);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:7px 13px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(6px)}.demo-badge:hover{border-color:#fff}@media(max-width:719px){.demo-badge{bottom:auto;top:calc(8px + env(safe-area-inset-top));left:8px;font-size:10px;padding:6px 10px}}
+/* Fonts are served from this site (variable woff2, latin subset) so the page
+   never waits on fonts.googleapis.com before it can paint. */
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:500 600;font-display:swap;src:url(/fonts/cormorant-garamond.woff2) format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-style:italic;font-weight:500 600;font-display:swap;src:url(/fonts/cormorant-garamond-italic.woff2) format("woff2")}
+@font-face{font-family:"Jost";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/jost.woff2) format("woff2")}
+.demo-badge{position:fixed;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:120;background:rgba(10,12,16,.9);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:7px 13px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;backdrop-filter:blur(6px)}.demo-badge:hover{border-color:#fff}@media(max-width:719px){.demo-badge{top:0;left:0;right:0;bottom:auto;border-radius:0;border-width:0 0 1px;text-align:center;font-size:10px;padding:calc(7px + env(safe-area-inset-top)) 10px 7px;backdrop-filter:none}}
 
 /* Palette pulled from the photographs: linen walls, espresso leather,
    caramel from the balayage. Text pairs checked for WCAG AA:
@@ -78,7 +83,8 @@ header.solid .book:hover{background:var(--ink);color:var(--linen)}
 
 /* hero: the studio photo, pushed in by scroll so it reads as walking in */
 .hero{position:relative;height:100vh;min-height:560px;overflow:hidden;background:var(--ink)}
-.hero .photo{position:absolute;inset:0;background:url(img/hair/hero.jpg) center/cover no-repeat;transform-origin:58% 42%;will-change:transform}
+.hero .photo{position:absolute;inset:0;transform-origin:58% 42%;will-change:transform}
+.hero .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:58% 42%;display:block}
 .hero .shade{position:absolute;inset:0;background:linear-gradient(to right,rgba(28,20,15,.88) 0%,rgba(28,20,15,.62) 38%,rgba(28,20,15,0) 70%),linear-gradient(to bottom,rgba(28,20,15,.55),transparent 22%)}
 .hero .copy{position:absolute;left:0;right:0;bottom:12vh;z-index:2}
 .hero .kicker{color:#E6C49A}
@@ -90,7 +96,7 @@ header.solid .book:hover{background:var(--ink);color:var(--linen)}
 .hero .btn-ghost:hover{background:var(--linen);color:var(--ink)}
 .hero .scroll-cue{position:absolute;right:28px;bottom:28px;z-index:2;color:#E9DFD3;font-size:12px;letter-spacing:.24em;text-transform:uppercase;writing-mode:vertical-rl}
 
-section.pad{padding:110px 0}
+section.pad{padding:110px 0;scroll-margin-top:96px}
 .sec-head{max-width:620px;margin-bottom:54px}
 .sec-head h2{font-size:clamp(38px,5.4vw,62px)}
 .sec-head p{color:var(--muted);margin-top:14px;font-size:17px}
@@ -169,17 +175,17 @@ footer a{color:#E6C49A}
 .sticky-call .btn{flex:1}
 @media(min-width:720px){.sticky-call{display:none}}
 
-.reveal{opacity:0;transform:translateY(22px)}
+.js .reveal{opacity:0;transform:translateY(22px)}
 @media(prefers-reduced-motion:reduce){
-  .reveal{opacity:1;transform:none}
+  .js .reveal{opacity:1;transform:none}
   .look.fade .after,.look .spin-still{transition:none}
 }
 @media(max-width:767px){
-  header{padding:12px 0}
+  header{padding:12px 0;top:calc(25px + env(safe-area-inset-top))}
   .logo{font-size:20px;white-space:nowrap}
   header .book{white-space:nowrap;font-size:13.5px;padding:10px 16px}
   .hero{height:auto;min-height:0;background:var(--linen)}
-  .hero .photo{position:relative;height:auto;aspect-ratio:16/10;margin-top:68px;background-image:url(img/hair/hero-m.jpg)}
+  .hero .photo{position:relative;height:auto;aspect-ratio:16/10;margin-top:calc(93px + env(safe-area-inset-top))}
   .hero .kicker{color:var(--caramel);letter-spacing:.12em;font-size:11.5px}
   .hero .shade{display:none}
   .hero .copy{position:relative;bottom:auto;padding:30px 0 50px}
@@ -218,7 +224,7 @@ footer a{color:#E6C49A}
 </script>
 </head>
 <body>
-<a class="skip" href="#looks">Skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
 
 <header id="hdr">
   <div class="wrap">
@@ -227,8 +233,15 @@ footer a{color:#E6C49A}
   </div>
 </header>
 
+<main id="main">
 <section class="hero" id="top" aria-label="Inside the studio">
-  <div class="photo" id="heroPhoto" role="img" aria-label="Inside Vesper: a sunlit brick loft with black leather chairs facing brass-rimmed round mirrors"></div>
+  <div class="photo" id="heroPhoto">
+    <picture>
+      <source type="image/avif" srcset="img/hair/hero-m.avif 1000w, img/hair/hero-1400.avif 1400w, img/hair/hero.avif 2000w" sizes="100vw">
+      <source type="image/webp" srcset="img/hair/hero-m.webp 1000w, img/hair/hero-1400.webp 1400w, img/hair/hero.webp 2000w" sizes="100vw">
+      <img src="img/hair/hero-1400.jpg" srcset="img/hair/hero-m.jpg 1000w, img/hair/hero-1400.jpg 1400w, img/hair/hero.jpg 2000w" sizes="100vw" width="2000" height="1131" alt="Inside Vesper: a sunlit brick loft with black leather chairs facing brass-rimmed round mirrors" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
   <div class="shade"></div>
   <div class="copy">
     <div class="wrap">
@@ -254,24 +267,39 @@ footer a{color:#E6C49A}
     <div class="looks">
       <figure class="look spin reveal" id="spinLook" tabindex="0" role="button" aria-pressed="false" aria-label="Balayage and blowout. Hover, tap or press Enter to turn the chair around and see the finished hair.">
         <div class="frame">
-          <video id="spinVid" muted playsinline preload="auto" src="img/hair/spin.mp4" poster="img/hair/spin-poster.jpg" aria-hidden="true"></video>
-          <img class="spin-still after-still" src="img/hair/spin-final.jpg" alt="" aria-hidden="true" loading="lazy">
+          <video id="spinVid" muted playsinline preload="none" poster="img/hair/spin-poster.webp" width="720" height="720" aria-hidden="true"></video>
+          <picture>
+            <source type="image/webp" srcset="img/hair/spin-final.webp">
+            <img class="spin-still after-still" src="img/hair/spin-final.jpg" width="900" height="900" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          </picture>
           <span class="hint"><span class="mouse">Hover to turn her around</span><span class="touch">Tap to turn her around</span></span>
         </div>
         <figcaption><h3>Balayage &amp; blowout</h3><p>Grown-out and tangled to soft caramel dimension. Noor, 3½ hours.</p></figcaption>
       </figure>
       <figure class="look fade reveal" tabindex="0" role="button" aria-pressed="false" aria-label="The bob. Hover, tap or press Enter to see the finished cut.">
         <div class="frame">
-          <img src="img/hair/cut-before.jpg" alt="Before: very long, straight, shapeless dark hair" loading="lazy">
-          <img class="after" src="img/hair/cut-after.jpg" alt="After: a sharp, glossy chin-length bob" loading="lazy">
+          <picture>
+            <source type="image/webp" srcset="img/hair/cut-before.webp">
+            <img src="img/hair/cut-before.jpg" width="720" height="900" alt="Before: very long, straight, shapeless dark hair" loading="lazy" decoding="async">
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="img/hair/cut-after.webp">
+            <img class="after" src="img/hair/cut-after.jpg" width="720" height="900" alt="After: a sharp, glossy chin-length bob" loading="lazy" decoding="async">
+          </picture>
           <span class="hint"><span class="mouse">Hover for the after</span><span class="touch">Tap for the after</span></span>
         </div>
         <figcaption><h3>The bob</h3><p>Fourteen inches off, one clean line. Theo, 75 minutes.</p></figcaption>
       </figure>
       <figure class="look fade reveal" tabindex="0" role="button" aria-pressed="false" aria-label="Curl cut. Hover, tap or press Enter to see the finished curls.">
         <div class="frame">
-          <img src="img/hair/curls-before.jpg" alt="Before: dry, undefined curls pulled back" loading="lazy">
-          <img class="after" src="img/hair/curls-after.jpg" alt="After: defined, glossy shoulder-length curls" loading="lazy">
+          <picture>
+            <source type="image/webp" srcset="img/hair/curls-before.webp">
+            <img src="img/hair/curls-before.jpg" width="720" height="900" alt="Before: dry, undefined curls pulled back" loading="lazy" decoding="async">
+          </picture>
+          <picture>
+            <source type="image/webp" srcset="img/hair/curls-after.webp">
+            <img class="after" src="img/hair/curls-after.jpg" width="720" height="900" alt="After: defined, glossy shoulder-length curls" loading="lazy" decoding="async">
+          </picture>
           <span class="hint"><span class="mouse">Hover for the after</span><span class="touch">Tap for the after</span></span>
         </div>
         <figcaption><h3>Curl cut</h3><p>Cut dry, curl by curl, then defined. Amara, 2 hours.</p></figcaption>
@@ -365,6 +393,7 @@ footer a{color:#E6C49A}
     </form>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="wrap">© 2026 Vesper Hair Studio · Williamsburg, Brooklyn · <a href="tel:+17185550187">(718) 555-0187</a><br><span style="opacity:.8">Portfolio demo by <a href="index.html">UI Designs Co</a>. Vesper Hair Studio is a fictional business: the stylists, prices, address, phone number and client photos on this page are samples, not real.</span></div>
@@ -381,7 +410,6 @@ footer a{color:#E6C49A}
 // GSAP is deferred so it never blocks first paint; deferred scripts finish
 // before DOMContentLoaded, so it is loaded by the time this runs.
 window.addEventListener('DOMContentLoaded', () => {
-gsap.registerPlugin(ScrollTrigger);
 // The hero pin starts at scroll 0; a restored mid-page position would make it
 // measure from the wrong place.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -407,6 +435,14 @@ document.getElementById('bookForm').addEventListener('submit', e => {
 // clean seek in either direction.
 const spinLook = document.getElementById('spinLook');
 const spinVid = document.getElementById('spinVid');
+// The clip is 1.3 MB, so it is not fetched until the card is within 600 px of
+// the viewport (or on first hover, whichever comes first). Reduced motion
+// never loads it: the poster and a CSS crossfade stand in.
+let spinLoaded = false;
+function loadSpin() {
+  if (spinLoaded) return; spinLoaded = true;
+  spinVid.preload = 'auto'; spinVid.src = 'img/hair/spin.mp4'; spinVid.load();
+}
 let target = 0, raf = 0, last = 0;
 function step(now) {
   const dt = last ? (now - last) / 1000 : 0; last = now;
@@ -423,9 +459,16 @@ function setSpin(on) {
   spinLook.setAttribute('aria-pressed', on ? 'true' : 'false');
   spinLook.classList.toggle('on', on);
   if (spinLook.classList.contains('still-mode')) return;   // reduced motion: CSS crossfade
+  loadSpin();
   if (!raf) { last = 0; raf = requestAnimationFrame(step); }
 }
 if (reduce.matches) spinLook.classList.add('still-mode');
+else if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) { loadSpin(); io.disconnect(); }
+  }, { rootMargin: touch.matches ? '250px 0px' : '600px 0px' });
+  io.observe(spinLook);
+} else loadSpin();
 
 document.querySelectorAll('.look').forEach(card => {
   const isSpin = card === spinLook;
@@ -443,7 +486,9 @@ document.querySelectorAll('.look').forEach(card => {
 });
 
 /* scroll motion --------------------------------------------------------- */
-if (reduce.matches) return;
+// If GSAP never arrived (CDN down, blocked), show everything and stop.
+if (reduce.matches || !window.gsap || !window.ScrollTrigger) { document.documentElement.classList.remove('js'); return; }
+gsap.registerPlugin(ScrollTrigger);
 // Pins first, in page order: every trigger below must be measured after the
 // hero's pin spacing exists.
 if (innerWidth >= 768) {
