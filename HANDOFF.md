@@ -218,6 +218,10 @@ a too-early load shows 404s.
   Browser pane pauses animation entirely while hidden.
 - An old `http-server` may still hold port 8898 (TaskStop doesn't always kill
   the node child). It serves the same folder, so that's harmless.
+- **Homepage header** is see-through over the film by design, and a small inline
+  script turns it `.solid` once you're 60% past the film (fixed 2026-09-19 —
+  scan results were showing through the nav). The scan result carries
+  `scroll-margin-top:96px` so it never lands under a fixed header.
 - Three style systems: `site.css`, `index.html` inline, `legal.css`. The nav
   is duplicated across pages, so edit them with a script.
 - CRLF warnings on commit are normal.
