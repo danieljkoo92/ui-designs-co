@@ -92,3 +92,7 @@
 .sc-hidden{margin:16px 0 4px;padding:14px 16px;border-radius:10px;background:rgba(217,164,65,.08);border:1px solid rgba(217,164,65,.38)}
 .sc-hidden b{display:block;margin-bottom:5px;font-size:15px;color:var(--gold,#D9A441)}
 .sc-hidden p{margin:0;font-size:14px;line-height:1.55;color:#C3CAD4}
+
+/* Every page has a fixed header (~80px). A result taller than the screen
+   scrolls to the top edge, which put the score and verdict under the nav. */
+.sc-out{scroll-margin-top:96px}

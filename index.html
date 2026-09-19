@@ -145,7 +145,10 @@ h1,h2,h3{font-family:"Playfair Display",Georgia,serif}
 }
 
 /* header */
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:linear-gradient(to bottom,rgba(10,12,16,.88),transparent)}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:linear-gradient(to bottom,rgba(10,12,16,.88),transparent);transition:background .25s,box-shadow .25s}
+/* See-through over the film is the point; over content it lets headings and
+   scan results show through the nav. Solid once the film is scrolled past. */
+header.solid{background:rgba(10,12,16,.94);backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--edge)}
 header .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px}
 .logo{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:21px;color:var(--white);text-decoration:none;white-space:nowrap}
 .logo em{font-style:italic;color:var(--gold)}
@@ -879,6 +882,13 @@ footer .fine{margin-top:18px;font-size:13px}
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="hero.js" defer></script>
+<script>
+(function () {
+  var h = document.querySelector('header');
+  function set() { h.classList.toggle('solid', window.scrollY > window.innerHeight * 0.6); }
+  addEventListener('scroll', set, { passive: true }); addEventListener('resize', set); set();
+})();
+</script>
 <script src="scan-widget.js" defer></script>
 <script src="chat-widget.js" defer></script>
 <script>
